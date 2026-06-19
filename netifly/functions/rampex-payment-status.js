@@ -1,43 +1,32 @@
 /**
  * netlify/functions/rampex-payment-status.js
  *
- * Retrieves the status of a Rampex payment by paymentId.
+ * Retrieves the current status of a Rampex payment link by link_id.
  * Called on the return journey from Rampex checkout to verify payment completion.
  *
  * Required env vars:
  *   RAMPEX_API_KEY
  *   RAMPEX_ENV  ("live" | "sandbox")
  *
- * Endpoint:
- *   POST /.netlify/functions/rampex-payment-status
+ * Endpoint used:
+ *   GET https://api.rampex.io/api-get-payment-status?link_id={paymentId}
+ *   Authorization: X-API-Key header
  *
- * Body:
- *   paymentId        {string}  Rampex payment ID returned by create-rampex-payment-link
- *   bookingReference {string}  DriveEuro booking reference (for logging/correlation)
+ * POST /.netlify/functions/rampex-payment-status
+ * Body: { paymentId, bookingReference }
  *
  * Returns:
  *   { success, status, paymentId, bookingReference, amount, currency, providerReference }
  *
- * ── Rampex status endpoint note ──────────────────────────────────────────────
- * The likely Rampex status endpoint is:
- *   POST https://api.rampex.io/api-payment-status
- *   Body: { payment_id: paymentId }
- *
- * If Rampex uses a GET endpoint with path param instead, replace the fetch call below with:
- *   GET https://api.rampex.io/api-payment-status/{paymentId}
- *
- * Statuses indicating successful payment (checked case-insensitively):
+ * Statuses treated as paid:
  *   paid | completed | success | captured | approved | settled
- * ────────────────────────────────────────────────────────────────────────────
  */
 
 'use strict';
 
-const RAMPEX_BASE = 'https://api.rampex.io';
-
+const RAMPEX_BASE   = 'https://api.rampex.io';
 const PAID_STATUSES = ['paid', 'completed', 'success', 'captured', 'approved', 'settled'];
 
-/** Standard CORS headers */
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -60,7 +49,7 @@ exports.handler = async (event) => {
 
   // ── Validate environment ─────────────────────────────────────────────
   if (!process.env.RAMPEX_API_KEY) {
-    console.error('[rampex-payment-status] RAMPEX_API_KEY is not set');
+    console.error('[rampex-payment-status] RAMPEX_API_KEY is not configured');
     return {
       statusCode: 500,
       headers: CORS,
@@ -90,19 +79,20 @@ exports.handler = async (event) => {
     };
   }
 
-  // ── Call Rampex payment status endpoint ──────────────────────────────
-  // Using POST /api-payment-status with { payment_id } body.
-  // If Rampex provides a GET endpoint, update this block accordingly.
+  console.log('[rampex-payment-status] Checking status for paymentId:', paymentId, 'ref:', bookingReference || '(none)');
+
+  // ── Call Rampex status endpoint ──────────────────────────────────────
+  // GET /api-get-payment-status?link_id={paymentId}
+  const statusUrl = `${RAMPEX_BASE}/api-get-payment-status?link_id=${encodeURIComponent(paymentId)}`;
+
   let statusRes;
   try {
-    statusRes = await fetch(`${RAMPEX_BASE}/api-payment-status`, {
-      method: 'POST',
+    statusRes = await fetch(statusUrl, {
+      method: 'GET',
       headers: {
-        'X-API-Key':    process.env.RAMPEX_API_KEY,
-        'Content-Type': 'application/json',
-        Accept:         'application/json',
+        'X-API-Key': process.env.RAMPEX_API_KEY,
+        Accept:      'application/json',
       },
-      body: JSON.stringify({ payment_id: paymentId }),
     });
   } catch (fetchErr) {
     console.error('[rampex-payment-status] Network error:', fetchErr.message);
@@ -113,53 +103,69 @@ exports.handler = async (event) => {
     };
   }
 
-  // ── Parse response ───────────────────────────────────────────────────
-  let statusData;
+  // ── Read response ────────────────────────────────────────────────────
+  let statusData = null;
+  let rawBodyText = '';
+
   try {
-    statusData = await statusRes.json();
+    rawBodyText = await statusRes.text();
+    statusData  = JSON.parse(rawBodyText);
   } catch {
-    const raw = await statusRes.text().catch(() => '');
-    console.error('[rampex-payment-status] Non-JSON response:', raw);
-    return {
-      statusCode: 502,
-      headers: CORS,
-      body: JSON.stringify({ error: 'Unexpected response from payment provider.' }),
-    };
+    statusData = null;
   }
 
+  console.log('[rampex-payment-status] Provider HTTP status:', statusRes.status);
+  console.log('[rampex-payment-status] Provider response body:', rawBodyText.slice(0, 500));
+
   if (!statusRes.ok) {
-    console.error('[rampex-payment-status] Error response:', JSON.stringify(statusData));
+    console.error('[rampex-payment-status] Error from provider:', statusRes.status);
     return {
       statusCode: 502,
       headers: CORS,
       body: JSON.stringify({
-        error: statusData.message || statusData.error || 'Could not retrieve payment status.',
+        error:          'Could not retrieve payment status.',
+        providerStatus: statusRes.status,
       }),
     };
   }
 
-  // Normalise status field — Rampex may use status, payment_status, or state
+  if (!statusData) {
+    return {
+      statusCode: 502,
+      headers: CORS,
+      body: JSON.stringify({ error: 'Non-JSON response from payment provider.' }),
+    };
+  }
+
+  // ── Normalise response ───────────────────────────────────────────────
+  // Rampex may nest data under a `data` key or return it at the top level.
+  const d = (statusData.data && typeof statusData.data === 'object')
+    ? statusData.data
+    : statusData;
+
   const rawStatus = (
-    statusData.status         ||
-    statusData.payment_status ||
-    statusData.state          ||
+    d.status         ||
+    d.payment_status ||
+    d.state          ||
+    statusData.status ||
     ''
-  ).toLowerCase();
+  ).toString().toLowerCase();
 
   const isPaid = PAID_STATUSES.includes(rawStatus);
 
-  // Extract amount and currency safely
-  const amount   = statusData.amount   || statusData.total  || null;
-  const currency = statusData.currency || statusData.currency_code || null;
+  const amount   = d.amount   || d.total  || statusData.amount   || null;
+  const currency = d.currency || d.currency_code || statusData.currency || null;
 
-  // Extract provider/transaction reference
   const providerReference = (
-    statusData.transaction_id     ||
-    statusData.transactionId      ||
-    statusData.provider_reference ||
-    statusData.providerReference  ||
-    statusData.charge_id          ||
-    statusData.id                 ||
+    d.transaction_id      ||
+    d.transactionId       ||
+    d.provider_reference  ||
+    d.providerReference   ||
+    d.charge_id           ||
+    d.link_id             ||
+    d.payment_id          ||
+    d.id                  ||
+    statusData.id         ||
     null
   );
 
@@ -167,10 +173,10 @@ exports.handler = async (event) => {
     statusCode: 200,
     headers: { ...CORS, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      success:           isPaid,
-      status:            rawStatus || 'unknown',
+      success:          isPaid,
+      status:           rawStatus || 'unknown',
       paymentId,
-      bookingReference:  bookingReference || null,
+      bookingReference: bookingReference || null,
       amount,
       currency,
       providerReference,
