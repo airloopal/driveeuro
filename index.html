@@ -340,8 +340,8 @@
   .pay-soon{font-size:10px;font-weight:700;background:#f3e8ff;color:#7e22ce;padding:.15rem .5rem;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;}
   .btn-pay-secure{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;}
   .btn-pay-secure:hover{opacity:.88;}
-  .btn-rampex{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;}
-  .btn-rampex:hover{opacity:.88;}
+  .btn-secure-checkout{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;}
+  .btn-secure-checkout:hover{opacity:.88;}
 </style>
 </head>
 <body>
@@ -2075,12 +2075,12 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                 </div>
 
                 <div className="pay-methods">
-                  {/* A — Rampex Secure Checkout */}
+                  {/* A — DriveEuro Secure Checkout */}
                   <div className={`pay-card ${payMethod==='rampex'?'pay-sel':''}`} onClick={()=>setPayMethod('rampex')}>
                     <div className="pay-radio"><div className="pay-radio-dot"/></div>
                     <div className="pay-info">
-                      <div className="pay-label">Rampex Secure Checkout</div>
-                      <div className="pay-sub">Pay your reservation fee securely by card or supported payment method. Crypto settlement is handled by Rampex.</div>
+                      <div className="pay-label">DriveEuro Secure Checkout</div>
+                      <div className="pay-sub">Pay your reservation fee securely by card or supported payment method.</div>
                     </div>
                     <Icon name="mdi:shield-check-outline" sz={20} cls="icon-muted"/>
                   </div>
@@ -2090,7 +2090,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     <div className="pay-radio"><div className="pay-radio-dot"/></div>
                     <div className="pay-info">
                       <div className="pay-label">Card / Provider Checkout</div>
-                      <div className="pay-sub">Card and regional provider options may be available through Rampex at checkout.</div>
+                      <div className="pay-sub">Card and regional payment options may be available at checkout.</div>
                     </div>
                     <Icon name="mdi:credit-card-outline" sz={20} cls="icon-muted"/>
                   </div>
@@ -2119,7 +2119,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     <div style={{fontSize:13, color:'var(--text-muted)'}}>Please do not close this page.</div>
                   </div>
                 ) : (payMethod === 'rampex' || payMethod === 'card') ? (
-                  <button className="btn-rampex" onClick={()=>startPaymentFlow(payMethod)}>
+                  <button className="btn-secure-checkout" onClick={()=>startPaymentFlow(payMethod)}>
                     <Icon name="mdi:lock-check-outline" sz={18} cls="icon-white"/>
                     Continue to Secure Checkout — {fmt(p.reservationFee)}
                   </button>
@@ -2133,7 +2133,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                   <Icon name="mdi:lock-outline" sz={14} cls="icon-faint"/> SSL encrypted · No card details stored by DriveEuro
                 </div>
                 <div style={{fontSize:12, color:'var(--text-faint)', marginTop:'0.625rem', lineHeight:1.6}}>
-                  Your reservation fee is processed securely through Rampex. Available payment methods may vary by region and provider.
+                  Your reservation fee is processed securely. Available payment methods may vary by region and provider.
                 </div>
                 <div style={{marginTop:'1rem'}}>
                   <button className="btn btn-outline btn-sm" onClick={()=>setStep(2)}>← Back</button>
