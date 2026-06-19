@@ -1,14 +1,15 @@
 /**
- * netlify/functions/paypal-health.js
+ * netlify/functions/rampex-health.js
  *
- * Diagnostic endpoint — confirms environment variables are present
+ * Diagnostic endpoint — confirms Rampex environment variables are present
  * without exposing their values.
  *
- * GET  /.netlify/functions/paypal-health
- * Returns JSON health check payload.
+ * GET  /.netlify/functions/rampex-health
  *
- * NEVER returns the actual values of PAYPAL_CLIENT_ID or
- * PAYPAL_CLIENT_SECRET — only boolean presence flags.
+ * Required env vars (Netlify UI → Site settings → Environment variables):
+ *   RAMPEX_API_KEY
+ *   RAMPEX_ENV    ("live" | "sandbox")
+ *   SITE_URL      (e.g. https://driveeuro.netlify.app)
  */
 
 'use strict';
@@ -35,13 +36,12 @@ exports.handler = async (event) => {
 
   // ── Build response — presence flags only, never secret values ──────
   const payload = {
-    ok:                       true,
-    paypalClientIdPresent:    Boolean(process.env.PAYPAL_CLIENT_ID),
-    paypalClientSecretPresent: Boolean(process.env.PAYPAL_CLIENT_SECRET),
-    paypalEnv:                process.env.PAYPAL_ENV  || null,
-    siteUrl:                  process.env.SITE_URL    || null,
-    nodeVersion:              process.version,
-    timestamp:                new Date().toISOString(),
+    ok:                  true,
+    rampexApiKeyPresent: Boolean(process.env.RAMPEX_API_KEY),
+    rampexEnv:           process.env.RAMPEX_ENV  || null,
+    siteUrl:             process.env.SITE_URL     || null,
+    nodeVersion:         process.version,
+    timestamp:           new Date().toISOString(),
   };
 
   return {
