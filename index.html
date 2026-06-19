@@ -1808,9 +1808,12 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
       });
       createResult = await res.json();
       if (!res.ok || !createResult.paymentUrl) {
+        // Log the full safe error response for debugging — never shown to customer
+        console.log('[DriveEuro] create-rampex-payment-link failed response:', JSON.stringify(createResult));
         throw new Error(createResult.error || 'No payment URL returned from provider');
       }
     } catch (err) {
+      // err.message is logged server-side; only the generic message is shown to the customer
       console.error('[DriveEuro] create-rampex-payment-link error:', err.message);
       setPayMsg('We could not connect to the payment provider. Please try again.');
       setPayProcessing(false);
