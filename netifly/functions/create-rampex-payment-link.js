@@ -2,37 +2,37 @@
  * netlify/functions/create-rampex-payment-link.js
  *
  * Creates a Rampex hosted payment link for a DriveEuro reservation fee.
- * RAMPEX_API_KEY stays in this server-side function and is never sent to
- * the browser.
+ * RAMPEX_API_KEY stays server-side only — never sent to the browser.
  *
  * Required env vars (Netlify UI → Site settings → Environment variables):
  *   RAMPEX_API_KEY  – Rampex secret API key
- *   RAMPEX_ENV      – "live" | "sandbox"  (informational; base URL is fixed)
+ *   RAMPEX_ENV      – "live" | "sandbox"  (informational; base URL is fixed to live)
  *   SITE_URL        – canonical site URL, e.g. https://driveeuro.netlify.app
  *
- * Endpoint:
- *   POST /.netlify/functions/create-rampex-payment-link
+ * POST /.netlify/functions/create-rampex-payment-link
  *
- * Body:
- *   amount           {number}  Reservation fee in selected currency
- *   currency         {string}  GBP | EUR | USD
- *   bookingReference {string}  DriveEuro booking reference (idempotency key)
+ * Body fields accepted:
+ *   amount           {number}   Reservation fee in selected currency
+ *   currency         {string}   GBP | EUR | USD
+ *   bookingReference {string}   DriveEuro booking reference
  *   vehicleName      {string}
  *   customerEmail    {string}
  *   customerName     {string}
- *   paymentMethod    {string}  "rampex" | "card"
- *   trip             {object}  Trip detail metadata
+ *   paymentMethod    {string}   "rampex" | "card"
+ *   trip             {object}   Trip metadata
  *
  * Returns:
  *   { paymentId, status, paymentUrl, rawProviderStatus }
+ *
+ * On error returns:
+ *   { error, providerStatus, providerMessage }
  */
 
 'use strict';
 
-const RAMPEX_BASE        = 'https://api.rampex.io';
+const RAMPEX_BASE          = 'https://api.rampex.io';
 const SUPPORTED_CURRENCIES = ['GBP', 'EUR', 'USD'];
 
-/** Standard CORS headers */
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -40,34 +40,73 @@ const CORS = {
 };
 
 /**
- * Extract the payment URL from the Rampex response object.
- * Rampex documentation may use different field names across versions —
- * this helper checks all known possibilities in priority order.
+ * Extract payment URL from Rampex response.
+ * Checks top-level fields first, then data.* nested fields.
+ * Covers all known Rampex field name variants.
  */
 function extractPaymentUrl(data) {
-  return (
-    data.payment_url  ||
-    data.paymentUrl   ||
-    data.checkout_url ||
-    data.checkoutUrl  ||
-    data.short_url    ||
-    data.shortUrl     ||
-    data.url          ||
-    data.link         ||
-    null
-  );
+  // Top-level variants
+  if (data.payment_url)   return data.payment_url;
+  if (data.paymentUrl)    return data.paymentUrl;
+  if (data.redirect_url)  return data.redirect_url;
+  if (data.redirectUrl)   return data.redirectUrl;
+  if (data.checkout_url)  return data.checkout_url;
+  if (data.checkoutUrl)   return data.checkoutUrl;
+  if (data.short_url)     return data.short_url;
+  if (data.shortUrl)      return data.shortUrl;
+  if (data.url)           return data.url;
+  if (data.link)          return data.link;
+  // Nested under data.*
+  if (data.data) {
+    const d = data.data;
+    if (d.payment_url)   return d.payment_url;
+    if (d.redirect_url)  return d.redirect_url;
+    if (d.checkout_url)  return d.checkout_url;
+    if (d.short_url)     return d.short_url;
+    if (d.url)           return d.url;
+    if (d.link)          return d.link;
+  }
+  return null;
 }
 
 /**
- * Extract the payment ID from the Rampex response object.
+ * Extract payment/link ID from Rampex response.
+ * Covers all known Rampex field name variants.
  */
 function extractPaymentId(data) {
-  return (
-    data.payment_id ||
-    data.paymentId  ||
-    data.id         ||
-    null
-  );
+  if (data.link_id)    return data.link_id;
+  if (data.linkId)     return data.linkId;
+  if (data.payment_id) return data.payment_id;
+  if (data.paymentId)  return data.paymentId;
+  if (data.id)         return data.id;
+  if (data.data) {
+    const d = data.data;
+    if (d.link_id)    return d.link_id;
+    if (d.payment_id) return d.payment_id;
+    if (d.id)         return d.id;
+  }
+  return null;
+}
+
+/**
+ * Extract a safe human-readable message from a Rampex error response.
+ * Never returns raw internal server errors or stack traces.
+ */
+function extractSafeProviderMessage(data) {
+  if (!data || typeof data !== 'object') return null;
+  // Common Rampex error field names
+  const raw =
+    data.message        ||
+    data.error          ||
+    data.error_message  ||
+    data.errorMessage   ||
+    data.detail         ||
+    data.description    ||
+    (data.errors && Array.isArray(data.errors) ? data.errors[0] : null) ||
+    null;
+  if (!raw) return null;
+  // Truncate and return as string — do not expose internal paths or tokens
+  return String(raw).slice(0, 200);
 }
 
 exports.handler = async (event) => {
@@ -86,15 +125,19 @@ exports.handler = async (event) => {
 
   // ── Validate environment ─────────────────────────────────────────────
   if (!process.env.RAMPEX_API_KEY) {
-    console.error('[create-rampex-payment-link] RAMPEX_API_KEY is not set');
+    console.error('[create-rampex-payment-link] RAMPEX_API_KEY is not configured');
     return {
       statusCode: 500,
       headers: CORS,
-      body: JSON.stringify({ error: 'Payment provider not configured. Please contact DriveEuro.' }),
+      body: JSON.stringify({
+        error:           'Unable to create payment link.',
+        providerStatus:  null,
+        providerMessage: 'Payment provider API key is not configured on this server.',
+      }),
     };
   }
 
-  // ── Parse & validate body ────────────────────────────────────────────
+  // ── Parse body ───────────────────────────────────────────────────────
   let body;
   try {
     body = JSON.parse(event.body || '{}');
@@ -117,7 +160,16 @@ exports.handler = async (event) => {
     trip = {},
   } = body;
 
-  // Validate amount
+  // Log presence of key fields — never log secrets or full PII
+  console.log('[create-rampex-payment-link] Request received:', {
+    amountPresent:        Boolean(amount),
+    currencyPresent:      Boolean(currency),
+    customerEmailPresent: Boolean(customerEmail),
+    bookingReference:     bookingReference || '(none)',
+    currency:             currency || '(none)',
+  });
+
+  // ── Validate inputs ──────────────────────────────────────────────────
   const amountNum = parseFloat(amount);
   if (!amountNum || amountNum <= 0) {
     return {
@@ -127,7 +179,6 @@ exports.handler = async (event) => {
     };
   }
 
-  // Validate currency
   const currencyCode = (currency || 'GBP').toUpperCase();
   if (!SUPPORTED_CURRENCIES.includes(currencyCode)) {
     return {
@@ -139,7 +190,6 @@ exports.handler = async (event) => {
     };
   }
 
-  // Validate required fields
   if (!customerEmail || !customerEmail.includes('@')) {
     return {
       statusCode: 400,
@@ -160,25 +210,22 @@ exports.handler = async (event) => {
   const successUrl = `${siteUrl}/?payment=success&provider=rampex&booking=${encodeURIComponent(bookingReference)}`;
   const cancelUrl  = `${siteUrl}/?payment=cancelled&provider=rampex&booking=${encodeURIComponent(bookingReference)}`;
 
-  // ── Build Rampex payload ─────────────────────────────────────────────
+  // ── Build minimal Rampex payload ─────────────────────────────────────
+  // Sending only the fields Rampex requires to create a payment link.
+  // Metadata and extra fields are omitted until the basic link creation works.
   const rampexPayload = {
-    amount:         amountNum,
+    amount:         Number(amountNum.toFixed(2)),
     currency:       currencyCode,
-    title:          'DriveEuro Reservation Fee',
-    description:    `DriveEuro reservation fee - ${vehicleName || 'vehicle'} - ${bookingReference}`,
     customer_email: customerEmail,
-    reference:      bookingReference,
-    success_url:    successUrl,
-    cancel_url:     cancelUrl,
-    metadata: {
-      bookingReference,
-      vehicleName:   vehicleName   || '',
-      customerName:  customerName  || '',
-      paymentMethod: paymentMethod || 'rampex',
-      trip,
-      source: 'driveeuro',
-    },
+    description:    `DriveEuro reservation fee - ${bookingReference}`,
+    provider:       'hosted',
   };
+
+  console.log('[create-rampex-payment-link] Calling Rampex API:', {
+    endpoint: `${RAMPEX_BASE}/api-create-payment-link`,
+    amount:   rampexPayload.amount,
+    currency: rampexPayload.currency,
+  });
 
   // ── Call Rampex API ──────────────────────────────────────────────────
   let rampexRes;
@@ -193,58 +240,90 @@ exports.handler = async (event) => {
       body: JSON.stringify(rampexPayload),
     });
   } catch (fetchErr) {
-    console.error('[create-rampex-payment-link] Network error:', fetchErr.message);
+    console.error('[create-rampex-payment-link] Network error reaching Rampex:', fetchErr.message);
     return {
       statusCode: 502,
       headers: CORS,
-      body: JSON.stringify({ error: 'Network error communicating with payment provider.' }),
+      body: JSON.stringify({
+        error:           'Unable to create payment link.',
+        providerStatus:  null,
+        providerMessage: 'Network error reaching payment provider.',
+      }),
     };
   }
 
-  // ── Parse Rampex response ────────────────────────────────────────────
-  let rampexData;
+  // ── Read response body (always, even on error) ───────────────────────
+  let rampexData = null;
+  let rawBodyText = '';
+
   try {
-    rampexData = await rampexRes.json();
+    rawBodyText = await rampexRes.text();
+    rampexData  = JSON.parse(rawBodyText);
   } catch {
-    const raw = await rampexRes.text().catch(() => '');
-    console.error('[create-rampex-payment-link] Non-JSON response from Rampex:', raw);
-    return {
-      statusCode: 502,
-      headers: CORS,
-      body: JSON.stringify({ error: 'Unexpected response from payment provider.' }),
-    };
+    // Response was not JSON
+    rampexData = null;
   }
 
+  // Server-side debug logging — safe to log, never exposed to browser
+  console.log('[create-rampex-payment-link] Rampex response status:', rampexRes.status);
+  console.log('[create-rampex-payment-link] Rampex response body:', rawBodyText.slice(0, 1000));
+
+  // ── Handle non-OK response ───────────────────────────────────────────
   if (!rampexRes.ok) {
-    console.error('[create-rampex-payment-link] Rampex error response:', JSON.stringify(rampexData));
+    const safeMessage = rampexData ? extractSafeProviderMessage(rampexData) : null;
+    console.error('[create-rampex-payment-link] Rampex returned error status', rampexRes.status);
     return {
       statusCode: 502,
       headers: CORS,
-      body: JSON.stringify({ error: rampexData.message || rampexData.error || 'Failed to create payment link. Please try again.' }),
+      body: JSON.stringify({
+        error:           'Unable to create payment link.',
+        providerStatus:  rampexRes.status,
+        providerMessage: safeMessage || `Provider returned status ${rampexRes.status}`,
+      }),
     };
   }
 
-  // Extract URL and ID — support all known Rampex field name variants
+  // ── Handle empty / non-JSON OK response ─────────────────────────────
+  if (!rampexData) {
+    console.error('[create-rampex-payment-link] Rampex 2xx but response was not JSON');
+    return {
+      statusCode: 502,
+      headers: CORS,
+      body: JSON.stringify({
+        error:           'Unable to create payment link.',
+        providerStatus:  rampexRes.status,
+        providerMessage: 'Provider returned a non-JSON response.',
+      }),
+    };
+  }
+
+  // ── Extract URL and ID ───────────────────────────────────────────────
   const paymentUrl = extractPaymentUrl(rampexData);
   const paymentId  = extractPaymentId(rampexData);
 
   if (!paymentUrl) {
-    console.error('[create-rampex-payment-link] No payment URL in Rampex response:', JSON.stringify(rampexData));
+    console.error('[create-rampex-payment-link] No payment URL found in Rampex response. Keys present:', Object.keys(rampexData));
     return {
       statusCode: 502,
       headers: CORS,
-      body: JSON.stringify({ error: 'Payment provider did not return a checkout URL. Please try again.' }),
+      body: JSON.stringify({
+        error:           'Unable to create payment link.',
+        providerStatus:  rampexRes.status,
+        providerMessage: 'Provider response did not include a checkout URL.',
+      }),
     };
   }
+
+  console.log('[create-rampex-payment-link] Payment link created. paymentId:', paymentId || '(none)');
 
   return {
     statusCode: 200,
     headers: { ...CORS, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       paymentId:         paymentId  || null,
-      status:            rampexData.status || 'created',
+      status:            (rampexData && rampexData.status) || 'created',
       paymentUrl,
-      rawProviderStatus: rampexData.status || null,
+      rawProviderStatus: rampexRes.status,
     }),
   };
 };
