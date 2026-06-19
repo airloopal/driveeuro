@@ -338,13 +338,10 @@
   .pay-label{font-weight:700;font-size:14px;color:var(--text);}
   .pay-sub{font-size:12px;color:var(--text-muted);margin-top:1px;}
   .pay-soon{font-size:10px;font-weight:700;background:#f3e8ff;color:#7e22ce;padding:.15rem .5rem;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;}
-  .btn-paypal{background:#0070ba;color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:background .2s;}
-  .btn-paypal:hover{background:#005ea6;}
   .btn-pay-secure{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;}
   .btn-pay-secure:hover{opacity:.88;}
-  .paypal-logo-text{font-size:17px;font-weight:800;letter-spacing:-.5px;}
-  .paypal-logo-text .pp-blue{color:#003087;}
-  .paypal-logo-text .pp-sky{color:#009cde;}
+  .btn-rampex{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;}
+  .btn-rampex:hover{opacity:.88;}
 </style>
 </head>
 <body>
@@ -1035,121 +1032,110 @@ function App() {
   // Persist currency selection
   useEffect(() => { try { localStorage.setItem('driveeuro_cur', currency); } catch {} }, [currency]);
 
-  // ── Handle PayPal return redirect ──────────────────────────────────────
-  // PayPal redirects back to /?payment=success|cancelled&provider=paypal[&token=ORDER_ID]
+  // ── Handle Rampex return redirect ─────────────────────────────────────
+  // Rampex redirects back to /?payment=success|cancelled&provider=rampex&booking=REF
   // This effect runs once on mount and handles both outcomes.
   useEffect(() => {
-    const capturePayPalReturnIfNeeded = async () => {
-      const params = new URLSearchParams(window.location.search);
+    const handleRampexReturnIfNeeded = async () => {
+      const params   = new URLSearchParams(window.location.search);
       const payment  = params.get('payment');
       const provider = params.get('provider');
-      if (provider !== 'paypal') return; // not a PayPal return
+      if (provider !== 'rampex') return; // not a Rampex return
 
-      // Clean the URL so refreshing doesn't re-trigger
+      // Clean the URL so refreshing does not re-trigger
       window.history.replaceState({}, document.title, window.location.pathname);
 
+      // Retrieve the pending payment record saved before redirect
+      let pending = null;
+      try {
+        const raw = localStorage.getItem('driveEuroPendingPayment');
+        if (raw) pending = JSON.parse(raw);
+      } catch { /* malformed — treat as null */ }
+
       if (payment === 'cancelled') {
-        // ── Customer cancelled on PayPal ──────────────────────────────
+        // ── Customer cancelled at Rampex checkout ─────────────────────
         try { localStorage.removeItem('driveEuroPendingPayment'); } catch {}
-        // Show cancellation notice and send back to checkout page state
         alert('Payment was not completed. Your vehicle has not been reserved yet.');
         setPage('home');
         return;
       }
 
       if (payment === 'success') {
-        // ── Customer approved — capture the order ─────────────────────
-        // PayPal appends ?token=ORDER_ID to the return URL
-        const paypalOrderId = params.get('token');
+        // ── Customer returned after Rampex checkout ────────────────────
+        const bookingRef = params.get('booking') || pending?.bookingReference || genId();
+        const paymentId  = pending?.paymentId || null;
 
-        if (!paypalOrderId) {
-          alert('Payment capture failed: missing PayPal order ID. Please contact DriveEuro.');
-          setPage('home');
-          return;
+        // Optionally verify status with rampex-payment-status
+        let statusResult = null;
+        if (paymentId) {
+          try {
+            const res = await fetch('/.netlify/functions/rampex-payment-status', {
+              method:  'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body:    JSON.stringify({ paymentId, bookingReference: bookingRef }),
+            });
+            if (res.ok) statusResult = await res.json();
+          } catch (err) {
+            console.error('[DriveEuro] rampex-payment-status error:', err.message);
+            // Non-fatal — we continue and show the booking anyway
+          }
         }
 
-        // Retrieve the pending payment record we saved before redirect
-        let pending = null;
-        try {
-          const raw = localStorage.getItem('driveEuroPendingPayment');
-          if (raw) pending = JSON.parse(raw);
-        } catch {}
+        // Determine if the payment is confirmed, pending, or unknown
+        const paidStatuses = ['paid', 'completed', 'success', 'captured', 'approved', 'settled'];
+        const isPaid = statusResult
+          ? paidStatuses.includes((statusResult.status || '').toLowerCase())
+          : true; // if we could not verify, optimistically continue and advise customer to contact us
 
-        // Call the capture function
-        let captureResult;
+        // Persist result
         try {
-          const res = await fetch('/.netlify/functions/capture-paypal-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderId: paypalOrderId, token: paypalOrderId }),
-          });
-          captureResult = await res.json();
-        } catch (err) {
-          console.error('[DriveEuro] capture-paypal-order network error:', err.message);
-          alert('Payment capture failed. Please contact DriveEuro.');
-          setPage('home');
-          return;
-        }
-
-        if (!captureResult || !captureResult.success) {
-          console.error('[DriveEuro] capture returned failure:', captureResult);
-          alert('Payment capture failed. Please contact DriveEuro.');
-          setPage('home');
-          return;
-        }
-
-        // ── Payment captured successfully ──────────────────────────────
-        try {
-          localStorage.setItem('driveEuroPaymentResult', JSON.stringify(captureResult));
+          if (statusResult) localStorage.setItem('driveEuroPaymentResult', JSON.stringify(statusResult));
           localStorage.removeItem('driveEuroPendingPayment');
         } catch {}
 
-        // Build the booking confirmation object from the pending record
-        const ref = pending?.bookingReference || captureResult.orderId || genId();
+        // Build the booking confirmation object
+        const ref = bookingRef;
         const booking = {
-          id:               ref,
-          customer:         pending?.customer?.fullName  || '',
-          email:            pending?.customer?.email     || captureResult.payer?.email || '',
-          phone:            pending?.customer?.phone     || '',
-          dob:              pending?.customer?.dob       || '',
-          driverAge:        pending?.customer?.driverAge || '',
-          vehicle:          pending?.vehicleName         || '',
-          supplier:         pending?.supplierName        || '',
-          pickup:           pending?.trip?.pickupLocation  || '',
-          dropoff:          pending?.trip?.dropoffLocation || pending?.trip?.pickupLocation || '',
-          pickupDate:       pending?.trip?.pickupDate    || '',
-          pickupTime:       pending?.trip?.pickupTime    || '',
-          returnDate:       pending?.trip?.returnDate    || '',
-          returnTime:       pending?.trip?.returnTime    || '',
-          driverAge:        pending?.customer?.driverAge || '',
-          currency:         pending?.currency            || 'GBP',
-          days:             pending?.days                || 7,
-          originalPrice:    pending?.originalPrice       || 0,
-          discountedPrice:  pending?.discountedPrice     || 0,
-          reservationFee:   pending?.reservationFee      || 0,
-          remaining:        pending?.remaining           || 0,
-          saved:            pending?.saved               || 0,
-          status:           'reserved',
-          paymentMethod:    'paypal',
-          captureId:        captureResult.captureId      || null,
-          supplierRef:      '',
-          internalNotes:    '',
-          balanceNotes:     pending?.trip?.specialRequests || '',
-          created:          new Date().toISOString().split('T')[0],
+          id:              ref,
+          customer:        pending?.customer?.fullName   || '',
+          email:           pending?.customer?.email      || '',
+          phone:           pending?.customer?.phone      || '',
+          dob:             pending?.customer?.dob        || '',
+          driverAge:       pending?.customer?.driverAge  || '',
+          vehicle:         pending?.vehicleName          || '',
+          supplier:        pending?.supplierName         || '',
+          pickup:          pending?.trip?.pickupLocation  || '',
+          dropoff:         pending?.trip?.dropoffLocation || pending?.trip?.pickupLocation || '',
+          pickupDate:      pending?.trip?.pickupDate     || '',
+          pickupTime:      pending?.trip?.pickupTime     || '',
+          returnDate:      pending?.trip?.returnDate     || '',
+          returnTime:      pending?.trip?.returnTime     || '',
+          currency:        pending?.currency             || 'GBP',
+          days:            pending?.days                 || 7,
+          originalPrice:   pending?.originalPrice        || 0,
+          discountedPrice: pending?.discountedPrice      || 0,
+          reservationFee:  pending?.reservationFee       || 0,
+          remaining:       pending?.remaining            || 0,
+          saved:           pending?.saved                || 0,
+          status:          isPaid ? 'reserved' : 'reserved', // still reserved — balance due later
+          paymentMethod:   'rampex',
+          paymentId:       paymentId,
+          providerRef:     statusResult?.providerReference || null,
+          paymentStatus:   statusResult?.status || (isPaid ? 'paid' : 'pending'),
+          supplierRef:     '',
+          internalNotes:   '',
+          balanceNotes:    pending?.trip?.specialRequests || '',
+          created:         new Date().toISOString().split('T')[0],
         };
 
-        // Add to bookings list (in-memory state — will reset on hard refresh,
-        // but the confirmation data is what the user sees immediately)
         setBookings(b => [booking, ...b]);
-
-        // Navigate to confirmation
-        setConfirmData({ ...booking });
+        setConfirmData({ ...booking, isPaid });
         setPage('confirmation');
         window.scrollTo(0, 0);
       }
     };
 
-    capturePayPalReturnIfNeeded();
+    handleRampexReturnIfNeeded();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Hidden admin: Ctrl+Shift+A keyboard shortcut
@@ -1674,7 +1660,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   }));
   const [errors, setErrors] = useState({});
   const [payProcessing, setPayProcessing] = useState(false);
-  const [payMethod, setPayMethod] = useState('paypal');
+  const [payMethod, setPayMethod] = useState('rampex'); // 'rampex' | 'card' | 'klarna'
   const [payMsg, setPayMsg] = useState(''); // inline user-facing message during pay flow
 
   if (!vehicle) return <div className="container" style={{padding:'3rem'}}><button className="btn btn-navy btn-sm" onClick={()=>navigate('results',{days:7})}>← Back to results</button></div>;
@@ -1722,33 +1708,34 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
 
   const handleNext = () => { if (validate()) setStep(s=>s+1); };
 
-  // ── PayPal payment integration ─────────────────────────────────────────
+  // ── Rampex payment integration ─────────────────────────────────────────
   //
-  // startPaymentFlow(method) calls /.netlify/functions/create-paypal-order,
+  // startPaymentFlow(method) calls /.netlify/functions/create-rampex-payment-link,
   // stores a pending payment record in localStorage, then redirects the customer
-  // to PayPal's hosted approval page.
+  // to the Rampex-hosted checkout page.
   //
-  // On return, capturePayPalReturnIfNeeded() (mounted in App on page load) reads
-  // the URL query params, calls /.netlify/functions/capture-paypal-order,
-  // and routes to the confirmation page on success.
+  // On return, handleRampexReturnIfNeeded() (mounted in App on page load) reads
+  // the URL query params, optionally calls /.netlify/functions/rampex-payment-status,
+  // and routes to the confirmation page.
   //
   // Klarna remains disabled until merchant integration is approved and tested.
   const startPaymentFlow = async (method) => {
     if (method === 'klarna') return; // guard — button is already disabled
 
-    // Re-run full form validation before initiating payment
-    // Build a synthetic step=2 validate pass (all fields must be complete)
+    // Full form validation before initiating payment
     const preValidateErrors = {};
-    if (!form.fullName.trim())          preValidateErrors.fullName      = 'Required';
-    if (!form.email.includes('@'))      preValidateErrors.email         = 'Valid email required';
-    if (!form.phone.trim())             preValidateErrors.phone         = 'Required';
-    if (!form.dob)                      preValidateErrors.dob           = 'Required';
-    if (!form.driverAge)                preValidateErrors.driverAge     = 'Required';
-    if (!form.pickupLocation.trim())    preValidateErrors.pickupLocation = 'Required';
-    if (!form.pickupDate)               preValidateErrors.pickupDate    = 'Please select a pickup date';
-    if (!form.returnDate)               preValidateErrors.returnDate    = 'Please select a return date';
-    if (!form.agreedTerms)              preValidateErrors.agreedTerms   = 'You must agree to the terms';
-    if (!form.agreedAge)                preValidateErrors.agreedAge     = 'Please confirm your licence';
+    if (!form.fullName.trim())          preValidateErrors.fullName       = 'Required';
+    if (!form.email.includes('@'))      preValidateErrors.email          = 'Valid email required';
+    if (!form.phone.trim())             preValidateErrors.phone          = 'Required';
+    if (!form.dob)                      preValidateErrors.dob            = 'Required';
+    if (!form.driverAge)                preValidateErrors.driverAge      = 'Required';
+    if (!form.pickupLocation.trim())    preValidateErrors.pickupLocation  = 'Required';
+    if (!form.pickupDate)               preValidateErrors.pickupDate     = 'Please select a pickup date';
+    if (form.pickupDate && form.pickupDate < todayStr()) preValidateErrors.pickupDate = 'Pickup date cannot be in the past';
+    if (!form.returnDate)               preValidateErrors.returnDate     = 'Please select a return date';
+    if (form.returnDate && form.pickupDate && form.returnDate < form.pickupDate) preValidateErrors.returnDate = 'Return date must be on or after pickup date';
+    if (!form.agreedTerms)              preValidateErrors.agreedTerms    = 'You must agree to the terms';
+    if (!form.agreedAge)                preValidateErrors.agreedAge      = 'Please confirm your licence';
 
     if (Object.keys(preValidateErrors).length > 0) {
       setErrors(preValidateErrors);
@@ -1759,25 +1746,24 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     setPayProcessing(true);
     setPayMsg('');
 
-    // Generate a local booking reference now (used as PayPal idempotency key
-    // and stored with the pending payment so we can link it on return)
     const bookingReference = genId();
 
-    // Pending payment record — written to localStorage so capturePayPalReturnIfNeeded
-    // can reconstruct the booking after PayPal redirects back to this page
+    // Pending payment record — survives the Rampex redirect so we can
+    // reconstruct the booking on return
     const pendingPayment = {
       bookingReference,
       method,
-      vehicleName:  vehicle.name,
-      supplierName: vehicle.supplier,
+      vehicleName:      vehicle.name,
+      supplierName:     vehicle.supplier,
       currency,
-      amount:       p.reservationFee,           // GBP amount — server receives this
+      amount:           p.reservationFee,
       originalPrice:    p.original,
       discountedPrice:  p.discounted,
       reservationFee:   p.reservationFee,
       remaining:        p.remaining,
       saved:            p.saved,
       days:             days || 7,
+      paymentId:        null, // will be populated from createResult below
       customer: {
         fullName:   form.fullName,
         email:      form.email,
@@ -1803,11 +1789,11 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
       localStorage.setItem('driveEuroPendingPayment', JSON.stringify(pendingPayment));
     } catch { /* non-fatal */ }
 
-    // Call Netlify function to create the PayPal order
+    // Call Netlify function to create the Rampex payment link
     let createResult;
     try {
-      const res = await fetch('/.netlify/functions/create-paypal-order', {
-        method: 'POST',
+      const res = await fetch('/.netlify/functions/create-rampex-payment-link', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount:           p.reservationFee,
@@ -1815,23 +1801,32 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
           bookingReference,
           vehicleName:      vehicle.name,
           customerEmail:    form.email,
-          trip: pendingPayment.trip,
+          customerName:     form.fullName,
+          paymentMethod:    method,
+          trip:             pendingPayment.trip,
         }),
       });
       createResult = await res.json();
-      if (!res.ok || !createResult.approvalUrl) {
-        throw new Error(createResult.error || 'No approval URL returned from PayPal');
+      if (!res.ok || !createResult.paymentUrl) {
+        throw new Error(createResult.error || 'No payment URL returned from provider');
       }
     } catch (err) {
-      console.error('[DriveEuro] create-paypal-order error:', err.message);
+      console.error('[DriveEuro] create-rampex-payment-link error:', err.message);
       setPayMsg('We could not connect to the payment provider. Please try again.');
       setPayProcessing(false);
       return;
     }
 
-    // Redirect to PayPal hosted checkout — customer approves there
-    // PayPal appends ?token=ORDER_ID to the return_url on approval
-    window.location.href = createResult.approvalUrl;
+    // Persist the paymentId returned so we can check status on return
+    if (createResult.paymentId) {
+      try {
+        const updated = { ...pendingPayment, paymentId: createResult.paymentId };
+        localStorage.setItem('driveEuroPendingPayment', JSON.stringify(updated));
+      } catch {}
+    }
+
+    // Redirect customer to Rampex hosted checkout
+    window.location.href = createResult.paymentUrl;
   };
 
   // ── Trip Summary block (used in step 2 and sidebar) ──────────────────
@@ -2070,34 +2065,36 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
 
                 {/* Payment method selector
                     ──────────────────────────────────────────────────────────────
-                    PayPal API integration should create/capture orders server-side.
-                    PayPal payment link can be used for MVP manual fulfilment.
-                    Klarna should remain disabled until merchant integration is
-                    approved and tested.
+                    Rampex integration: create-rampex-payment-link Netlify function
+                    creates a hosted payment link. Customer is redirected there.
+                    On return, handleRampexReturnIfNeeded() checks status.
+                    Klarna remains disabled until merchant integration is approved.
                     ────────────────────────────────────────────────────────────── */}
                 <div style={{fontWeight:700, color:'var(--navy)', fontSize:14, marginBottom:'0.875rem', marginTop:'1rem'}}>
                   <Icon name="mdi:credit-card-outline" sz={18} cls="icon-navy" style={{marginRight:6}}/> Choose payment method
                 </div>
 
                 <div className="pay-methods">
-                  {/* A — PayPal */}
-                  <div className={`pay-card ${payMethod==='paypal'?'pay-sel':''}`} onClick={()=>setPayMethod('paypal')}>
+                  {/* A — Rampex Secure Checkout */}
+                  <div className={`pay-card ${payMethod==='rampex'?'pay-sel':''}`} onClick={()=>setPayMethod('rampex')}>
                     <div className="pay-radio"><div className="pay-radio-dot"/></div>
                     <div className="pay-info">
-                      <div className="pay-label"><span className="paypal-logo-text"><span className="pp-blue">Pay</span><span className="pp-sky">Pal</span></span></div>
-                      <div className="pay-sub">Log in to PayPal or continue as a guest where available.</div>
+                      <div className="pay-label">Rampex Secure Checkout</div>
+                      <div className="pay-sub">Pay your reservation fee securely by card or supported payment method. Crypto settlement is handled by Rampex.</div>
                     </div>
                     <Icon name="mdi:shield-check-outline" sz={20} cls="icon-muted"/>
                   </div>
-                  {/* B — Card via PayPal Guest Checkout */}
+
+                  {/* B — Card / Provider Checkout */}
                   <div className={`pay-card ${payMethod==='card'?'pay-sel':''}`} onClick={()=>setPayMethod('card')}>
                     <div className="pay-radio"><div className="pay-radio-dot"/></div>
                     <div className="pay-info">
-                      <div className="pay-label">Pay by Card</div>
-                      <div className="pay-sub">Secure card payment powered by PayPal Guest Checkout, where available.</div>
+                      <div className="pay-label">Card / Provider Checkout</div>
+                      <div className="pay-sub">Card and regional provider options may be available through Rampex at checkout.</div>
                     </div>
                     <Icon name="mdi:credit-card-outline" sz={20} cls="icon-muted"/>
                   </div>
+
                   {/* C — Klarna (disabled) */}
                   <div className="pay-card pay-disabled">
                     <div className="pay-radio"/>
@@ -2118,18 +2115,13 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                 {payProcessing ? (
                   <div style={{textAlign:'center', padding:'1.5rem', background:'var(--ice)', borderRadius:10}}>
                     <div style={{marginBottom:'0.5rem'}}><Icon name="mdi:loading" sz={32} cls="icon-muted"/></div>
-                    <div style={{fontWeight:700, color:'var(--navy)', marginBottom:'0.25rem'}}>Redirecting to secure payment…</div>
+                    <div style={{fontWeight:700, color:'var(--navy)', marginBottom:'0.25rem'}}>Redirecting to secure checkout…</div>
                     <div style={{fontSize:13, color:'var(--text-muted)'}}>Please do not close this page.</div>
                   </div>
-                ) : payMethod === 'paypal' ? (
-                  <button className="btn-paypal" onClick={()=>startPaymentFlow('paypal')}>
+                ) : (payMethod === 'rampex' || payMethod === 'card') ? (
+                  <button className="btn-rampex" onClick={()=>startPaymentFlow(payMethod)}>
                     <Icon name="mdi:lock-check-outline" sz={18} cls="icon-white"/>
-                    Continue with PayPal — {fmt(p.reservationFee)}
-                  </button>
-                ) : payMethod === 'card' ? (
-                  <button className="btn-pay-secure" onClick={()=>startPaymentFlow('card')}>
-                    <Icon name="mdi:credit-card-check-outline" sz={18} cls="icon-white"/>
-                    Continue to Secure Payment — {fmt(p.reservationFee)}
+                    Continue to Secure Checkout — {fmt(p.reservationFee)}
                   </button>
                 ) : (
                   <button className="btn-pay-secure" style={{opacity:.5,cursor:'not-allowed'}} disabled>
@@ -2141,7 +2133,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                   <Icon name="mdi:lock-outline" sz={14} cls="icon-faint"/> SSL encrypted · No card details stored by DriveEuro
                 </div>
                 <div style={{fontSize:12, color:'var(--text-faint)', marginTop:'0.625rem', lineHeight:1.6}}>
-                  Your reservation fee is processed securely through PayPal. You may be able to pay with your PayPal account or by card as a guest, depending on PayPal availability in your region.
+                  Your reservation fee is processed securely through Rampex. Available payment methods may vary by region and provider.
                 </div>
                 <div style={{marginTop:'1rem'}}>
                   <button className="btn btn-outline btn-sm" onClick={()=>setStep(2)}>← Back</button>
@@ -2260,7 +2252,13 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
             <div className="price-block" style={{marginBottom:'1rem'}}>
               <div style={{fontWeight:700, color:'#fff', marginBottom:'0.75rem'}}>Booking confirmed</div>
               <div className="price-row"><span className="price-row-label">Reference</span><span className="price-row-val price-row-gold">{data.id}</span></div>
-              {data.captureId && <div className="price-row"><span className="price-row-label">PayPal capture</span><span className="price-row-val" style={{fontSize:11}}>{data.captureId}</span></div>}
+              {data.providerRef && <div className="price-row"><span className="price-row-label">Payment ref</span><span className="price-row-val" style={{fontSize:11}}>{data.providerRef}</span></div>}
+              {data.paymentId && !data.providerRef && <div className="price-row"><span className="price-row-label">Payment ID</span><span className="price-row-val" style={{fontSize:11}}>{data.paymentId}</span></div>}
+              {data.isPaid === false && (
+                <div style={{background:'var(--warn-bg)', border:'1px solid #fde68a', borderRadius:8, padding:'0.6rem 0.75rem', fontSize:12, color:'var(--warn)', marginTop:'0.5rem', lineHeight:1.5}}>
+                  Payment is being verified. If you have completed payment, please contact DriveEuro with your booking reference.
+                </div>
+              )}
               <div className="price-row"><span className="price-row-label">Vehicle</span><span className="price-row-val" style={{fontSize:12}}>{data.vehicle} or similar</span></div>
               <div className="price-row"><span className="price-row-label">Supplier</span><span className="price-row-val" style={{fontSize:12}}>{data.supplier}</span></div>
               <div style={{height:1, background:'rgba(255,255,255,0.12)', margin:'0.4rem 0'}}/>
