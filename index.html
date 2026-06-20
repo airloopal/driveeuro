@@ -730,59 +730,114 @@ const REFUND_NOTE = 'If your selected vehicle or a suitable alternative cannot b
 // ── Vehicle image map ─────────────────────────────────────────────────
 // Keys match vehicle.class values. Swap any URL for your own CDN path.
 // All images are sourced from Unsplash (free to use, no attribution required for display).
+// ── Image system ──────────────────────────────────────────────────────
+// CLASS_IMAGES uses normalised lowercase-hyphen keys so lookups are
+// immune to capitalisation differences in vehicle.class values.
+// Missing file classes fall back to the nearest visual equivalent.
 const CLASS_IMAGES = {
-  // ── Available local files ──────────────────────────────────────────
-  'Mini':             { url:'/assets/cars/mini.png',              icon:'mdi:car-outline',    label:'Mini' },
-  'Economy':          { url:'/assets/cars/economy.png',           icon:'mdi:car-outline',    label:'Economy' },
-  'Compact':          { url:'/assets/cars/compact.png',           icon:'mdi:car-outline',    label:'Compact' },
-  'Estate':           { url:'/assets/cars/estate.png',            icon:'mdi:car-estate',     label:'Estate' },
-  'SUV':              { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'SUV' },
-  'Premium':          { url:'/assets/cars/premium.png',           icon:'mdi:car-sports',     label:'Premium' },
-  'Executive':        { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Executive Saloon' },
-  'Executive Saloon': { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Executive Saloon' },
-  'Electric':         { url:'/assets/cars/electric.png',          icon:'mdi:ev-station',     label:'Electric' },
-  'Electric Premium': { url:'/assets/cars/electric.png',          icon:'mdi:ev-station',     label:'Electric' },
-  'Sports Car':       { url:'/assets/cars/sports-car.png',        icon:'mdi:car-sports',     label:'Sports Car' },
-  'Van':              { url:'/assets/cars/van.png',               icon:'mdi:van-passenger',  label:'Van' },
-  '7-Seater':         { url:'/assets/cars/seven-seater.png',      icon:'mdi:van-passenger',  label:'7-Seater' },
-  // ── Fallback mappings for classes without a dedicated local file ───
-  // Convertible → sports-car.png (no convertible.png available)
-  'Convertible':      { url:'/assets/cars/sports-car.png',        icon:'mdi:car-convertible',label:'Convertible' },
-  // Luxury Saloon → executive-saloon.png (no luxury-saloon.png available)
-  'Luxury':           { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Luxury Saloon' },
-  'Luxury Saloon':    { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Luxury Saloon' },
-  // Luxury SUV → suv.png (no luxury-suv.png available)
-  'Luxury SUV':       { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'Luxury SUV' },
-  'SUV Luxury':       { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'Luxury SUV' },
-  'Premium SUV':      { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'Premium SUV' },
+  'mini':              '/assets/cars/mini.png',
+  'economy':           '/assets/cars/economy.png',
+  'compact':           '/assets/cars/compact.png',
+  'estate':            '/assets/cars/estate.png',
+  'suv':               '/assets/cars/suv.png',
+  'premium':           '/assets/cars/premium.png',
+  'executive':         '/assets/cars/executive-saloon.png',
+  'executive-saloon':  '/assets/cars/executive-saloon.png',
+  'electric':          '/assets/cars/electric.png',
+  'electric-premium':  '/assets/cars/electric.png',
+  'sports-car':        '/assets/cars/sports-car.png',
+  'van':               '/assets/cars/van.png',
+  '7-seater':          '/assets/cars/seven-seater.png',
+  'seven-seater':      '/assets/cars/seven-seater.png',
+  // Fallback mappings — no dedicated local file for these classes
+  'convertible':       '/assets/cars/sports-car.png',
+  'luxury':            '/assets/cars/executive-saloon.png',
+  'luxury-saloon':     '/assets/cars/executive-saloon.png',
+  'luxury-suv':        '/assets/cars/suv.png',
+  'suv-luxury':        '/assets/cars/suv.png',
+  'premium-suv':       '/assets/cars/suv.png',
 };
 
-const getVehicleImg = (vehicleClass) =>
-  CLASS_IMAGES[vehicleClass] || { url: null, icon: 'mdi:car-outline', label: vehicleClass || 'Vehicle' };
+// Icon fallbacks per normalised class key (used when image fails to load)
+const CLASS_ICONS = {
+  'mini': 'mdi:car-outline', 'economy': 'mdi:car-outline', 'compact': 'mdi:car-outline',
+  'estate': 'mdi:car-estate', 'suv': 'mdi:car-suv', 'suv-luxury': 'mdi:car-suv',
+  'luxury-suv': 'mdi:car-suv', 'premium-suv': 'mdi:car-suv',
+  'premium': 'mdi:car-sports', 'executive': 'mdi:car-sports', 'executive-saloon': 'mdi:car-sports',
+  'luxury': 'mdi:car-sports', 'luxury-saloon': 'mdi:car-sports',
+  'electric': 'mdi:ev-station', 'electric-premium': 'mdi:ev-station',
+  'convertible': 'mdi:car-convertible', 'sports-car': 'mdi:car-sports',
+  'van': 'mdi:van-passenger', '7-seater': 'mdi:van-passenger', 'seven-seater': 'mdi:van-passenger',
+};
+
+/**
+ * Normalise any vehicle class string to the lowercase-hyphen key used in CLASS_IMAGES.
+ * e.g. "SUV Luxury" → "suv-luxury", "Electric Premium" → "electric-premium"
+ */
+function normalizeClassKey(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
+/**
+ * Resolve the best available image URL for a vehicle.
+ * Priority:
+ *   A. vehicle.localImage         — explicit per-vehicle local override
+ *   B. CLASS_IMAGES[normalised]   — class-based local file
+ *   C. null                       — triggers icon fallback in VehicleImage
+ *
+ * Reads vehicle.vehicleClass || vehicle.class || vehicle.category || vehicle.type
+ * so it works whether the vehicle came from VEHICLES array or an adapter layer.
+ */
+function getVehicleImage(vehicle) {
+  if (!vehicle) return null;
+  // A — explicit local image on the vehicle object
+  if (vehicle.localImage) return vehicle.localImage;
+  // B — resolve from class using normalised key
+  const raw = vehicle.vehicleClass || vehicle.class || vehicle.category || vehicle.type || '';
+  const key = normalizeClassKey(raw);
+  return CLASS_IMAGES[key] || CLASS_IMAGES[normalizeClassKey(raw.split(' ')[0])] || CLASS_IMAGES['economy'] || null;
+}
+
+/**
+ * Get the Iconify icon name for a vehicle class, for use in the fallback card.
+ */
+function getVehicleIcon(vehicle) {
+  const raw = vehicle.vehicleClass || vehicle.class || vehicle.category || vehicle.type || '';
+  const key = normalizeClassKey(raw);
+  return CLASS_ICONS[key] || 'mdi:car-outline';
+}
 
 // ── VehicleImage component ────────────────────────────────────────────
-// detail=true → tall hero variant on the vehicle details page
+// detail=true → tall hero variant on the vehicle details page.
+// Uses getVehicleImage() — never reads vehicle.image or any Unsplash URL.
 const VehicleImage = ({ vehicle, detail = false }) => {
   const [imgErr, setImgErr] = useState(false);
-  const meta = getVehicleImg(vehicle.class);
-  const wrapClass = `vimg-wrap ${detail ? 'vimg-wrap--detail' : 'vimg-wrap--card'}`;
+  const imgUrl  = getVehicleImage(vehicle);
+  const icon    = getVehicleIcon(vehicle);
+  const label   = vehicle.vehicleClass || vehicle.class || 'Vehicle';
+  const wrapCls = `vimg-wrap ${detail ? 'vimg-wrap--detail' : 'vimg-wrap--card'}`;
 
   return (
-    <div className={wrapClass}>
-      {meta.url && !imgErr ? (
+    <div className={wrapCls}>
+      {imgUrl && !imgErr ? (
         <img
-          src={meta.url}
-          alt={`${vehicle.class} car — ${vehicle.name} or similar`}
+          src={imgUrl}
+          alt={`${label} — ${vehicle.name || ''} or similar`}
           onError={() => setImgErr(true)}
           loading="lazy"
+          style={{width:'100%', height:'100%', objectFit:'cover', display:'block'}}
         />
       ) : (
         <div className="vimg-fallback">
-          <Icon name={meta.icon} sz={48} cls="icon-muted"/>
-          <span className="vimg-fallback-label">{meta.label}</span>
+          <Icon name={icon} sz={48} cls="icon-muted"/>
+          <span className="vimg-fallback-label">{label}</span>
         </div>
       )}
-      <div className="vimg-class-tag">{meta.label}</div>
+      <div className="vimg-class-tag">{label}</div>
     </div>
   );
 };
