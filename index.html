@@ -26,7 +26,8 @@
 <script src="https://unpkg.com/@babel/standalone@7.25.6/babel.min.js"></script>
 <script src="https://code.iconify.design/iconify-icon/3.0.2/iconify-icon.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -46,9 +47,9 @@
     --shadow-lg: 0 10px 30px rgba(0,0,0,0.12),0 4px 8px rgba(0,0,0,0.06);
   }
   html { scroll-behavior: smooth; }
-  body { font-family:'Inter',sans-serif; color:var(--text); background:var(--ice); line-height:1.6; -webkit-font-smoothing:antialiased; }
-  h1,h2,h3,h4,h5 { font-family:'Plus Jakarta Sans',sans-serif; line-height:1.25; }
-  input,select,textarea,button { font-family:inherit; font-size:15px; }
+  body { font-family:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color:var(--text); background:var(--ice); line-height:1.6; -webkit-font-smoothing:antialiased; font-weight:400; }
+  h1,h2,h3,h4,h5 { font-family:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight:800; line-height:1.25; letter-spacing:-0.03em; }
+  input,select,textarea,button { font-family:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:15px; }
   button { cursor:pointer; border:none; background:none; }
   a { color:inherit; text-decoration:none; }
   img { max-width:100%; display:block; }
@@ -57,13 +58,13 @@
   /* Nav */
   .nav { background:var(--navy); padding:0 1.5rem; position:sticky; top:0; z-index:100; }
   .nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
-  .logo { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; font-weight:800; color:var(--white); cursor:pointer; }
+  .logo { font-family:'Inter', system-ui, sans-serif; font-size:1.5rem; font-weight:800; color:var(--white); cursor:pointer; letter-spacing:-0.03em; }
   .logo span { color:var(--gold); }
   .brand-logo { height:42px; width:auto; display:block; }
   .nav-links { display:flex; gap:1.5rem; align-items:center; }
   .nav-link { color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; transition:color 0.2s; cursor:pointer; }
   .nav-link:hover { color:var(--white); }
-  .nav-btn { background:var(--gold); color:var(--navy); padding:0.5rem 1.25rem; border-radius:8px; font-weight:600; font-size:14px; cursor:pointer; transition:background 0.2s; }
+  .nav-btn { background:var(--gold); color:var(--navy); padding:0.5rem 1.25rem; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer; transition:background 0.2s; letter-spacing:-0.01em; }
   .nav-btn:hover { background:var(--gold-light); }
   .nav-mobile-toggle { display:none; color:var(--white); font-size:1.5rem; padding:0.5rem; }
   @media(max-width:768px) {
@@ -73,21 +74,21 @@
   }
 
   /* Buttons */
-  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:0.75rem 1.5rem; border-radius:var(--radius); font-weight:600; font-size:15px; transition:all 0.2s; cursor:pointer; border:none; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:0.75rem 1.5rem; border-radius:var(--radius); font-weight:700; font-size:15px; transition:all 0.2s; cursor:pointer; border:none; letter-spacing:-0.01em; }
   .btn-primary { background:var(--gold); color:var(--navy); }
   .btn-primary:hover { background:var(--gold-light); }
   .btn-navy { background:var(--navy); color:var(--white); }
   .btn-navy:hover { background:var(--navy-light); }
   .btn-outline { border:1.5px solid var(--border-dark); background:var(--white); color:var(--text); }
   .btn-outline:hover { border-color:var(--navy); color:var(--navy); }
-  .btn-stripe { background:#635bff; color:#fff; font-size:15px; font-weight:700; padding:1rem 1.5rem; border-radius:var(--radius); display:flex; align-items:center; justify-content:center; gap:10px; width:100%; transition:background 0.2s; }
+  .btn-stripe { background:#635bff; color:#fff; font-size:15px; font-weight:700; padding:1rem 1.5rem; border-radius:var(--radius); display:flex; align-items:center; justify-content:center; gap:10px; width:100%; transition:background 0.2s; letter-spacing:-0.01em; }
   .btn-stripe:hover { background:#4f46e5; }
   .btn-sm { padding:0.45rem 0.9rem; font-size:13px; border-radius:8px; }
   .btn-full { width:100%; }
 
   /* Forms */
   .form-group { display:flex; flex-direction:column; gap:5px; }
-  .form-label { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
+  .form-label { font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
   .form-input { width:100%; padding:0.72rem 1rem; border:1.5px solid var(--border); border-radius:var(--radius); font-size:15px; color:var(--text); background:var(--white); transition:border-color 0.2s; outline:none; }
   .form-input:focus { border-color:var(--navy); }
   .form-input::placeholder { color:var(--text-faint); }
@@ -123,7 +124,7 @@
   /* Pricing block */
   .price-block { background:linear-gradient(150deg,#0f2744 0%,#1a3a5c 100%); color:#fff; border-radius:var(--radius-lg); padding:1.25rem; }
   .price-original { font-size:13px; color:rgba(255,255,255,0.5); text-decoration:line-through; }
-  .price-member { font-size:1.65rem; font-weight:800; color:var(--gold); font-family:'Plus Jakarta Sans',sans-serif; }
+  .price-member { font-size:1.65rem; font-weight:800; color:var(--gold); letter-spacing:-0.03em; }
   .price-row { display:flex; justify-content:space-between; align-items:center; padding:0.38rem 0; border-bottom:1px solid rgba(255,255,255,0.1); }
   .price-row:last-child { border-bottom:none; }
   .price-row-label { font-size:13px; color:rgba(255,255,255,0.75); }
@@ -137,7 +138,7 @@
   .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='%23ffffff' fill-opacity='0.025'/%3E%3C/g%3E%3C/svg%3E"); }
   .hero-inner { max-width:1200px; margin:0 auto; position:relative; z-index:1; }
   .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(201,162,39,0.15); border:1px solid rgba(201,162,39,0.35); color:var(--gold); padding:0.35rem 0.9rem; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:1.2rem; }
-  .hero-title { font-size:clamp(1.9rem,5vw,3.5rem); font-weight:800; color:#fff; line-height:1.15; margin-bottom:0.9rem; }
+  .hero-title { font-size:clamp(1.9rem,5vw,3.5rem); font-weight:800; color:#fff; line-height:1.15; margin-bottom:0.9rem; letter-spacing:-0.03em; }
   .hero-title span { color:var(--gold); }
   .hero-sub { font-size:1.05rem; color:rgba(255,255,255,0.7); max-width:520px; margin-bottom:2rem; line-height:1.75; }
 
@@ -192,7 +193,7 @@
   .page { min-height:calc(100vh - 64px); }
   .page-header { background:var(--navy); padding:2.75rem 1.5rem 2rem; }
   .page-header-inner { max-width:1200px; margin:0 auto; }
-  .page-header-title { font-size:2rem; font-weight:800; color:#fff; margin-bottom:0.35rem; }
+  .page-header-title { font-size:2rem; font-weight:800; color:#fff; margin-bottom:0.35rem; letter-spacing:-0.03em; }
   .page-header-sub { font-size:1rem; color:rgba(255,255,255,0.65); }
   .section { padding:3.5rem 1.5rem; }
   .container { max-width:1200px; margin:0 auto; }
@@ -255,7 +256,7 @@
 
   /* Discount callout banner */
   .discount-banner { background:linear-gradient(135deg,var(--gold) 0%,#e8b520 100%); border-radius:var(--radius-lg); padding:1.5rem; color:var(--navy); display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
-  .discount-number { font-size:3rem; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; line-height:1; }
+  .discount-number { font-size:3rem; font-weight:800; line-height:1; letter-spacing:-0.03em; }
 
   /* FAQ */
   .faq-item { border-bottom:1px solid var(--border); }
@@ -264,7 +265,7 @@
 
   /* How */
   .how-step { display:flex; gap:1.1rem; align-items:flex-start; }
-  .how-num { width:42px; height:42px; border-radius:50%; background:var(--navy); color:var(--gold); font-weight:800; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Plus Jakarta Sans',sans-serif; }
+  .how-num { width:42px; height:42px; border-radius:50%; background:var(--navy); color:var(--gold); font-weight:800; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; letter-spacing:-0.02em; }
   .how-content h3 { font-size:1.05rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; }
   .how-content p { font-size:14px; color:var(--text-muted); }
 
@@ -286,7 +287,7 @@
   /* Misc */
   .divider { height:1px; background:var(--border); margin:1.25rem 0; }
   .stat-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.25rem; }
-  .stat-value { font-size:1.8rem; font-weight:800; color:var(--navy); font-family:'Plus Jakarta Sans',sans-serif; margin-bottom:2px; }
+  .stat-value { font-size:1.8rem; font-weight:800; color:var(--navy); margin-bottom:2px; letter-spacing:-0.03em; }
   .stat-label { font-size:12px; color:var(--text-muted); font-weight:500; }
   .results-layout { display:grid; grid-template-columns:240px 1fr; gap:1.5rem; }
   @media(max-width:900px) { .results-layout { grid-template-columns:1fr; } .filter-panel { position:static; max-height:none; } }
@@ -356,9 +357,9 @@
   .pay-label{font-weight:700;font-size:14px;color:var(--text);}
   .pay-sub{font-size:12px;color:var(--text-muted);margin-top:1px;}
   .pay-soon{font-size:10px;font-weight:700;background:#f3e8ff;color:#7e22ce;padding:.15rem .5rem;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;}
-  .btn-pay-secure{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;}
+  .btn-pay-secure{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;letter-spacing:-0.01em;}
   .btn-pay-secure:hover{opacity:.88;}
-  .btn-secure-checkout{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;}
+  .btn-secure-checkout{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;letter-spacing:-0.01em;}
   .btn-secure-checkout:hover{opacity:.88;}
 </style>
 </head>
@@ -2378,7 +2379,7 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
                   </div>
                   <div className="email-body">
                     <div style={{background:'var(--navy)', padding:'1.5rem', textAlign:'center'}}>
-                      <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif", fontWeight:800, fontSize:'1.3rem', color:'#fff'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
+                      <div style={{fontWeight:800, fontSize:'1.3rem', color:'#fff', letterSpacing:'-0.03em'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
                     </div>
                     <div className="email-inner">
                       <p style={{marginBottom:'1rem'}}>Dear {data.customer},</p>
@@ -2666,7 +2667,7 @@ function AdminPage({ navigate, bookings, setBookings }) {
     <div className="admin-layout">
       <div className="admin-sidebar">
         <div style={{padding:'0.75rem 1.25rem 1.25rem', borderBottom:'1px solid rgba(255,255,255,0.08)', marginBottom:'0.5rem'}}>
-          <div style={{color:'#fff', fontWeight:800, fontSize:'1.1rem', fontFamily:"'Plus Jakarta Sans',sans-serif"}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
+          <div style={{color:'#fff', fontWeight:800, fontSize:'1.1rem', letterSpacing:'-0.03em'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
           <div style={{color:'rgba(255,255,255,0.4)', fontSize:11, marginTop:2}}>Staff Portal</div>
         </div>
         <div className="admin-sidebar-section">Management</div>
@@ -2983,7 +2984,7 @@ function Footer({ navigate }) {
     <footer className="footer">
       <div className="footer-grid">
         <div>
-          <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif", fontWeight:800, fontSize:'1.35rem', color:'#fff', marginBottom:'0.75rem'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
+          <div style={{fontWeight:800, fontSize:'1.35rem', color:'#fff', marginBottom:'0.75rem', letterSpacing:'-0.03em'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
           <p style={{fontSize:13, lineHeight:1.75, marginBottom:'1rem'}}>Discounted car rentals across the UK and EU. No membership needed — just better prices.</p>
           <div style={{fontSize:13, lineHeight:1.9}}>
             <div className="icon-with-text"><Icon name="mdi:email-outline" sz={15} cls="icon-muted"/> support@driveeuro.com</div>
