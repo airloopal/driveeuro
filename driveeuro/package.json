@@ -1,6 +1,0 @@
-{
-  "scripts": {
-    "start": "vercel dev"
-  },
-  "dependencies": {}
-}
