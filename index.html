@@ -731,25 +731,30 @@ const REFUND_NOTE = 'If your selected vehicle or a suitable alternative cannot b
 // Keys match vehicle.class values. Swap any URL for your own CDN path.
 // All images are sourced from Unsplash (free to use, no attribution required for display).
 const CLASS_IMAGES = {
-  'Mini':             { url:'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-outline', label:'Mini' },
-  'Economy':          { url:'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-outline', label:'Economy' },
-  'Compact':          { url:'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-outline', label:'Compact' },
-  'Estate':           { url:'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-estate', label:'Estate' },
-  'SUV':              { url:'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-suv', label:'SUV' },
-  'Premium':          { url:'https://images.unsplash.com/photo-1617469767053-d3b523a0b982?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-sports', label:'Premium' },
-  'Executive':        { url:'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-sports', label:'Executive Saloon' },
-  'Executive Saloon': { url:'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-sports', label:'Executive Saloon' },
-  'Luxury':           { url:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-sports', label:'Luxury Saloon' },
-  'Luxury Saloon':    { url:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-sports', label:'Luxury Saloon' },
-  'Luxury SUV':       { url:'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-suv', label:'Luxury SUV' },
-  'SUV Luxury':       { url:'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-suv', label:'Luxury SUV' },
-  'Premium SUV':      { url:'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-suv', label:'Premium SUV' },
-  'Electric':         { url:'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:ev-station', label:'Electric' },
-  'Electric Premium': { url:'https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:ev-station', label:'Electric' },
-  'Convertible':      { url:'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-convertible', label:'Convertible' },
-  'Sports Car':       { url:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:car-sports', label:'Sports Car' },
-  'Van':              { url:'https://images.unsplash.com/photo-1601629665203-f9f2b8d07430?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:van-passenger', label:'Van' },
-  '7-Seater':         { url:'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80&auto=format&fit=crop&crop=center', icon:'mdi:van-passenger', label:'7-Seater' },
+  // ── Available local files ──────────────────────────────────────────
+  'Mini':             { url:'/assets/cars/mini.png',              icon:'mdi:car-outline',    label:'Mini' },
+  'Economy':          { url:'/assets/cars/economy.png',           icon:'mdi:car-outline',    label:'Economy' },
+  'Compact':          { url:'/assets/cars/compact.png',           icon:'mdi:car-outline',    label:'Compact' },
+  'Estate':           { url:'/assets/cars/estate.png',            icon:'mdi:car-estate',     label:'Estate' },
+  'SUV':              { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'SUV' },
+  'Premium':          { url:'/assets/cars/premium.png',           icon:'mdi:car-sports',     label:'Premium' },
+  'Executive':        { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Executive Saloon' },
+  'Executive Saloon': { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Executive Saloon' },
+  'Electric':         { url:'/assets/cars/electric.png',          icon:'mdi:ev-station',     label:'Electric' },
+  'Electric Premium': { url:'/assets/cars/electric.png',          icon:'mdi:ev-station',     label:'Electric' },
+  'Sports Car':       { url:'/assets/cars/sports-car.png',        icon:'mdi:car-sports',     label:'Sports Car' },
+  'Van':              { url:'/assets/cars/van.png',               icon:'mdi:van-passenger',  label:'Van' },
+  '7-Seater':         { url:'/assets/cars/seven-seater.png',      icon:'mdi:van-passenger',  label:'7-Seater' },
+  // ── Fallback mappings for classes without a dedicated local file ───
+  // Convertible → sports-car.png (no convertible.png available)
+  'Convertible':      { url:'/assets/cars/sports-car.png',        icon:'mdi:car-convertible',label:'Convertible' },
+  // Luxury Saloon → executive-saloon.png (no luxury-saloon.png available)
+  'Luxury':           { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Luxury Saloon' },
+  'Luxury Saloon':    { url:'/assets/cars/executive-saloon.png',  icon:'mdi:car-sports',     label:'Luxury Saloon' },
+  // Luxury SUV → suv.png (no luxury-suv.png available)
+  'Luxury SUV':       { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'Luxury SUV' },
+  'SUV Luxury':       { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'Luxury SUV' },
+  'Premium SUV':      { url:'/assets/cars/suv.png',               icon:'mdi:car-suv',        label:'Premium SUV' },
 };
 
 const getVehicleImg = (vehicleClass) =>
