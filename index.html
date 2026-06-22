@@ -2545,7 +2545,7 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
                     <span style={{color:'rgba(255,255,255,0.6)', fontSize:12, marginLeft:8}}>Email client</span>
                   </div>
                   <div className="email-chrome">
-                    <div><strong>From:</strong> DriveEuro Reservations &lt;bookings@driveeuro.com&gt;</div>
+                    <div><strong>From:</strong> DriveEuroCars &lt;help@driveeurocars.com&gt;</div>
                     <div><strong>To:</strong> {data.email}</div>
                     <div><strong>Subject:</strong> Booking Confirmed — {data.id} | {data.vehicle} · {data.pickup}</div>
                   </div>
@@ -2581,7 +2581,7 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
                         {REFUND_NOTE}
                       </div>
                       <div style={{marginTop:'1.5rem', borderTop:'1px solid var(--border)', paddingTop:'1rem', fontSize:12, color:'var(--text-faint)', lineHeight:1.7}}>
-                        DriveEuro Ltd · support@driveeuro.com · +44 20 7946 0300<br/>
+                        DriveEuroCars · help@driveeurocars.com · +44 20 7946 0300<br/>
                         You're receiving this because you made a reservation on DriveEuro.
                       </div>
                     </div>
@@ -3080,7 +3080,7 @@ function FAQsPage() {
             </div>
           ))}
           <div className="alert alert-info" style={{marginTop:'2rem'}}>
-            <Icon name="mdi:headset" sz={18} cls="icon-faint" style={{flexShrink:0}}/><span>Still have questions? Email <strong>support@driveeuro.com</strong> — we typically respond within 4 hours.</span>
+            <Icon name="mdi:headset" sz={18} cls="icon-faint" style={{flexShrink:0}}/><span>Still have questions? Email <strong>help@driveeurocars.com</strong> — we typically respond within 4 hours.</span>
           </div>
         </div>
       </div>
@@ -3110,7 +3110,7 @@ function LegalPage({ which }) {
         ['2. Use of data','To process reservations and send confirmations. To share minimum required details with the rental supplier. We do not sell your data.'],
         ['3. Payment security','Card payments are processed via Stripe (PCI DSS Level 1). No card data touches DriveEuro servers.'],
         ['4. Data retention','Booking records are retained for 7 years per UK financial regulations. You may request deletion where no legal retention obligation applies.'],
-        ['5. Your rights','Under UK GDPR: right to access, rectify, erase, object, or restrict processing. Contact privacy@driveeuro.com.'],
+        ['5. Your rights','Under UK GDPR: right to access, rectify, erase, object, or restrict processing. Contact help@driveeurocars.com.'],
         ['6. Cookies','Essential cookies for site operation; analytics cookies with consent. Manage preferences in your browser settings.'],
       ]
     },
@@ -3121,7 +3121,7 @@ function LegalPage({ which }) {
         ['Cancellations after 48 hours','Reservation fees are non-refundable. A future booking credit may be offered at our discretion.'],
         ['Vehicle unavailable','If the supplier cannot confirm your selected vehicle or a suitable alternative, your reservation fee is refunded in full within 3 business days.'],
         ['No-shows','Failure to collect the vehicle without prior notice forfeits the reservation fee. No-shows may affect future booking eligibility.'],
-        ['How to cancel','Email cancellations@driveeuro.com with your booking reference, full name, and email address. Confirmation within 2 business hours.'],
+        ['How to cancel','Email help@driveeurocars.com with your booking reference, full name, and email address. Confirmation within 2 business hours.'],
         ['Amendments','Subject to supplier availability. Price differences apply. Amendments within 48 hours of pickup may not be possible.'],
       ]
     }
@@ -3159,7 +3159,7 @@ function Footer({ navigate }) {
           <div style={{fontWeight:800, fontSize:'1.35rem', color:'#fff', marginBottom:'0.75rem', letterSpacing:'-0.03em'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
           <p style={{fontSize:13, lineHeight:1.75, marginBottom:'1rem'}}>Discounted car rentals across the UK and EU. No membership needed — just better prices.</p>
           <div style={{fontSize:13, lineHeight:1.9}}>
-            <div className="icon-with-text"><Icon name="mdi:email-outline" sz={15} cls="icon-muted"/> support@driveeuro.com</div>
+            <div className="icon-with-text"><Icon name="mdi:email-outline" sz={15} cls="icon-muted"/> help@driveeurocars.com</div>
             <div className="icon-with-text"><Icon name="mdi:phone-outline" sz={15} cls="icon-muted"/> +44 20 7946 0300</div>
           </div>
         </div>
