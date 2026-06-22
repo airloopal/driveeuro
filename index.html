@@ -3,24 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DriveEuro — Discounted Car Rentals Across the UK & EU</title>
+
+<!-- Primary SEO -->
+<title>DriveEuroCars — Discounted UK &amp; EU Car Rental</title>
+<meta name="title"       content="DriveEuroCars — Discounted UK &amp; EU Car Rental">
+<meta name="description" content="Compare UK and European car rental prices, reserve your vehicle with 10% upfront, and pay the balance at collection. No membership needed — just better prices.">
+<meta name="robots"      content="index, follow, max-image-preview:large">
+<link rel="canonical"    href="https://www.driveeurocars.com/">
+
+<!-- Google Search Console verification (replace placeholder before submitting) -->
+<meta name="google-site-verification" content="PASTE_GOOGLE_VERIFICATION_CODE_HERE">
 
 <!-- Favicon -->
-<link rel="icon" type="image/png" href="/assets/driveeuro-favicon.png"/>
-<link rel="apple-touch-icon" href="/assets/driveeuro-favicon.png"/>
+<link rel="icon"             type="image/png" href="/assets/driveeuro-favicon.png">
+<link rel="apple-touch-icon" href="/assets/driveeuro-favicon.png">
 
 <!-- Open Graph -->
-<meta property="og:type"        content="website"/>
-<meta property="og:title"       content="DriveEuro — Discounted Car Rentals Across the UK & EU"/>
-<meta property="og:description" content="Save up to 30% on car rentals across the UK and EU. Reserve with just 10% upfront — pay the balance at collection."/>
-<meta property="og:image"       content="/assets/driveeuro-social-card.png"/>
-<meta property="og:url"         content="https://driveeuro.vercel.app"/>
+<meta property="og:type"        content="website">
+<meta property="og:url"         content="https://www.driveeurocars.com/">
+<meta property="og:title"       content="DriveEuroCars — Discounted UK &amp; EU Car Rental">
+<meta property="og:description" content="Reserve UK and European car rentals with DriveEuro pricing, secure checkout, and 10% upfront reservation.">
+<meta property="og:image"       content="https://www.driveeurocars.com/assets/driveeuro-social-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name"   content="DriveEuroCars">
 
 <!-- Twitter / X card -->
-<meta name="twitter:card"        content="summary_large_image"/>
-<meta name="twitter:title"       content="DriveEuro — Discounted Car Rentals Across the UK & EU"/>
-<meta name="twitter:description" content="Save up to 30% on car rentals across the UK and EU. Reserve with just 10% upfront — pay the balance at collection."/>
-<meta name="twitter:image"       content="/assets/driveeuro-social-card.png"/>
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:url"         content="https://www.driveeurocars.com/">
+<meta name="twitter:title"       content="DriveEuroCars — Discounted UK &amp; EU Car Rental">
+<meta name="twitter:description" content="Compare UK and EU car rental prices, reserve with 10% upfront, and pay the balance at collection.">
+<meta name="twitter:image"       content="https://www.driveeurocars.com/assets/driveeuro-social-card.png">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "DriveEuroCars",
+    "alternateName": "DriveEuro",
+    "url": "https://www.driveeurocars.com/",
+    "logo": "https://www.driveeurocars.com/assets/driveeuro-logo.png",
+    "sameAs": []
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "DriveEuroCars",
+    "alternateName": "DriveEuro",
+    "url": "https://www.driveeurocars.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.driveeurocars.com/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Discounted UK and EU Car Rental",
+    "provider": {
+      "@type": "Organization",
+      "name": "DriveEuroCars",
+      "url": "https://www.driveeurocars.com/"
+    },
+    "areaServed": [
+      "United Kingdom", "Ireland", "France", "Spain", "Portugal",
+      "Italy", "Germany", "Netherlands", "Belgium", "Switzerland",
+      "Austria", "Poland", "Greece"
+    ],
+    "serviceType": "Car rental comparison and reservation",
+    "url": "https://www.driveeurocars.com/",
+    "description": "DriveEuroCars helps customers compare UK and European car rental pricing, reserve vehicles with 10% upfront, and pay the balance at collection."
+  }
+]
+</script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7.25.6/babel.min.js"></script>
@@ -30,6 +88,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { max-width: 100%; overflow-x: hidden; }
   :root {
     --navy: #0f2744; --navy-light: #1a3a5c; --navy-deep: #091c33;
     --gold: #c9a227; --gold-light: #f0c84a; --gold-pale: #fef9ec;
@@ -143,9 +202,9 @@
   .hero-sub { font-size:1.05rem; color:rgba(255,255,255,0.7); max-width:520px; margin-bottom:2rem; line-height:1.75; }
 
   /* Search box */
-  .search-box { background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:1.5rem; }
+  .search-box { background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:1.5rem; overflow:hidden; }
   .search-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:0.875rem; }
-  @media(max-width:480px) { .search-grid { grid-template-columns:1fr; } }
+  @media(max-width:640px) { .search-grid { grid-template-columns:1fr !important; gap:0.75rem; } .search-box { padding:1.25rem; border-radius:12px; } }
 
   /* Trust bar */
   .trust-bar { background:var(--white); border-bottom:1px solid var(--border); }
@@ -359,8 +418,65 @@
   .pay-soon{font-size:10px;font-weight:700;background:#f3e8ff;color:#7e22ce;padding:.15rem .5rem;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;}
   .btn-pay-secure{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;letter-spacing:-0.01em;}
   .btn-pay-secure:hover{opacity:.88;}
-  .btn-secure-checkout{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;letter-spacing:-0.01em;}
-  .btn-secure-checkout:hover{opacity:.88;}
+  /* ── Mobile responsive (≤768px) ── */
+  @media(max-width:768px) {
+
+    /* A. Nav / header */
+    .nav { padding:0 1rem; }
+    .nav-inner { height:60px; }
+    .brand-logo { max-height:36px; max-width:120px; width:auto; height:auto; object-fit:contain; }
+
+    /* B. Hero */
+    .hero { padding:2.5rem 1.25rem 2rem; }
+    .hero-title { font-size:clamp(2rem,10vw,3rem); line-height:1.1; }
+    .hero-sub { font-size:0.975rem; margin-bottom:1.5rem; }
+
+    /* C. Search form — single column, full-width inputs, no overflow */
+    .search-box { width:100%; max-width:100%; padding:1.1rem; border-radius:12px; overflow:hidden; }
+    .search-grid { grid-template-columns:1fr !important; gap:0.75rem; }
+    .form-group, .loc-wrap { width:100%; min-width:0; }
+    .form-input { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+    input[type="date"], input[type="time"], select { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+
+    /* D. How It Works teaser — single column */
+    .how-grid { grid-template-columns:1fr !important; gap:2rem !important; }
+    .how-step { display:grid; grid-template-columns:48px 1fr; gap:1rem; align-items:flex-start; }
+    .how-num { width:48px; height:48px; min-width:48px; font-size:1.1rem; }
+    .how-content h3 { font-size:1rem; }
+    .how-content p  { font-size:14px; line-height:1.6; }
+
+    /* E. General section spacing */
+    .section { padding:2.5rem 1.25rem; }
+    .page-header { padding:1.75rem 1.25rem 1.5rem; }
+    .page-header-title { font-size:1.6rem; }
+    .container { padding-left:0; padding-right:0; }
+
+    /* F. Checkout layout stacks cleanly */
+    .checkout-layout, .details-layout, .confirm-layout { grid-template-columns:1fr; gap:1.25rem; }
+
+    /* G. h1/h2 font sizes — prevent viewport bleed */
+    h1 { font-size:clamp(2rem,10vw,3rem); line-height:1.1; }
+    h2 { font-size:clamp(1.6rem,8vw,2.25rem); line-height:1.15; }
+
+    /* H. Footer */
+    .footer { padding:2rem 1.25rem 1.25rem; }
+
+    /* I. Cards */
+    .card-body { padding:1.1rem; }
+  }
+
+  @media(max-width:480px) {
+    /* Tighten further on smallest screens */
+    .nav-inner { height:56px; }
+    .brand-logo { max-height:30px; }
+    .hero { padding:2rem 1rem 1.75rem; }
+    .search-box { padding:1rem; }
+    .section { padding:2rem 1rem; }
+    .page-header { padding:1.5rem 1rem 1.25rem; }
+    .footer { padding:1.75rem 1rem 1rem; }
+    h1 { font-size:clamp(1.8rem,9vw,2.5rem); }
+    h2 { font-size:clamp(1.4rem,7vw,2rem); }
+  }
 </style>
 </head>
 <body>
@@ -1514,7 +1630,7 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
       {/* How it works teaser */}
       <div className="section" style={{background:'var(--white)'}}>
         <div className="container">
-          <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3rem', alignItems:'center'}}>
+          <div className="how-grid" style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3rem', alignItems:'center'}}>
             <div>
               <div style={{fontSize:11, fontWeight:700, color:'var(--gold)', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'0.6rem'}}>Simple process</div>
               <h2 style={{fontSize:'1.75rem', fontWeight:800, color:'var(--navy)', marginBottom:'0.875rem'}}>Book in minutes,<br/>drive with confidence</h2>
