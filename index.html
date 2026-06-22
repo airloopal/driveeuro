@@ -114,6 +114,40 @@
   img { max-width:100%; display:block; }
   .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
 
+  /* Global form element hardening — prevents any input overflowing its container */
+  input, select, textarea, button {
+    font-family:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:15px;
+    box-sizing:border-box;
+    max-width:100%;
+  }
+  input, select, textarea {
+    width:100%;
+    min-width:0;
+  }
+  /* iOS/Safari: suppress native styling that ignores width constraints */
+  input[type="date"],
+  input[type="time"],
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select {
+    -webkit-appearance:none;
+    appearance:none;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    display:block;
+  }
+  /* iOS date input inner layout — keep value left-aligned */
+  input[type="date"]::-webkit-date-and-time-value { text-align:left; }
+  /* Constrain the calendar icon so it never pushes input wider */
+  input[type="date"]::-webkit-calendar-picker-indicator { max-width:24px; flex-shrink:0; }
+
+  /* Placeholder colour — premium and readable */
+  input::placeholder, textarea::placeholder { color:#7A869A; opacity:1; }
+  select:invalid, select option[value=""] { color:var(--text-faint); }
+
   /* Nav */
   .nav { background:var(--navy); padding:0 1.5rem; position:sticky; top:0; z-index:100; }
   .nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
@@ -146,17 +180,17 @@
   .btn-full { width:100%; }
 
   /* Forms */
-  .form-group { display:flex; flex-direction:column; gap:5px; }
+  .form-group { display:flex; flex-direction:column; gap:5px; width:100%; min-width:0; }
   .form-label { font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; }
-  .form-input { width:100%; padding:0.72rem 1rem; border:1.5px solid var(--border); border-radius:var(--radius); font-size:15px; color:var(--text); background:var(--white); transition:border-color 0.2s; outline:none; }
+  .form-input { width:100%; min-width:0; box-sizing:border-box; padding:0.72rem 1rem; border:1.5px solid var(--border); border-radius:var(--radius); font-size:15px; color:var(--text); background:var(--white); transition:border-color 0.2s; outline:none; }
   .form-input:focus { border-color:var(--navy); }
-  .form-input::placeholder { color:var(--text-faint); }
-  select.form-input { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23718096' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 0.75rem center; background-size:18px; padding-right:2.5rem; }
+  .form-input::placeholder { color:#7A869A; opacity:1; }
+  select.form-input { -webkit-appearance:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23718096' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 0.75rem center; background-size:18px; padding-right:2.5rem; }
   .input-error { border-color:var(--danger) !important; }
   .error-msg { font-size:12px; color:var(--danger); margin-top:2px; }
   textarea.form-input { resize:vertical; min-height:96px; }
   .checkbox-row { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--text-muted); line-height:1.6; cursor:pointer; }
-  .checkbox-row input { width:17px; height:17px; margin-top:2px; flex-shrink:0; accent-color:var(--navy); cursor:pointer; }
+  .checkbox-row input { width:17px; height:17px; min-width:17px; margin-top:2px; flex-shrink:0; accent-color:var(--navy); cursor:pointer; }
 
   /* Cards */
   .card { background:var(--white); border-radius:var(--radius-lg); border:1px solid var(--border); box-shadow:var(--shadow); }
@@ -431,12 +465,32 @@
     .hero-title { font-size:clamp(2rem,10vw,3rem); line-height:1.1; }
     .hero-sub { font-size:0.975rem; margin-bottom:1.5rem; }
 
-    /* C. Search form — single column, full-width inputs, no overflow */
-    .search-box { width:100%; max-width:100%; padding:1.1rem; border-radius:12px; overflow:hidden; }
-    .search-grid { grid-template-columns:1fr !important; gap:0.75rem; }
-    .form-group, .loc-wrap { width:100%; min-width:0; }
-    .form-input { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
-    input[type="date"], input[type="time"], select { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+    /* C. Search form — single column, full-width, no overflow, no iOS zoom */
+    .search-box {
+      width:calc(100% - 32px);
+      max-width:100%;
+      margin-left:auto;
+      margin-right:auto;
+      padding:20px;
+      border-radius:12px;
+      overflow:hidden;
+      box-sizing:border-box;
+    }
+    .search-grid { grid-template-columns:1fr !important; gap:16px; width:100%; max-width:100%; }
+    .form-group, .loc-wrap { width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
+    /* font-size 16px on mobile prevents iOS Safari from auto-zooming on focus */
+    input, select, textarea {
+      width:100%; max-width:100%; min-width:0;
+      box-sizing:border-box;
+      font-size:16px !important;
+    }
+    input[type="date"], input[type="time"] {
+      width:100%; max-width:100%; min-width:0;
+      box-sizing:border-box;
+      font-size:16px !important;
+      -webkit-appearance:none;
+      appearance:none;
+    }
 
     /* D. How It Works teaser — single column */
     .how-grid { grid-template-columns:1fr !important; gap:2rem !important; }
@@ -470,12 +524,13 @@
     .nav-inner { height:56px; }
     .brand-logo { max-height:30px; }
     .hero { padding:2rem 1rem 1.75rem; }
-    .search-box { padding:1rem; }
+    .search-box { width:calc(100% - 24px); padding:16px; }
     .section { padding:2rem 1rem; }
     .page-header { padding:1.5rem 1rem 1.25rem; }
     .footer { padding:1.75rem 1rem 1rem; }
     h1 { font-size:clamp(1.8rem,9vw,2.5rem); }
     h2 { font-size:clamp(1.4rem,7vw,2rem); }
+    input, select, textarea { font-size:16px !important; }
   }
 </style>
 </head>
@@ -1533,11 +1588,11 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
             <div className="search-grid">
               <div className="form-group">
                 <label className="form-label">Pickup location</label>
-                <LocationInput value={local.pickup} onChange={v=>set('pickup',v)} placeholder="City, airport or postcode" onSelect={loc=>{set('pickup',loc.name);set('pickupCode',loc.locationCode);}}/>
+                <LocationInput value={local.pickup} onChange={v=>set('pickup',v)} placeholder="Where are you collecting from?" onSelect={loc=>{set('pickup',loc.name);set('pickupCode',loc.locationCode);}}/>
               </div>
               <div className="form-group">
                 <label className="form-label">Drop-off location</label>
-                <LocationInput value={local.dropoff} onChange={v=>set('dropoff',v)} placeholder="Same as pickup" onSelect={loc=>{set('dropoff',loc.name);set('dropoffCode',loc.locationCode);}}/>
+                <LocationInput value={local.dropoff} onChange={v=>set('dropoff',v)} placeholder="Same location or choose another" onSelect={loc=>{set('dropoff',loc.name);set('dropoffCode',loc.locationCode);}}/>
               </div>
               <div className="form-group">
                 <label className="form-label">Pickup date</label>
@@ -1562,13 +1617,14 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
               <div className="form-group">
                 <label className="form-label">Driver age</label>
                 <select className="form-input" value={local.driverAge} onChange={e=>set('driverAge',e.target.value)}>
+                  <option value="">Select driver age</option>
                   <option>Under 21</option><option>21-24</option><option>25-29</option><option value="30-65">30–65</option><option>66+</option>
                 </select>
               </div>
               <div className="form-group">
                 <label className="form-label">Vehicle type</label>
                 <select className="form-input" value={local.vehicleType} onChange={e=>set('vehicleType',e.target.value)}>
-                  <option value="">Any type</option><option>Economy</option><option>Premium</option><option>Luxury</option><option>Electric</option><option>SUV</option>
+                  <option value="">Choose vehicle type</option><option>Economy</option><option>Premium</option><option>Luxury</option><option>Electric</option><option>SUV</option>
                 </select>
               </div>
             </div>
@@ -2206,18 +2262,18 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                 <div style={{display:'flex', flexDirection:'column', gap:'0.9rem'}}>
                   <div className="form-group">
                     <label className="form-label">Full name (as on licence)</label>
-                    <input className={`form-input ${errors.fullName?'input-error':''}`} value={form.fullName} onChange={e=>setF('fullName',e.target.value)} placeholder="e.g. Jane Smith"/>
+                    <input className={`form-input ${errors.fullName?'input-error':''}`} value={form.fullName} onChange={e=>setF('fullName',e.target.value)} placeholder="Your full name (as on licence)"/>
                     {errors.fullName && <span className="error-msg">{errors.fullName}</span>}
                   </div>
                   <div className="grid-2">
                     <div className="form-group">
                       <label className="form-label">Email address</label>
-                      <input type="email" className={`form-input ${errors.email?'input-error':''}`} value={form.email} onChange={e=>setF('email',e.target.value)} placeholder="jane@example.com"/>
+                      <input type="email" className={`form-input ${errors.email?'input-error':''}`} value={form.email} onChange={e=>setF('email',e.target.value)} placeholder="you@example.com"/>
                       {errors.email && <span className="error-msg">{errors.email}</span>}
                     </div>
                     <div className="form-group">
                       <label className="form-label">Phone number</label>
-                      <input type="tel" className={`form-input ${errors.phone?'input-error':''}`} value={form.phone} onChange={e=>setF('phone',e.target.value)} placeholder="+44 7700 000000"/>
+                      <input type="tel" className={`form-input ${errors.phone?'input-error':''}`} value={form.phone} onChange={e=>setF('phone',e.target.value)} placeholder="Mobile number"/>
                       {errors.phone && <span className="error-msg">{errors.phone}</span>}
                     </div>
                   </div>
@@ -2256,7 +2312,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                       <LocationInput
                         value={form.pickupLocation}
                         onChange={v=>setF('pickupLocation',v)}
-                        placeholder="City or airport"
+                        placeholder="Where are you collecting from?"
                         onSelect={loc=>{setF('pickupLocation',loc.name);setF('pickupCode',loc.locationCode);}}
                       />
                       {errors.pickupLocation && <span className="error-msg">{errors.pickupLocation}</span>}
@@ -2266,7 +2322,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                       <LocationInput
                         value={form.dropoffLocation}
                         onChange={v=>setF('dropoffLocation',v)}
-                        placeholder="Same as pickup"
+                        placeholder="Same location or choose another"
                         onSelect={loc=>{setF('dropoffLocation',loc.name);setF('dropoffCode',loc.locationCode);}}
                       />
                     </div>
@@ -2321,7 +2377,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
 
                   <div className="form-group">
                     <label className="form-label">Special requests (optional)</label>
-                    <textarea className="form-input" value={form.specialRequests} onChange={e=>setF('specialRequests',e.target.value)} placeholder="Child seat, GPS, cross-border countries…"/>
+                    <textarea className="form-input" value={form.specialRequests} onChange={e=>setF('specialRequests',e.target.value)} placeholder="E.g. child seat, GPS, cross-border travel countries…"/>
                   </div>
                   <div className="divider"/>
                   <label className={`checkbox-row ${errors.agreedTerms?'input-error':''}`}>
