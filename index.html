@@ -532,65 +532,66 @@
     h2 { font-size:clamp(1.4rem,7vw,2rem); }
     input, select, textarea { font-size:16px !important; }
   }
-  /* ── DriveEuroCars compact search card ── */
-.sc-wrap{width:calc(100% - 32px);max-width:720px;margin:0 auto;}
-.sc-card{background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.12);overflow:visible;}
+
+/* ── DriveEuroCars compact search card ── */
+.sc-wrap{width:calc(100% - 32px);max-width:840px;margin:0 auto;}
+
+.sc-card{background:#fff;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.10);overflow:hidden;}
 
 /* Tabs */
-.sc-tabs{display:flex;border-bottom:1.5px solid #E2E8F0;border-radius:18px 18px 0 0;overflow:hidden;}
+.sc-tabs{display:flex;border-bottom:1.5px solid #E2E8F0;}
 .sc-tab{flex:1;padding:14px 12px;font-family:'Inter',system-ui,sans-serif;font-size:14px;font-weight:600;color:#64748B;background:#F8FAFC;border:none;cursor:pointer;text-align:center;transition:all .18s;line-height:1.2;}
 .sc-tab.sc-on{background:#fff;color:#0F2744;box-shadow:inset 0 -3px 0 #C9A227;}
 .sc-tab:hover:not(.sc-on){background:#F0F4F8;color:#0F2744;}
 
 /* Rows */
-.sc-rows{border-radius:0;}
+.sc-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1.5px solid #E2E8F0;box-sizing:border-box;position:relative;}
 .sc-rows>.sc-row:last-child{border-bottom:none;}
-.sc-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1.5px solid #E2E8F0;min-height:66px;position:relative;box-sizing:border-box;}
-.sc-ico{width:36px;height:36px;border-radius:50%;background:#EEF2F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sc-body{flex:1;min-width:0;width:100%;}
-.sc-lbl{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.sc-ico{width:38px;height:38px;border-radius:50%;background:#EEF2F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sc-body{flex:1;min-width:0;}
+.sc-lbl{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
 .sc-val{font-size:15px;font-weight:600;color:#0F2744;}
 .sc-val.sc-ph{color:#94A3B8;font-weight:400;}
+
+/* Invisible overlay for age select */
 .sc-over{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:none;background:transparent;z-index:5;-webkit-appearance:none;appearance:none;}
 
-/* Location input — never truncate */
-.sc-loc{width:100%;min-width:0;border:none;outline:none;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:400;color:#0F2744;background:transparent;padding:0;letter-spacing:-.01em;display:block;}
+/* Location input */
+.sc-loc{width:100%;min-width:0;border:none;outline:none;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:400;color:#0F2744;background:transparent;padding:0;display:block;box-sizing:border-box;}
 .sc-loc::placeholder{color:#94A3B8;}
 .sc-loc:focus{outline:none;box-shadow:none;}
 
-/* Period row */
-.sc-period{display:grid;grid-template-columns:1fr 24px 1fr;align-items:start;flex:1;min-width:0;gap:0;}
-.sc-pcol{display:flex;flex-direction:column;gap:3px;min-width:0;}
-.sc-plbl{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;}
-.sc-pair{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.sc-punit{position:relative;display:inline-block;}
-.sc-ptxt{font-size:14px;font-weight:600;color:#0F2744;white-space:nowrap;}
-.sc-ptxt.sc-ph{color:#94A3B8;font-weight:400;}
-.sc-pnat{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:16px;-webkit-appearance:none;appearance:none;border:none;background:transparent;z-index:5;width:100%;height:100%;}
-.sc-arr{font-size:18px;color:#CBD5E0;text-align:center;padding-top:20px;}
+/* Date grid — two columns desktop, one column mobile */
+.sc-date-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-width:0;}
+.sc-date-col{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.sc-date-lbl{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;}
+.sc-date-controls{display:grid;grid-template-columns:1fr 90px;gap:8px;min-width:0;}
+.sc-date-controls input,
+.sc-date-controls select{width:100%;min-width:0;height:40px;border:1.5px solid #E2E8F0;border-radius:9px;font-family:'Inter',system-ui,sans-serif;font-size:14px;font-weight:500;color:#0F2744;background:#fff;padding:0 10px;box-sizing:border-box;-webkit-appearance:none;appearance:none;cursor:pointer;}
+.sc-date-controls input:focus,
+.sc-date-controls select:focus{outline:none;border-color:#0F2744;}
+.sc-date-controls select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2394A3B8' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:14px;padding-right:28px;}
 
-/* Strip — stacked on mobile, row on desktop */
-.sc-strip{display:flex;flex-direction:column;gap:8px;padding:12px 16px;border-top:1.5px solid #E2E8F0;background:#F8FAFC;border-radius:0;}
-.sc-sel{width:100%;font-family:'Inter',system-ui,sans-serif;font-size:14px;font-weight:600;color:#0F2744;background:#fff;border:1.5px solid #E2E8F0;border-radius:9px;padding:10px 32px 10px 12px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2394A3B8' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:15px;box-sizing:border-box;}
+/* Strip selects */
+.sc-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px;border-top:1.5px solid #E2E8F0;background:#F8FAFC;}
+.sc-sel{width:100%;min-width:0;font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:600;color:#0F2744;background:#fff;border:1.5px solid #E2E8F0;border-radius:9px;padding:10px 28px 10px 10px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;box-sizing:border-box;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2394A3B8' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:14px;}
 .sc-sel:focus{border-color:#0F2744;}
 
 /* Search button */
-.sc-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px 20px;background:linear-gradient(135deg,#0F2744 0%,#091C33 100%);color:#fff;font-family:'Inter',system-ui,sans-serif;font-size:16px;font-weight:700;border:none;cursor:pointer;letter-spacing:-.02em;transition:opacity .18s;border-radius:0 0 18px 18px;}
+.sc-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px 20px;background:linear-gradient(135deg,#0F2744 0%,#091C33 100%);color:#fff;font-family:'Inter',system-ui,sans-serif;font-size:16px;font-weight:700;border:none;cursor:pointer;letter-spacing:-.02em;transition:opacity .18s;}
 .sc-btn:hover{opacity:.88;}
 .sc-btn:active{opacity:.76;}
 
-/* Trust pills — navy text on pale background so always readable */
-.sc-trust{display:flex;flex-direction:column;gap:0;margin-top:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:14px;overflow:hidden;max-width:720px;margin-left:auto;margin-right:auto;}
-.sc-trust-pill{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-bottom:1px solid rgba(255,255,255,.15);}
-.sc-trust-pill:last-child{border-bottom:none;}
+/* Trust pills — always white text on translucent navy */
+.sc-trust{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.sc-trust-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;color:#fff;}
 
-/* Desktop: strip in one row, trust pills in row */
-@media(min-width:640px){
-  .sc-strip{flex-direction:row;}
-  .sc-sel{width:auto;flex:1;}
-  .sc-trust{flex-direction:row;flex-wrap:wrap;}
-  .sc-trust-pill{flex:1;min-width:160px;border-bottom:none;border-right:1px solid rgba(255,255,255,.15);}
-  .sc-trust-pill:last-child{border-right:none;}
+/* Mobile */
+@media(max-width:640px){
+  .sc-date-grid{grid-template-columns:1fr;}
+  .sc-date-controls{grid-template-columns:1fr 1fr;}
+  .sc-strip{grid-template-columns:1fr;}
+  .sc-trust{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -1650,10 +1651,11 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
           <h1 className="hero-title">Great rates on rentals,<br /><span>no membership required</span></h1>
           <p className="hero-sub">Compare discounted prices at 50+ rental desks across Europe. Pay just 10% upfront to reserve — settle the balance at collection.</p>
           <div className="search-box">
-                      {/* ── Compact search card ── */}
-          {/* ── Compact search card ── */}
+           {/* ── Compact search card ── */}
           <div className="sc-wrap">
             <div className="sc-card">
+
+              {/* Tabs */}
               <div className="sc-tabs">
                 <button className={`sc-tab${!diffDropoff ? ' sc-on' : ''}`}
                   onClick={() => { set('diffDropoff', false); set('dropoff', local.pickup); set('dropoffCode', local.pickupCode); }}>
@@ -1666,24 +1668,28 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
               </div>
 
               <div className="sc-rows">
+
                 {/* Pickup location */}
                 <div className="sc-row">
                   <div className="sc-ico">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#0F2744"/></svg>
                   </div>
                   <div className="sc-body">
-                    <span className="sc-lbl">{diffDropoff ? 'Pickup location' : 'Pickup \u0026 drop-off location'}</span>
+                    <span className="sc-lbl">{diffDropoff ? 'Pickup location' : 'Pickup & drop-off location'}</span>
                     <LocationInput
                       value={local.pickup}
                       onChange={v => { set('pickup', v); if (!diffDropoff) set('dropoff', v); }}
                       placeholder="Where are you collecting from?"
-                      onSelect={loc => { set('pickup', loc.name); set('pickupCode', loc.locationCode); if (!diffDropoff) { set('dropoff', loc.name); set('dropoffCode', loc.locationCode); } }}
+                      onSelect={loc => {
+                        set('pickup', loc.name); set('pickupCode', loc.locationCode);
+                        if (!diffDropoff) { set('dropoff', loc.name); set('dropoffCode', loc.locationCode); }
+                      }}
                       inputCls="sc-loc"
                     />
                   </div>
                 </div>
 
-                {/* Drop-off location — different drop-off mode only */}
+                {/* Drop-off location — different mode only */}
                 {diffDropoff && (
                   <div className="sc-row">
                     <div className="sc-ico">
@@ -1702,45 +1708,38 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
                   </div>
                 )}
 
-                {/* Rental period */}
-                <div className="sc-row">
-                  <div className="sc-ico">
+                {/* Rental period — real date+time inputs */}
+                <div className="sc-row" style={{alignItems:'flex-start'}}>
+                  <div className="sc-ico" style={{marginTop:6}}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7z" fill="#0F2744"/></svg>
                   </div>
-                  <div className="sc-period">
-                    <div className="sc-pcol">
-                      <span className="sc-plbl">Pick-up</span>
-                      <div className="sc-pair">
-                        <div className="sc-punit">
-                          <span className={`sc-ptxt${!local.pickupDate ? ' sc-ph' : ''}`}>
-                            {fmtPickupDate || 'Choose date'}
-                          </span>
-                          <input type="date" className="sc-pnat" value={local.pickupDate} min={today} onChange={e => handlePickupDateChange(e.target.value)}/>
-                        </div>
-                        <div className="sc-punit">
-                          <span className="sc-ptxt" style={{color:'#64748B',fontWeight:500}}>{local.pickupTime || '10:00'}</span>
-                          <select className="sc-pnat" value={local.pickupTime} onChange={e => set('pickupTime', e.target.value)}>
-                            {TIMES.map(t => <option key={t}>{t}</option>)}
-                          </select>
-                        </div>
+                  <div className="sc-date-grid">
+                    <div className="sc-date-col">
+                      <span className="sc-date-lbl">Collection</span>
+                      <div className="sc-date-controls">
+                        <input
+                          type="date"
+                          value={local.pickupDate}
+                          min={today}
+                          onChange={e => handlePickupDateChange(e.target.value)}
+                        />
+                        <select value={local.pickupTime} onChange={e => set('pickupTime', e.target.value)}>
+                          {TIMES.map(t => <option key={t}>{t}</option>)}
+                        </select>
                       </div>
                     </div>
-                    <div className="sc-arr">&#8594;</div>
-                    <div className="sc-pcol">
-                      <span className="sc-plbl">Drop-off</span>
-                      <div className="sc-pair">
-                        <div className="sc-punit">
-                          <span className={`sc-ptxt${!local.returnDate ? ' sc-ph' : ''}`}>
-                            {fmtReturnDate || 'Choose date'}
-                          </span>
-                          <input type="date" className="sc-pnat" value={local.returnDate} min={local.pickupDate || today} onChange={e => handleReturnDateChange(e.target.value)}/>
-                        </div>
-                        <div className="sc-punit">
-                          <span className="sc-ptxt" style={{color:'#64748B',fontWeight:500}}>{local.returnTime || '10:00'}</span>
-                          <select className="sc-pnat" value={local.returnTime} onChange={e => set('returnTime', e.target.value)}>
-                            {TIMES.map(t => <option key={t}>{t}</option>)}
-                          </select>
-                        </div>
+                    <div className="sc-date-col">
+                      <span className="sc-date-lbl">Return</span>
+                      <div className="sc-date-controls">
+                        <input
+                          type="date"
+                          value={local.returnDate}
+                          min={local.pickupDate || today}
+                          onChange={e => handleReturnDateChange(e.target.value)}
+                        />
+                        <select value={local.returnTime} onChange={e => set('returnTime', e.target.value)}>
+                          {TIMES.map(t => <option key={t}>{t}</option>)}
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -1759,16 +1758,17 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
                     <select className="sc-over" value={local.driverAge} onChange={e => set('driverAge', e.target.value)}>
                       <option value="">Select driver age</option>
                       <option value="Under 21">Under 21</option>
-                      <option value="21-24">21\u201324</option>
-                      <option value="25-29">25\u201329</option>
-                      <option value="30-65">30\u201365</option>
+                      <option value="21-24">21–24</option>
+                      <option value="25-29">25–29</option>
+                      <option value="30-65">30–65</option>
                       <option value="66+">66+</option>
                     </select>
                   </div>
                 </div>
-              </div>
 
-              {/* Selectors — stacked on mobile, row on desktop */}
+              </div>{/* /sc-rows */}
+
+              {/* Vehicle / Country / Currency */}
               <div className="sc-strip">
                 <select className="sc-sel" value={local.vehicleType} onChange={e => set('vehicleType', e.target.value)}>
                   <option value="">All vehicle types</option>
@@ -1796,18 +1796,20 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
                 </select>
               </div>
 
+              {/* Search */}
               <button className="sc-btn" onClick={handleSearch}>
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#C9A227"/></svg>
                 Search
                 {local.pickupDate && local.returnDate && (
                   <span style={{fontWeight:400, fontSize:13, opacity:.65}}>
-                    &nbsp;\u00b7 {rentalDays} day{rentalDays !== 1 ? 's' : ''}
+                    &nbsp;· {rentalDays} day{rentalDays !== 1 ? 's' : ''}
                   </span>
                 )}
               </button>
-            </div>
 
-            {/* Trust pills — white text on translucent panel, always readable on navy */}
+            </div>{/* /sc-card */}
+
+            {/* Benefit pills — white text on translucent, always visible on navy hero */}
             <div className="sc-trust">
               <span className="sc-trust-pill">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" fill="#C9A227"/></svg>
@@ -1826,7 +1828,8 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
                 Balance due at collection
               </span>
             </div>
-          </div>
+
+          </div>{/* /sc-wrap */}
 
           </div>
         </div>
