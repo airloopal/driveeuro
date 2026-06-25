@@ -532,6 +532,59 @@
     h2 { font-size:clamp(1.4rem,7vw,2rem); }
     input, select, textarea { font-size:16px !important; }
   }
+  /* ── DriveEuroCars compact search card ── */
+.sc-wrap{width:100%;max-width:840px;margin:0 auto;}
+.sc-card{background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,.25),0 2px 8px rgba(0,0,0,.10);overflow:hidden;}
+.sc-tabs{display:flex;border-bottom:1.5px solid #E2E8F0;}
+.sc-tab{flex:1;padding:13px 16px;font-family:'Inter',system-ui,sans-serif;font-size:14px;font-weight:600;color:#64748B;background:#F8FAFC;border:none;cursor:pointer;text-align:center;transition:all .18s;line-height:1;}
+.sc-tab:first-child{border-radius:18px 0 0 0;}
+.sc-tab:last-child{border-radius:0 18px 0 0;}
+.sc-tab.sc-on{background:#fff;color:#0F2744;box-shadow:inset 0 -2.5px 0 #C9A227;}
+.sc-tab:hover:not(.sc-on){background:#F0F4F8;color:#0F2744;}
+.sc-rows>.sc-row:last-child{border-bottom:none;}
+.sc-row{display:flex;align-items:center;gap:12px;padding:13px 20px;border-bottom:1.5px solid #E2E8F0;min-height:64px;position:relative;box-sizing:border-box;}
+.sc-ico{width:36px;height:36px;border-radius:50%;background:#EEF2F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sc-body{flex:1;min-width:0;}
+.sc-lbl{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;white-space:nowrap;}
+.sc-val{font-size:15px;font-weight:600;color:#0F2744;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sc-val.sc-ph{color:#94A3B8;font-weight:400;}
+.sc-over{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:none;background:transparent;z-index:5;-webkit-appearance:none;appearance:none;}
+.sc-loc{width:100%;border:none;outline:none;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:600;color:#0F2744;background:transparent;padding:0;letter-spacing:-.01em;min-width:0;}
+.sc-loc::placeholder{color:#94A3B8;font-weight:400;}
+.sc-loc:focus{outline:none;box-shadow:none;border:none;}
+.sc-period{display:grid;grid-template-columns:1fr 20px 1fr;align-items:center;flex:1;min-width:0;}
+.sc-pcol{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.sc-plbl{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;}
+.sc-pair{display:flex;align-items:center;gap:5px;}
+.sc-punit{position:relative;display:inline-block;}
+.sc-ptxt{font-size:14px;font-weight:600;color:#0F2744;white-space:nowrap;}
+.sc-ptxt.sc-ph{color:#94A3B8;font-weight:400;}
+.sc-pnat{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:16px;-webkit-appearance:none;appearance:none;border:none;background:transparent;z-index:5;width:100%;height:100%;}
+.sc-arr{font-size:16px;color:#CBD5E0;text-align:center;}
+.sc-strip{display:flex;gap:8px;padding:10px 20px;border-top:1.5px solid #E2E8F0;background:#F8FAFC;flex-wrap:wrap;}
+.sc-sel{flex:1;min-width:85px;max-width:100%;font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:600;color:#0F2744;background:#fff;border:1.5px solid #E2E8F0;border-radius:9px;padding:8px 24px 8px 9px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2394A3B8' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-size:14px;}
+.sc-sel:focus{border-color:#0F2744;}
+.sc-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:16px 20px;background:linear-gradient(135deg,#0F2744 0%,#091C33 100%);color:#fff;font-family:'Inter',system-ui,sans-serif;font-size:16px;font-weight:700;border:none;cursor:pointer;letter-spacing:-.02em;transition:opacity .18s;box-shadow:0 4px 18px rgba(9,28,51,.4);}
+.sc-btn:hover{opacity:.88;}
+.sc-btn:active{opacity:.76;}
+.sc-trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;max-width:840px;margin-left:auto;margin-right:auto;}
+.sc-trust-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;color:rgba(255,255,255,.85);}
+@media(max-width:768px){
+  .sc-wrap{width:calc(100% - 32px);}
+  .sc-card{border-radius:14px;}
+  .sc-tab{font-size:13px;padding:11px 10px;}
+  .sc-tab:first-child{border-radius:14px 0 0 0;}
+  .sc-tab:last-child{border-radius:0 14px 0 0;}
+  .sc-row{padding:11px 14px;gap:10px;min-height:58px;}
+  .sc-ico{width:32px;height:32px;}
+  .sc-ptxt{font-size:13px;}
+  .sc-val{font-size:14px;}
+  .sc-strip{padding:9px 14px;gap:6px;}
+  .sc-sel{font-size:12px;padding:7px 20px 7px 8px;min-width:70px;}
+  .sc-btn{font-size:15px;padding:14px 16px;}
+  .sc-trust{width:calc(100% - 32px);}
+  .sc-trust-pill{font-size:11px;padding:6px 11px;}
+}
 </style>
 </head>
 <body>
@@ -1246,7 +1299,7 @@ const searchLocations = (q) => {
 const locPillClass = (type) => ({airport:'lp-airport',city:'lp-city',station:'lp-station',hub:'lp-hub'}[type]||'lp-hub');
 
 // ── LocationInput component ────────────────────────────────────────────
-function LocationInput({ value, onChange, placeholder, onSelect }) {
+function LocationInput({ value, onChange, placeholder, onSelect, inputCls }) {
   const [open, setOpen] = useState(false);
   const [hov, setHov] = useState(-1);
   const suggestions = searchLocations(value);
@@ -1315,7 +1368,7 @@ const LS_KEY = 'driveeuro_search';
 const loadSearch = () => { try { const s = localStorage.getItem(LS_KEY); return s ? JSON.parse(s) : null; } catch { return null; } };
 const saveSearch = (s) => { try { localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch {} };
 
-const SEARCH_DEFAULTS = { pickup:'', dropoff:'', pickupCode:'', dropoffCode:'', pickupDate:'', pickupTime:'10:00', returnDate:'', returnTime:'10:00', driverAge:'30-65', vehicleType:'' };
+const SEARCH_DEFAULTS = { pickup:'', dropoff:'', pickupCode:'', dropoffCode:'', pickupDate:'', pickupTime:'10:00', returnDate:'', returnTime:'10:00', driverAge:'30-65', vehicleType:'', country:'', diffDropoff:false };
 
 function App() {
   const [page, setPage] = useState('home');
@@ -1533,7 +1586,7 @@ function App() {
 }
 
 // ── Home ──────────────────────────────────────────────────────────────
-function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
+function HomePage({ navigate, searchParams, setSearchParams, currency, setCurrency, fmt }) {
   const [local, setLocal] = useState({ ...SEARCH_DEFAULTS, ...searchParams });
   const [rentalDays, setRentalDays] = useState(() => {
     if (searchParams.pickupDate && searchParams.returnDate) {
@@ -1543,6 +1596,11 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
     return 7;
   });
   const set = (k,v) => setLocal(p => ({...p,[k]:v}));
+  const diffDropoff = !!local.diffDropoff;
+  const fmtPickupDate = local.pickupDate ? new Date(local.pickupDate + 'T12:00:00').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'}) : null;
+  const fmtReturnDate = local.returnDate ? new Date(local.returnDate + 'T12:00:00').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'}) : null;
+  const AGE_LABEL = {'Under 21':'Under 21','21-24':'21\u201324','25-29':'25\u201329','30-65':'30\u201365','66+':'66+'};
+
 
   const today = todayStr();
 
@@ -1585,55 +1643,162 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
           <h1 className="hero-title">Great rates on rentals,<br /><span>no membership required</span></h1>
           <p className="hero-sub">Compare discounted prices at 50+ rental desks across Europe. Pay just 10% upfront to reserve — settle the balance at collection.</p>
           <div className="search-box">
-            <div className="search-grid">
-              <div className="form-group">
-                <label className="form-label">Pickup location</label>
-                <LocationInput value={local.pickup} onChange={v=>set('pickup',v)} placeholder="Where are you collecting from?" onSelect={loc=>{set('pickup',loc.name);set('pickupCode',loc.locationCode);}}/>
+                      {/* ── Compact search card ── */}
+          <div className="sc-wrap">
+            <div className="sc-card">
+              <div className="sc-tabs">
+                <button className={`sc-tab${!diffDropoff ? ' sc-on' : ''}`}
+                  onClick={() => { set('diffDropoff', false); set('dropoff', local.pickup); set('dropoffCode', local.pickupCode); }}>
+                  Same drop-off
+                </button>
+                <button className={`sc-tab${diffDropoff ? ' sc-on' : ''}`}
+                  onClick={() => set('diffDropoff', true)}>
+                  Different drop-off
+                </button>
               </div>
-              <div className="form-group">
-                <label className="form-label">Drop-off location</label>
-                <LocationInput value={local.dropoff} onChange={v=>set('dropoff',v)} placeholder="Same location or choose another" onSelect={loc=>{set('dropoff',loc.name);set('dropoffCode',loc.locationCode);}}/>
+              <div className="sc-rows">
+                <div className="sc-row">
+                  <div className="sc-ico">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#0F2744"/></svg>
+                  </div>
+                  <div className="sc-body">
+                    <span className="sc-lbl">{diffDropoff ? 'Pickup location' : 'Pickup \u0026 drop-off location'}</span>
+                    <LocationInput value={local.pickup}
+                      onChange={v => { set('pickup', v); if (!diffDropoff) set('dropoff', v); }}
+                      placeholder="Where are you collecting from?"
+                      onSelect={loc => { set('pickup', loc.name); set('pickupCode', loc.locationCode); if (!diffDropoff) { set('dropoff', loc.name); set('dropoffCode', loc.locationCode); } }}
+                      inputCls="sc-loc"/>
+                  </div>
+                </div>
+                {diffDropoff && (
+                  <div className="sc-row">
+                    <div className="sc-ico">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#64748B"/></svg>
+                    </div>
+                    <div className="sc-body">
+                      <span className="sc-lbl">Drop-off location</span>
+                      <LocationInput value={local.dropoff}
+                        onChange={v => set('dropoff', v)}
+                        placeholder="Where are you returning the vehicle?"
+                        onSelect={loc => { set('dropoff', loc.name); set('dropoffCode', loc.locationCode); }}
+                        inputCls="sc-loc"/>
+                    </div>
+                  </div>
+                )}
+                <div className="sc-row">
+                  <div className="sc-ico">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7z" fill="#0F2744"/></svg>
+                  </div>
+                  <div className="sc-period">
+                    <div className="sc-pcol">
+                      <span className="sc-plbl">Pick-up</span>
+                      <div className="sc-pair">
+                        <div className="sc-punit">
+                          <span className={`sc-ptxt${!local.pickupDate ? ' sc-ph' : ''}`}>{fmtPickupDate || 'Date'}</span>
+                          <input type="date" className="sc-pnat" value={local.pickupDate} min={today} onChange={e => handlePickupDateChange(e.target.value)}/>
+                        </div>
+                        <div className="sc-punit">
+                          <span className={`sc-ptxt${!local.pickupTime ? ' sc-ph' : ''}`} style={{minWidth:38}}>{local.pickupTime || 'Time'}</span>
+                          <select className="sc-pnat" value={local.pickupTime} onChange={e => set('pickupTime', e.target.value)}>
+                            {TIMES.map(t => <option key={t}>{t}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="sc-arr">&#8594;</div>
+                    <div className="sc-pcol">
+                      <span className="sc-plbl">Drop-off</span>
+                      <div className="sc-pair">
+                        <div className="sc-punit">
+                          <span className={`sc-ptxt${!local.returnDate ? ' sc-ph' : ''}`}>{fmtReturnDate || 'Date'}</span>
+                          <input type="date" className="sc-pnat" value={local.returnDate} min={local.pickupDate || today} onChange={e => handleReturnDateChange(e.target.value)}/>
+                        </div>
+                        <div className="sc-punit">
+                          <span className={`sc-ptxt${!local.returnTime ? ' sc-ph' : ''}`} style={{minWidth:38}}>{local.returnTime || 'Time'}</span>
+                          <select className="sc-pnat" value={local.returnTime} onChange={e => set('returnTime', e.target.value)}>
+                            {TIMES.map(t => <option key={t}>{t}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="sc-row" style={{cursor:'pointer'}}>
+                  <div className="sc-ico">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#0F2744"/></svg>
+                  </div>
+                  <div className="sc-body" style={{position:'relative'}}>
+                    <span className="sc-lbl">Driver's age</span>
+                    <span className={`sc-val${!local.driverAge ? ' sc-ph' : ''}`}>
+                      {AGE_LABEL[local.driverAge] || local.driverAge || 'Select age'}
+                    </span>
+                    <select className="sc-over" value={local.driverAge} onChange={e => set('driverAge', e.target.value)}>
+                      <option value="">Select driver age</option>
+                      <option value="Under 21">Under 21</option>
+                      <option value="21-24">21\u201324</option>
+                      <option value="25-29">25\u201329</option>
+                      <option value="30-65">30\u201365</option>
+                      <option value="66+">66+</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div className="form-group">
-                <label className="form-label">Pickup date</label>
-                <input type="date" className="form-input" value={local.pickupDate} min={today} onChange={e=>handlePickupDateChange(e.target.value)}/>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Pickup time</label>
-                <select className="form-input" value={local.pickupTime} onChange={e=>set('pickupTime',e.target.value)}>
-                  {TIMES.map(t=><option key={t}>{t}</option>)}
+              <div className="sc-strip">
+                <select className="sc-sel" value={local.vehicleType} onChange={e => set('vehicleType', e.target.value)}>
+                  <option value="">All vehicle types</option>
+                  <option value="Economy">Economy</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Luxury">Luxury</option>
+                  <option value="Electric">Electric</option>
+                  <option value="SUV">SUV</option>
+                </select>
+                <select className="sc-sel" value={local.country || ''} onChange={e => set('country', e.target.value)}>
+                  <option value="">All countries</option>
+                  <option value="UK">United Kingdom</option>
+                  <option value="France">France</option>
+                  <option value="Germany">Germany</option>
+                  <option value="Spain">Spain</option>
+                  <option value="Italy">Italy</option>
+                  <option value="Netherlands">Netherlands</option>
+                  <option value="Portugal">Portugal</option>
+                  <option value="Ireland">Ireland</option>
+                </select>
+                <select className="sc-sel" value={currency} onChange={e => setCurrency && setCurrency(e.target.value)}>
+                  <option value="GBP">£ GBP</option>
+                  <option value="EUR">€ EUR</option>
+                  <option value="USD">$ USD</option>
                 </select>
               </div>
-              <div className="form-group">
-                <label className="form-label">Return date</label>
-                <input type="date" className="form-input" value={local.returnDate} min={local.pickupDate||today} onChange={e=>handleReturnDateChange(e.target.value)}/>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Return time</label>
-                <select className="form-input" value={local.returnTime} onChange={e=>set('returnTime',e.target.value)}>
-                  {TIMES.map(t=><option key={t}>{t}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Driver age</label>
-                <select className="form-input" value={local.driverAge} onChange={e=>set('driverAge',e.target.value)}>
-                  <option value="">Select driver age</option>
-                  <option>Under 21</option><option>21-24</option><option>25-29</option><option value="30-65">30–65</option><option>66+</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Vehicle type</label>
-                <select className="form-input" value={local.vehicleType} onChange={e=>set('vehicleType',e.target.value)}>
-                  <option value="">Choose vehicle type</option><option>Economy</option><option>Premium</option><option>Luxury</option><option>Electric</option><option>SUV</option>
-                </select>
-              </div>
+              <button className="sc-btn" onClick={handleSearch}>
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#C9A227"/></svg>
+                Search
+                {local.pickupDate && local.returnDate && (
+                  <span style={{fontWeight:400, fontSize:13, opacity:.65}}>
+                    &nbsp;\u00b7 {rentalDays} day{rentalDays !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </button>
             </div>
-            <div style={{marginTop:'1rem', display:'flex', gap:'1rem', alignItems:'center', flexWrap:'wrap'}}>
-              <button className="btn btn-primary" style={{minWidth:200}} onClick={handleSearch}>Search available cars →</button>
-              <span style={{fontSize:13, color:'var(--text-faint)'}}>
-                {local.pickupDate && local.returnDate ? `${rentalDays}-day rental · ` : ''}DriveEuro prices shown
+            <div className="sc-trust">
+              <span className="sc-trust-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" fill="#C9A227"/></svg>
+                Reserve with 10% upfront
+              </span>
+              <span className="sc-trust-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 2v11h3v9l7-12h-4l4-8z" fill="#C9A227"/></svg>
+                Save up to 30% on rentals
+              </span>
+              <span className="sc-trust-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#C9A227"/></svg>
+                50+ verified suppliers
+              </span>
+              <span className="sc-trust-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" fill="#C9A227"/></svg>
+                Balance due at collection
               </span>
             </div>
+          </div>
+
           </div>
         </div>
       </div>
@@ -1751,7 +1916,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
 
       <div className="filter-section">
         <div className="filter-title">Rental days</div>
-        <input type="number" className="form-input" style={{fontSize:13}} min={1} max={90} value={rentalDays} onChange={e=>setRentalDays(Math.max(1,Number(e.target.value)))} />
+        <input type="number" className={inputCls || "form-input"} style={{fontSize:13}} min={1} max={90} value={rentalDays} onChange={e=>setRentalDays(Math.max(1,Number(e.target.value)))} />
       </div>
 
       <div className="filter-section">
