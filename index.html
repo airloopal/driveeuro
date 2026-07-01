@@ -429,6 +429,7 @@
 
   /* ── Currency selector ── */
   .currency-sel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;font-size:13px;font-weight:600;padding:.3rem .55rem .3rem .55rem;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;}
+  .currency-sel option{background:#0f2744;color:#fff;font-weight:600;}
 
   /* ── Location autofill ── */
   .loc-wrap{position:relative;}
@@ -820,18 +821,25 @@ const MIN_FEE_GBP = 20.00; // £20 minimum reservation fee in GBP
 
 const calcPricing = (vehicle, days, currency) => { // eslint-disable-line no-unused-vars
   // ── Fixed-price override for internal test listings ──────────────────
-  // If the vehicle carries _fixedPricing, return those values directly
-  // without running the standard discount formula.
   if (vehicle._fixedPricing) return { ...vehicle._fixedPricing };
 
+  // ── Days sanity guard ─────────────────────────────────────────────────
+  // Never calculate prices against an invalid duration.
+  // Clamp to 1–90 days; anything outside returns a zero sentinel that the
+  // UI can detect and treat as "show error instead of price".
+  const safeD = (typeof days === 'number' && isFinite(days) && days >= 1 && days <= MAX_RENTAL_DAYS)
+    ? Math.round(days)
+    : 0;
+  if (safeD === 0) return { original:0, discounted:0, reservationFee:0, remaining:0, saved:0, invalid:true };
+
   const perDay         = vehicle.sourceMarketPrice || vehicle.pricePerDay || 0;
-  const original       = parseFloat((perDay * days).toFixed(2));          // GBP
-  const discounted     = parseFloat((original * 0.70).toFixed(2));        // GBP — DriveEuro Price
-  const rawFee         = parseFloat((discounted * 0.10).toFixed(2));      // GBP — 10% of DriveEuro Price
-  const reservationFee = parseFloat(Math.max(rawFee, MIN_FEE_GBP).toFixed(2)); // GBP — with £20 floor
-  const remaining      = parseFloat((discounted - reservationFee).toFixed(2)); // GBP
-  const saved          = parseFloat((original - discounted).toFixed(2));  // GBP
-  return { original, discounted, reservationFee, remaining, saved };
+  const original       = parseFloat((perDay * safeD).toFixed(2));
+  const discounted     = parseFloat((original * 0.70).toFixed(2));
+  const rawFee         = parseFloat((discounted * 0.10).toFixed(2));
+  const reservationFee = parseFloat(Math.max(rawFee, MIN_FEE_GBP).toFixed(2));
+  const remaining      = parseFloat((discounted - reservationFee).toFixed(2));
+  const saved          = parseFloat((original - discounted).toFixed(2));
+  return { original, discounted, reservationFee, remaining, saved, invalid:false };
 };
 
 // ── Hidden test vehicle ────────────────────────────────────────────────
@@ -1096,6 +1104,12 @@ const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn, currency: cur }) => 
           {vehicle.hotelDelivery && <span className="feature-tag">Hotel delivery</span>}
         </div>
         <div style={{flex:1}}/>
+        {p.invalid ? (
+          <div className="price-block" style={{textAlign:'center', padding:'1.25rem'}}>
+            <Icon name="mdi:alert-circle-outline" sz={28} cls="icon-gold" style={{marginBottom:'0.4rem'}}/>
+            <div style={{fontSize:13, color:'rgba(255,255,255,0.8)'}}>Invalid rental duration.<br/>Please search again.</div>
+          </div>
+        ) : (
         <div className="price-block">
           <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:'0.6rem'}}>
             <div>
@@ -1118,6 +1132,7 @@ const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn, currency: cur }) => 
             <span className="price-row-val">{f(p.remaining)}</span>
           </div>
         </div>
+        )}
         <button className="btn btn-primary btn-full" style={{marginTop:'0.875rem'}} onClick={onSelect}>View &amp; Reserve →</button>
       </div>
     </div>
@@ -1329,6 +1344,56 @@ const todayStr = () => new Date().toISOString().split('T')[0];
 
 // Time helpers for validation
 const timeToMinutes = (t) => { const [h,m] = (t||'00:00').split(':').map(Number); return h*60+(m||0); };
+
+// ── Rental duration validation ─────────────────────────────────────────
+// Maximum rental duration: 90 days for normal rentals.
+// Anything above this is treated as an invalid input.
+const MAX_RENTAL_DAYS = 90;
+
+/**
+ * Safely compute rental days from two YYYY-MM-DD strings.
+ * Returns an integer 1–90, or null if the range is invalid / impossible.
+ */
+const safeDays = (pickupDate, returnDate) => {
+  if (!pickupDate || !returnDate) return null;
+  // Reject obviously bogus years (before 2020 or after 2030)
+  const pickupYear = parseInt(pickupDate.slice(0, 4), 10);
+  const returnYear = parseInt(returnDate.slice(0, 4), 10);
+  if (isNaN(pickupYear) || isNaN(returnYear)) return null;
+  if (pickupYear < 2020 || pickupYear > 2030) return null;
+  if (returnYear < 2020 || returnYear > 2030) return null;
+
+  const ms = new Date(returnDate) - new Date(pickupDate);
+  if (!isFinite(ms) || ms <= 0) return null;          // return not after pickup
+  const d = Math.ceil(ms / 86400000);                  // ceil = partial day counts
+  if (d < 1 || d > MAX_RENTAL_DAYS) return null;       // out of allowed range
+  return d;
+};
+
+/**
+ * Validate a single date string:
+ * - must parse as a valid date
+ * - year must be 2020–2030
+ * - must not be in the past (optional, pass requireFuture=true)
+ */
+const isValidDate = (dateStr, requireFuture = false) => {
+  if (!dateStr) return false;
+  const year = parseInt(dateStr.slice(0, 4), 10);
+  if (isNaN(year) || year < 2020 || year > 2030) return false;
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return false;
+  if (requireFuture && dateStr < todayStr()) return false;
+  return true;
+};
+
+/**
+ * Safe price formatter — returns an error placeholder if the value is
+ * not a finite, reasonable number, so broken values are never silently rendered.
+ */
+const safeFmt = (n, fmtFn) => {
+  if (!isFinite(n) || isNaN(n) || n < 0 || n > 999999) return '—';
+  return fmtFn(n);
+};
 
 // localStorage persistence helpers
 const LS_KEY = 'driveeuro_search';
@@ -1614,43 +1679,51 @@ function App() {
 function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
   const [local, setLocal] = useState({ ...SEARCH_DEFAULTS, ...searchParams });
   const [rentalDays, setRentalDays] = useState(() => {
-    if (searchParams.pickupDate && searchParams.returnDate) {
-      const d = Math.round((new Date(searchParams.returnDate)-new Date(searchParams.pickupDate))/86400000);
-      return Math.max(1, d);
-    }
-    return 7;
+    const d = safeDays(searchParams.pickupDate, searchParams.returnDate);
+    return d || 7;
   });
+  const [dateError, setDateError] = useState('');
   const set = (k,v) => setLocal(p => ({...p,[k]:v}));
 
   const today = todayStr();
 
   const handlePickupDateChange = (v) => {
+    setDateError('');
     set('pickupDate', v);
-    // If return date is before new pickup date, clear it
-    if (local.returnDate && local.returnDate < v) {
-      set('returnDate', '');
-      setRentalDays(1);
-    } else if (local.returnDate && local.returnDate >= v) {
-      const d = Math.max(1, Math.round((new Date(local.returnDate)-new Date(v))/86400000));
+    if (!isValidDate(v, true)) { setDateError('Please select a valid future pickup date (within 2030).'); return; }
+    const d = safeDays(v, local.returnDate);
+    if (local.returnDate && !d) {
+      set('returnDate', '');      // clear invalid return
+      setRentalDays(7);
+    } else if (d) {
       setRentalDays(d);
     }
   };
 
   const handleReturnDateChange = (v) => {
+    setDateError('');
     set('returnDate', v);
-    if (local.pickupDate && v) {
-      const d = Math.max(1, Math.round((new Date(v)-new Date(local.pickupDate))/86400000));
+    if (!isValidDate(v)) { setDateError('Please select a valid return date (within 2030).'); return; }
+    const d = safeDays(local.pickupDate, v);
+    if (!d) {
+      setDateError(`Return date must be after pickup date and within ${MAX_RENTAL_DAYS} days.`);
+    } else {
       setRentalDays(d);
     }
   };
 
   const handleSearch = () => {
     if (!local.pickup) { alert('Please enter a pickup location'); return; }
-    if (!local.pickupDate) { alert('Please select a pickup date'); return; }
-    if (!local.returnDate) { alert('Please select a return date'); return; }
-    const merged = { ...local };
-    setSearchParams(merged);
-    navigate('results', { days: rentalDays });
+    if (!isValidDate(local.pickupDate, true)) { alert('Please select a valid future pickup date (2020–2030).'); return; }
+    if (!isValidDate(local.returnDate)) { alert('Please select a valid return date (2020–2030).'); return; }
+    const d = safeDays(local.pickupDate, local.returnDate);
+    if (!d) {
+      alert(`Invalid date range. Return date must be after pickup date and the rental must be 1–${MAX_RENTAL_DAYS} days.`);
+      return;
+    }
+    setDateError('');
+    setSearchParams({ ...local });
+    navigate('results', { days: d });
   };
 
   const TIMES = ['06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
@@ -1706,11 +1779,21 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
                 </select>
               </div>
             </div>
-            <div style={{marginTop:'1rem', display:'flex', gap:'1rem', alignItems:'center', flexWrap:'wrap'}}>
-              <button className="btn btn-primary" style={{minWidth:200}} onClick={handleSearch}>Search available cars →</button>
-              <span style={{fontSize:13, color:'var(--text-faint)'}}>
-                {local.pickupDate && local.returnDate ? `${rentalDays}-day rental · ` : ''}DriveEuro prices shown
-              </span>
+            <div style={{marginTop:'1rem', display:'flex', flexDirection:'column', gap:'0.5rem'}}>
+              {dateError && (
+                <div style={{background:'#fef2f2', border:'1px solid #fca5a5', borderRadius:8, padding:'0.6rem 0.875rem', fontSize:13, color:'#991b1b', display:'flex', alignItems:'center', gap:6}}>
+                  <Icon name="mdi:alert-circle-outline" sz={15} cls="icon-gold" style={{flexShrink:0,color:'#991b1b'}}/>
+                  {dateError}
+                </div>
+              )}
+              <div style={{display:'flex', gap:'1rem', alignItems:'center', flexWrap:'wrap'}}>
+                <button className="btn btn-primary" style={{minWidth:200}} onClick={handleSearch}>Search available cars →</button>
+                <span style={{fontSize:13, color:'var(--text-faint)'}}>
+                  {local.pickupDate && local.returnDate && safeDays(local.pickupDate, local.returnDate)
+                    ? `${safeDays(local.pickupDate, local.returnDate)}-day rental · `
+                    : ''}DriveEuro prices shown
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -1799,10 +1882,24 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
     minAge:0,
   });
   const [sort, setSort] = useState('price-asc');
-  const [rentalDays, setRentalDays] = useState(initDays || 7);
+  const [rentalDays, setRentalDays] = useState(() => {
+    const d = initDays;
+    return (typeof d === 'number' && d >= 1 && d <= MAX_RENTAL_DAYS) ? d : 7;
+  });
+  // ── Rental days input state (separate so typing doesn't re-render cards) ──
+  // The input uses this local string; rentalDays only updates on blur or Enter
+  // so VehicleCards don't remount on every keypress, preventing focus loss.
+  const [daysInputVal, setDaysInputVal] = useState(String(rentalDays));
   const [filtersOpen, setFiltersOpen] = useState(false);
   const toggle = (k) => setFilters(f => ({...f,[k]:!f[k]}));
   const toggleArr = (k,v) => setFilters(f => ({...f,[k]:f[k].includes(v)?f[k].filter(x=>x!==v):[...f[k],v]}));
+
+  const commitDays = (raw) => {
+    const n = parseInt(raw, 10);
+    const clamped = (!isFinite(n) || n < 1) ? 1 : n > MAX_RENTAL_DAYS ? MAX_RENTAL_DAYS : n;
+    setRentalDays(clamped);
+    setDaysInputVal(String(clamped));
+  };
 
   let results = VEHICLES.filter(v => {
     if (filters.types.length && !filters.types.includes(v.type)) return false;
@@ -1828,8 +1925,18 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
       <div style={{fontWeight:700, fontSize:15, color:'var(--navy)', marginBottom:'1rem'}}>Refine results</div>
 
       <div className="filter-section">
-        <div className="filter-title">Rental days</div>
-        <input type="number" className="form-input" style={{fontSize:13}} min={1} max={90} value={rentalDays} onChange={e=>setRentalDays(Math.max(1,Number(e.target.value)))} />
+        <div className="filter-title">Rental days (1–{MAX_RENTAL_DAYS})</div>
+        <input
+          type="number"
+          className="form-input"
+          style={{fontSize:13}}
+          min={1}
+          max={MAX_RENTAL_DAYS}
+          value={daysInputVal}
+          onChange={e => setDaysInputVal(e.target.value)}
+          onBlur={e => commitDays(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') commitDays(e.target.value); }}
+        />
       </div>
 
       <div className="filter-section">
@@ -1948,7 +2055,11 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
 // ── Vehicle Details ───────────────────────────────────────────────────
 function DetailsPage({ navigate, vehicle, days, currency, fmt, testMode }) {
   if (!vehicle) return <div className="container" style={{padding:'3rem 1.5rem'}}><p>No vehicle selected. <button className="btn btn-navy btn-sm" onClick={()=>navigate('results',{days:7})}>Back to results</button></p></div>;
-  const p = calcPricing(vehicle, days, currency);
+
+  // Validate days before rendering any prices
+  const validDays = (typeof days === 'number' && isFinite(days) && days >= 1 && days <= MAX_RENTAL_DAYS)
+    ? Math.round(days) : null;
+  const p = validDays ? calcPricing(vehicle, validDays, currency) : null;
 
   return (
     <div className="page">
@@ -2030,18 +2141,32 @@ function DetailsPage({ navigate, vehicle, days, currency, fmt, testMode }) {
 
           {/* Pricing sidebar */}
           <div style={{position:'sticky', top:80}}>
-            <PricingBlock p={p} days={days} supplier={vehicle.supplier}/>
-            <div style={{marginTop:'0.875rem'}}>
-              <button className="btn btn-primary btn-full" style={{fontSize:'1.05rem', padding:'1rem'}} onClick={()=>navigate('checkout',{vehicle,days})}>
-                Reserve now — pay {fmt(p.reservationFee)} today →
-              </button>
-            </div>
-            <div style={{textAlign:'center', marginTop:'0.6rem', fontSize:12, color:'var(--text-faint)'}}>
-              <span className="icon-with-text"><Icon name="mdi:lock-check-outline" sz={14} cls="icon-faint"/> Secure payment · Booking confirmed on payment</span>
-            </div>
-            <div className="alert alert-gold" style={{marginTop:'0.875rem', fontSize:12}}>
-              <Icon name="mdi:refresh" sz={16} cls="icon-gold" style={{flexShrink:0}}/><span>{REFUND_NOTE}</span>
-            </div>
+            {(!p || p.invalid) ? (
+              <div className="price-block" style={{textAlign:'center', padding:'1.5rem'}}>
+                <Icon name="mdi:alert-circle-outline" sz={32} cls="icon-gold"/>
+                <div style={{fontSize:14, color:'rgba(255,255,255,0.85)', marginTop:'0.5rem', lineHeight:1.6}}>
+                  Invalid rental duration.<br/>Please search again with valid dates.
+                </div>
+                <button className="btn btn-outline" style={{marginTop:'1rem', width:'100%'}} onClick={()=>navigate('home')}>
+                  Search again
+                </button>
+              </div>
+            ) : (
+              <div>
+                <PricingBlock p={p} days={validDays} supplier={vehicle.supplier} fmt={fmt}/>
+                <div style={{marginTop:'0.875rem'}}>
+                  <button className="btn btn-primary btn-full" style={{fontSize:'1.05rem', padding:'1rem'}} onClick={()=>navigate('checkout',{vehicle,days:validDays})}>
+                    Reserve now — pay {fmt(p.reservationFee)} today →
+                  </button>
+                </div>
+                <div style={{textAlign:'center', marginTop:'0.6rem', fontSize:12, color:'var(--text-faint)'}}>
+                  <span className="icon-with-text"><Icon name="mdi:lock-check-outline" sz={14} cls="icon-faint"/> Secure payment · Booking confirmed on payment</span>
+                </div>
+                <div className="alert alert-gold" style={{marginTop:'0.875rem', fontSize:12}}>
+                  <Icon name="mdi:refresh" sz={16} cls="icon-gold" style={{flexShrink:0}}/><span>{REFUND_NOTE}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -2076,19 +2201,34 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   const [payMsg, setPayMsg] = useState(''); // inline user-facing message during pay flow
 
   if (!vehicle) return <div className="container" style={{padding:'3rem'}}><button className="btn btn-navy btn-sm" onClick={()=>navigate('results',{days:7})}>← Back to results</button></div>;
-  const p = calcPricing(vehicle, days||7, currency);
+
+  // ── Central pricing lock ────────────────────────────────────────────────
+  // ALL pricing is derived from the form's current pickupDate/returnDate using
+  // safeDays(). The 'days' prop from App is only used as an initial hint for
+  // display — it is NEVER used for the actual payment amount.
+  // If the user changes dates in checkout, pricing recalculates immediately.
+  // If dates are invalid, liveP is null and payment is blocked.
+  const liveFormDays = safeDays(form.pickupDate, form.returnDate);
+  const liveP = liveFormDays ? calcPricing(vehicle, liveFormDays, currency) : null;
+  const pricingValid = !!(liveP && !liveP.invalid && isFinite(liveP.reservationFee));
+
+  // Fallback for sidebar display when form dates not yet filled
+  const displayDays = liveFormDays || (typeof days === 'number' && days >= 1 && days <= MAX_RENTAL_DAYS ? Math.round(days) : 7);
+  const displayP = liveP || calcPricing(vehicle, displayDays, currency);
+
   const setF = (k,v) => setForm(f=>({...f,[k]:v}));
 
-  // Date logic helpers
+  // Date logic helpers — use safeDays so invalid year ranges are always caught
   const handlePickupDateChange = (v) => {
     setF('pickupDate', v);
-    if (form.returnDate && form.returnDate < v) {
-      setF('returnDate', v); // auto-move return to pickup date
+    if (!isValidDate(v, true)) return; // invalid pickup — keep but don't adjust return
+    if (form.returnDate && !safeDays(v, form.returnDate)) {
+      setF('returnDate', ''); // clear return date if it's now invalid relative to new pickup
     }
   };
   const handleReturnDateChange = (v) => {
-    if (form.pickupDate && v < form.pickupDate) return; // block past return
     setF('returnDate', v);
+    // Note: do not early-return here — let validate() produce the error so user sees it
   };
 
   // Same-day return time validation
@@ -2106,10 +2246,19 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     }
     if (step===2) {
       if (!form.pickupLocation.trim()) e.pickupLocation='Required';
-      if (!form.pickupDate) e.pickupDate='Please select a pickup date';
-      if (form.pickupDate < today) e.pickupDate='Pickup date cannot be in the past';
-      if (!form.returnDate) e.returnDate='Please select a return date';
-      if (form.returnDate && form.pickupDate && form.returnDate < form.pickupDate) e.returnDate='Return date must be on or after pickup date';
+      // Full date validation using central helpers — catches bogus years like 1111, 2222, 2507
+      if (!isValidDate(form.pickupDate, true))
+        e.pickupDate = form.pickupDate
+          ? 'Invalid pickup date. Please select a date between today and 2030.'
+          : 'Please select a pickup date';
+      if (!isValidDate(form.returnDate))
+        e.returnDate = form.returnDate
+          ? 'Invalid return date. Please select a date between today and 2030.'
+          : 'Please select a return date';
+      if (!e.pickupDate && !e.returnDate) {
+        const d = safeDays(form.pickupDate, form.returnDate);
+        if (!d) e.returnDate = `Return date must be after pickup date and within ${MAX_RENTAL_DAYS} days.`;
+      }
       if (returnTimeInvalid) e.returnTime='Return time must be later than pickup time for same-day rentals';
       if (!form.agreedTerms) e.agreedTerms='You must agree to the terms';
       if (!form.agreedAge) e.agreedAge='Please confirm your licence';
@@ -2165,12 +2314,38 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
 
     const bookingReference = genId();
 
+    // ── Central payment guards — derived from current form state ───────────
+    // These use liveFormDays and liveP which are recalculated from form.pickupDate/
+    // returnDate on every render. This means manipulating dates in checkout
+    // immediately affects the payment amount and these guards.
+    if (!isValidDate(form.pickupDate, true)) {
+      setPayMsg('Invalid pickup date. Please select a valid future date.');
+      setPayProcessing(false); return;
+    }
+    if (!isValidDate(form.returnDate)) {
+      setPayMsg('Invalid return date. Please select a date between today and 2030.');
+      setPayProcessing(false); return;
+    }
+    const paymentDays = safeDays(form.pickupDate, form.returnDate);
+    if (!paymentDays) {
+      setPayMsg(`Invalid rental period. Rentals must be 1–${MAX_RENTAL_DAYS} days with valid dates.`);
+      setPayProcessing(false); return;
+    }
+    // Recalculate pricing one final time from the current form dates
+    const finalP = calcPricing(vehicle, paymentDays, currency);
+    if (!finalP || finalP.invalid || !isFinite(finalP.reservationFee) || finalP.reservationFee < MIN_FEE_GBP) {
+      setPayMsg('Pricing could not be calculated. Please go back and search again.');
+      setPayProcessing(false); return;
+    }
+    // Safety: displayed fee must match re-calculated fee (catches stale state)
+    if (liveP && Math.abs(liveP.reservationFee - finalP.reservationFee) > 0.01) {
+      setPayMsg('Pricing has changed. Please review your booking details before paying.');
+      setPayProcessing(false); return;
+    }
+
     // ── Test listing: enforce fixed £1.00 GBP payment amount ─────────────
-    // The _isTestListing flag guarantees the payment request is always £1.00
-    // regardless of currency selector state, preventing accidental larger charges.
-    // For live vehicles, the £20 minimum floor is already enforced by calcPricing().
-    const chargeAmount   = vehicle._isTestListing ? 1.00     : p.reservationFee;
-    const chargeCurrency = vehicle._isTestListing ? 'GBP'    : currency;
+    const chargeAmount   = vehicle._isTestListing ? 1.00  : finalP.reservationFee;
+    const chargeCurrency = vehicle._isTestListing ? 'GBP' : currency;
 
     // Pending payment record — survives the Rampex redirect so we can
     // reconstruct the booking on return
@@ -2181,13 +2356,13 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
       supplierName:     vehicle.supplier,
       currency:         chargeCurrency,
       amount:           chargeAmount,
-      originalPrice:    p.original,
-      discountedPrice:  p.discounted,
-      reservationFee:   chargeAmount,    // always £1.00 for test listings
-      remaining:        p.remaining,
-      saved:            p.saved,
-      days:             days || 1,
-      paymentId:        null, // will be populated from createResult below
+      originalPrice:    finalP.original,
+      discountedPrice:  finalP.discounted,
+      reservationFee:   chargeAmount,
+      remaining:        finalP.remaining,
+      saved:            finalP.saved,
+      days:             paymentDays,
+      paymentId:        null,
       isTestPayment:    vehicle._isTestListing || false,
       customer: {
         fullName:   form.fullName,
@@ -2284,18 +2459,24 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
           </div>
         ))}
         <div style={{paddingTop:'0.5rem', display:'flex', flexDirection:'column', gap:'0.3rem'}}>
-          <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
-            <span style={{color:'var(--text-muted)'}}>DriveEuro Price</span>
-            <strong style={{color:'var(--navy)'}}>{fmt(p.discounted)}</strong>
-          </div>
-          <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
-            <span style={{color:'var(--text-muted)'}}>Reserve with 10% upfront</span>
-            <strong style={{color:'var(--warn)'}}>{fmt(p.reservationFee)}</strong>
-          </div>
-          <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
-            <span style={{color:'var(--text-muted)'}}>Balance due at collection</span>
-            <strong>{fmt(p.remaining)}</strong>
-          </div>
+          {pricingValid && liveP ? (<>
+            <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
+              <span style={{color:'var(--text-muted)'}}>DriveEuro Price ({liveFormDays}d)</span>
+              <strong style={{color:'var(--navy)'}}>{fmt(liveP.discounted)}</strong>
+            </div>
+            <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
+              <span style={{color:'var(--text-muted)'}}>Reserve with 10% upfront</span>
+              <strong style={{color:'var(--warn)'}}>{fmt(liveP.reservationFee)}</strong>
+            </div>
+            <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
+              <span style={{color:'var(--text-muted)'}}>Balance due at collection</span>
+              <strong>{fmt(liveP.remaining)}</strong>
+            </div>
+          </>) : (
+            <div style={{fontSize:12, color:'#991b1b', background:'#fef2f2', borderRadius:6, padding:'0.5rem 0.75rem', marginTop:'0.25rem'}}>
+              Select valid pickup and return dates to see pricing.
+            </div>
+          )}
         </div>
       </div>
     );
@@ -2308,14 +2489,20 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
         <div className="price-row"><span className="price-row-label">{vehicle.name} or similar</span><span className="price-row-val" style={{fontSize:12}}>{vehicle.supplier}</span></div>
         <div className="price-row"><span className="price-row-label">Pickup</span><span className="price-row-val" style={{fontSize:12, textAlign:'right', maxWidth:160}}>{form.pickupLocation||vehicle.city}</span></div>
         {(form.pickupDate||form.returnDate) && <div className="price-row"><span className="price-row-label">Dates</span><span className="price-row-val" style={{fontSize:12}}>{form.pickupDate||'—'} → {form.returnDate||'—'}</span></div>}
-        <div className="price-row"><span className="price-row-label">Duration</span><span className="price-row-val">{days} days</span></div>
+        <div className="price-row"><span className="price-row-label">Duration</span><span className="price-row-val">{liveFormDays ? `${liveFormDays} days` : '— select dates'}</span></div>
         <div style={{height:1, background:'rgba(255,255,255,0.12)', margin:'0.5rem 0'}}/>
-        <div className="price-row"><span className="price-row-label">Standard price</span><span className="price-row-val" style={{opacity:0.5, textDecoration:'line-through'}}>{fmt(p.original)}</span></div>
-        <div className="price-row"><span className="price-row-label">You save</span><span className="price-row-val price-row-green">Save {fmt(p.saved)}</span></div>
-        <div className="price-row"><span className="price-row-label" style={{fontWeight:600, color:'#fff'}}>DriveEuro Price</span><span className="price-row-val price-row-gold" style={{fontWeight:800, fontSize:'1.05rem'}}>{fmt(p.discounted)}</span></div>
-        <div style={{height:1, background:'rgba(255,255,255,0.12)', margin:'0.6rem 0'}}/>
-        <div className="price-row"><span className="price-row-label">Reserve with 10% upfront</span><span className="price-row-val price-row-gold" style={{fontWeight:800, fontSize:'1.1rem'}}>{fmt(p.reservationFee)}</span></div>
-        <div className="price-row"><span className="price-row-label">Balance due at collection</span><span className="price-row-val">{fmt(p.remaining)}</span></div>
+        {pricingValid && liveP ? (<>
+          <div className="price-row"><span className="price-row-label">Standard price</span><span className="price-row-val" style={{opacity:0.5, textDecoration:'line-through'}}>{fmt(liveP.original)}</span></div>
+          <div className="price-row"><span className="price-row-label">You save</span><span className="price-row-val price-row-green">Save {fmt(liveP.saved)}</span></div>
+          <div className="price-row"><span className="price-row-label" style={{fontWeight:600, color:'#fff'}}>DriveEuro Price</span><span className="price-row-val price-row-gold" style={{fontWeight:800, fontSize:'1.05rem'}}>{fmt(liveP.discounted)}</span></div>
+          <div style={{height:1, background:'rgba(255,255,255,0.12)', margin:'0.6rem 0'}}/>
+          <div className="price-row"><span className="price-row-label">Reserve with 10% upfront</span><span className="price-row-val price-row-gold" style={{fontWeight:800, fontSize:'1.1rem'}}>{fmt(liveP.reservationFee)}</span></div>
+          <div className="price-row"><span className="price-row-label">Balance due at collection</span><span className="price-row-val">{fmt(liveP.remaining)}</span></div>
+        </>) : (
+          <div style={{fontSize:12, color:'rgba(255,200,100,0.9)', padding:'0.5rem 0', lineHeight:1.6}}>
+            Enter valid pickup and return dates to see pricing.
+          </div>
+        )}
         <div className="disclaimer-box" style={{fontSize:11}}>{OPERATIONAL_DISCLAIMER}</div>
       </div>
       <div className="alert alert-gold" style={{marginTop:'0.875rem', fontSize:12}}>
@@ -2486,7 +2673,12 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
             {step===3 && (
               <div className="card card-body">
                 <h2 style={{color:'var(--navy)', fontWeight:700, marginBottom:'0.5rem', fontSize:'1.15rem'}}>Pay to reserve your vehicle</h2>
-                <p style={{color:'var(--text-muted)', fontSize:14, marginBottom:'1.25rem'}}>You're paying <strong style={{color:'var(--navy)'}}>{fmt(p.reservationFee)}</strong> to reserve the {vehicle.name} with {vehicle.supplier}. This is deducted from the balance you owe at collection.</p>
+                <p style={{color:'var(--text-muted)', fontSize:14, marginBottom:'1.25rem'}}>
+                  {pricingValid && liveP
+                    ? <>You're paying <strong style={{color:'var(--navy)'}}>{fmt(liveP.reservationFee)}</strong> to reserve the {vehicle.name} with {vehicle.supplier}. The balance is due at collection.</>
+                    : <span style={{color:'#991b1b', fontWeight:600}}>Your dates are invalid. Please go back and select valid pickup and return dates before paying.</span>
+                  }
+                </p>
 
                 {/* Full booking summary before payment */}
                 <TripSummaryBlock/>
@@ -2534,6 +2726,12 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                   </div>
                 </div>
 
+                {!pricingValid && (
+                  <div style={{background:'#fef2f2', border:'1px solid #fca5a5', borderRadius:8, padding:'0.875rem', fontSize:13, color:'#991b1b', marginBottom:'1rem', lineHeight:1.6}}>
+                    <strong>Payment blocked:</strong> Your rental dates are invalid or outside the allowed range (today to 2030, max {MAX_RENTAL_DAYS} days). Please go back and correct your dates.
+                  </div>
+                )}
+
                 {payMsg && (
                   <div className="alert a-warn" style={{marginBottom:'1rem', fontSize:13}}>
                     <Icon name="mdi:alert-circle-outline" sz={16} cls="icon-gold" style={{flexShrink:0}}/> {payMsg}
@@ -2546,10 +2744,15 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     <div style={{fontWeight:700, color:'var(--navy)', marginBottom:'0.25rem'}}>Redirecting to secure checkout…</div>
                     <div style={{fontSize:13, color:'var(--text-muted)'}}>Please do not close this page.</div>
                   </div>
+                ) : !pricingValid ? (
+                  <button className="btn-pay-secure" style={{opacity:.35, cursor:'not-allowed'}} disabled>
+                    <Icon name="mdi:lock-check-outline" sz={18} cls="icon-white"/>
+                    Fix your dates to enable payment
+                  </button>
                 ) : (payMethod === 'rampex' || payMethod === 'card') ? (
                   <button className="btn-secure-checkout" onClick={()=>startPaymentFlow(payMethod)}>
                     <Icon name="mdi:lock-check-outline" sz={18} cls="icon-white"/>
-                    Continue to Secure Checkout — {fmt(p.reservationFee)}
+                    Continue to Secure Checkout — {fmt(liveP.reservationFee)}
                   </button>
                 ) : (
                   <button className="btn-pay-secure" style={{opacity:.5,cursor:'not-allowed'}} disabled>
