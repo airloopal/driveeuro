@@ -2595,13 +2595,12 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
         <div className="container" style={{padding:'2rem 1.5rem', maxWidth:640}}>
           <div className="card card-body" style={{marginBottom:'1rem'}}>
             <h2 style={{color:'var(--navy)', fontWeight:700, marginBottom:'0.875rem', fontSize:'1.1rem'}}>What happened?</h2>
-            <p style={{fontSize:14, color:'var(--text-muted)', lineHeight:1.7, marginBottom:'1rem'}}>You cancelled or closed the payment page before completing your reservation. Your vehicle selection and trip details have not been lost — you can go back and try again.</p>
+            <p style={{fontSize:14, color:'var(--text-muted)', lineHeight:1.7, marginBottom:'1rem'}}>You cancelled or closed the payment page before completing your reservation. No charge has been made. Please search again to select your vehicle and try booking.</p>
             <div style={{background:'var(--ice)', borderRadius:8, padding:'0.875rem', fontSize:13, color:'var(--text-muted)', lineHeight:1.7, marginBottom:'1rem'}}>
               <strong>Need help?</strong> Contact us at <strong><a href="mailto:help@driveeurocars.com" style={{color:'var(--navy)'}}>help@driveeurocars.com</a></strong> and we'll be happy to assist with your booking.
             </div>
             <div style={{display:'flex', gap:'0.75rem', flexWrap:'wrap'}}>
-              <button className="btn btn-primary" onClick={()=>navigate('checkout')}>Try again →</button>
-              <button className="btn btn-outline" onClick={()=>navigate('home')}>Back to search</button>
+              <button className="btn btn-primary" onClick={()=>navigate('home')}>Search again →</button>
             </div>
           </div>
         </div>
@@ -2626,8 +2625,7 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
               <strong>Still having trouble?</strong> Email <strong><a href="mailto:help@driveeurocars.com" style={{color:'var(--navy)'}}>help@driveeurocars.com</a></strong> with your booking reference <strong>{data.id !== '—' ? data.id : '(see above)'}</strong> and we'll help you complete your reservation.
             </div>
             <div style={{display:'flex', gap:'0.75rem', flexWrap:'wrap'}}>
-              <button className="btn btn-primary" onClick={()=>navigate('checkout')}>Try again →</button>
-              <button className="btn btn-outline" onClick={()=>navigate('home')}>Back to search</button>
+              <button className="btn btn-primary" onClick={()=>navigate('home')}>Search again →</button>
             </div>
           </div>
         </div>
