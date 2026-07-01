@@ -804,22 +804,33 @@ const BOOKINGS_INIT = [
 ];
 
 // ── Pricing helpers ───────────────────────────────────────────────────
-// calcPricing uses sourceMarketPrice (the market reference rate per day)
-// as the base for all customer-facing prices.
-// The 30% discount and 10% reservation fee run silently — never exposed
-// as a formula on customer-facing pages.
-const calcPricing = (vehicle, days) => {
+// calcPricing returns ALL values in GBP.
+// Display conversion is handled by fmtCurrency(amountGBP, currency) at
+// the render layer — never inside this function.
+//
+// Minimum reservation fee rule:
+//   fee = max(10% of DriveEuro price,  £20.00 GBP)
+//   fmtCurrency converts the £20 floor to the correct EUR/USD display
+//   amount automatically via the static FX rates.
+//
+// The currency parameter is accepted but intentionally unused here —
+// it exists so call sites can pass it without error while the display
+// layer owns conversion.
+const MIN_FEE_GBP = 20.00; // £20 minimum reservation fee in GBP
+
+const calcPricing = (vehicle, days, currency) => { // eslint-disable-line no-unused-vars
   // ── Fixed-price override for internal test listings ──────────────────
   // If the vehicle carries _fixedPricing, return those values directly
   // without running the standard discount formula.
   if (vehicle._fixedPricing) return { ...vehicle._fixedPricing };
 
-  const perDay   = vehicle.sourceMarketPrice || vehicle.pricePerDay || 0;
-  const original = parseFloat((perDay * days).toFixed(2));          // Original Market Price
-  const discounted  = parseFloat((original * 0.70).toFixed(2));     // DriveEuro Price
-  const reservationFee = parseFloat((discounted * 0.10).toFixed(2)); // Reserve with 10% upfront
-  const remaining   = parseFloat((discounted - reservationFee).toFixed(2)); // Balance due at collection
-  const saved       = parseFloat((original - discounted).toFixed(2));
+  const perDay         = vehicle.sourceMarketPrice || vehicle.pricePerDay || 0;
+  const original       = parseFloat((perDay * days).toFixed(2));          // GBP
+  const discounted     = parseFloat((original * 0.70).toFixed(2));        // GBP — DriveEuro Price
+  const rawFee         = parseFloat((discounted * 0.10).toFixed(2));      // GBP — 10% of DriveEuro Price
+  const reservationFee = parseFloat(Math.max(rawFee, MIN_FEE_GBP).toFixed(2)); // GBP — with £20 floor
+  const remaining      = parseFloat((discounted - reservationFee).toFixed(2)); // GBP
+  const saved          = parseFloat((original - discounted).toFixed(2));  // GBP
   return { original, discounted, reservationFee, remaining, saved };
 };
 
@@ -870,13 +881,14 @@ const TEST_VEHICLE = {
   _isTestListing: true, // flag checked by checkout to enforce £1.00 payment amount
 };
 
-// Legacy helper for contexts that only have pricePerDay (e.g. bookings data)
+// Legacy helper for contexts that only have pricePerDay (e.g. admin display, PI tab)
 const calcPricingFromRate = (pricePerDay, days) => {
-  const original   = parseFloat((pricePerDay * days).toFixed(2));
-  const discounted = parseFloat((original * 0.70).toFixed(2));
-  const reservationFee = parseFloat((discounted * 0.10).toFixed(2));
-  const remaining  = parseFloat((discounted - reservationFee).toFixed(2));
-  const saved      = parseFloat((original - discounted).toFixed(2));
+  const original       = parseFloat((pricePerDay * days).toFixed(2));
+  const discounted     = parseFloat((original * 0.70).toFixed(2));
+  const rawFee         = parseFloat((discounted * 0.10).toFixed(2));
+  const reservationFee = parseFloat(Math.max(rawFee, MIN_FEE_GBP).toFixed(2)); // £20 min
+  const remaining      = parseFloat((discounted - reservationFee).toFixed(2));
+  const saved          = parseFloat((original - discounted).toFixed(2));
   return { original, discounted, reservationFee, remaining, saved };
 };
 
@@ -1056,9 +1068,9 @@ const PricingBlock = ({ p, days, supplier, fmt: fmtFn }) => {
 const var_gold = '#c9a227';
 
 // ── Vehicle Card ──────────────────────────────────────────────────────
-const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn }) => {
+const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn, currency: cur }) => {
   const f = fmtFn || fmt;
-  const p = calcPricing(vehicle, days);
+  const p = calcPricing(vehicle, days, cur || 'GBP');
   return (
     <div className="vehicle-card">
       <VehicleImage vehicle={vehicle}/>
@@ -1740,7 +1752,7 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
           <p style={{color:'var(--text-muted)', marginBottom:'1.75rem'}}>Discounted rentals at top UK and EU destinations</p>
           <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1.25rem'}}>
             {VEHICLES.slice(0,4).map(v => (
-              <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} onSelect={() => navigate('details', {vehicle:v, days:rentalDays})} />
+              <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} currency={currency} onSelect={() => navigate('details', {vehicle:v, days:rentalDays})} />
             ))}
           </div>
           <div style={{textAlign:'center', marginTop:'2rem'}}>
@@ -1921,7 +1933,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
             ) : (
               <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1.25rem'}}>
                 {results.map(v=>(
-                  <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} onSelect={()=>navigate('details',{vehicle:v,days:rentalDays})}/>
+                  <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} currency={currency} onSelect={()=>navigate('details',{vehicle:v,days:rentalDays})}/>
                 ))}
               </div>
             )}
@@ -1936,7 +1948,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
 // ── Vehicle Details ───────────────────────────────────────────────────
 function DetailsPage({ navigate, vehicle, days, currency, fmt, testMode }) {
   if (!vehicle) return <div className="container" style={{padding:'3rem 1.5rem'}}><p>No vehicle selected. <button className="btn btn-navy btn-sm" onClick={()=>navigate('results',{days:7})}>Back to results</button></p></div>;
-  const p = calcPricing(vehicle, days);
+  const p = calcPricing(vehicle, days, currency);
 
   return (
     <div className="page">
@@ -2064,7 +2076,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   const [payMsg, setPayMsg] = useState(''); // inline user-facing message during pay flow
 
   if (!vehicle) return <div className="container" style={{padding:'3rem'}}><button className="btn btn-navy btn-sm" onClick={()=>navigate('results',{days:7})}>← Back to results</button></div>;
-  const p = calcPricing(vehicle, days||7);
+  const p = calcPricing(vehicle, days||7, currency);
   const setF = (k,v) => setForm(f=>({...f,[k]:v}));
 
   // Date logic helpers
@@ -2156,6 +2168,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     // ── Test listing: enforce fixed £1.00 GBP payment amount ─────────────
     // The _isTestListing flag guarantees the payment request is always £1.00
     // regardless of currency selector state, preventing accidental larger charges.
+    // For live vehicles, the £20 minimum floor is already enforced by calcPricing().
     const chargeAmount   = vehicle._isTestListing ? 1.00     : p.reservationFee;
     const chargeCurrency = vehicle._isTestListing ? 'GBP'    : currency;
 
