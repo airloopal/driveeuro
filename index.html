@@ -236,7 +236,7 @@
   .hero-sub { font-size:1.05rem; color:rgba(255,255,255,0.7); max-width:520px; margin-bottom:2rem; line-height:1.75; }
 
   /* Search box */
-  .search-box { background-color: #1a3a5c; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:1.5rem; overflow:hidden; }
+  .search-box { background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:1.5rem; overflow:hidden; }
   .search-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:0.875rem; }
   @media(max-width:640px) { .search-grid { grid-template-columns:1fr !important; gap:0.75rem; } .search-box { padding:1.25rem; border-radius:12px; } }
 
@@ -532,67 +532,6 @@
     h2 { font-size:clamp(1.4rem,7vw,2rem); }
     input, select, textarea { font-size:16px !important; }
   }
-
-/* ── DriveEuroCars compact search card ── */
-.sc-wrap{width:calc(100% - 32px);max-width:840px;margin:0 auto;}
-
-.sc-card{background:#fff;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.28),0 2px 8px rgba(0,0,0,.10);overflow:hidden;}
-
-/* Tabs */
-.sc-tabs{display:flex;border-bottom:1.5px solid #E2E8F0;}
-.sc-tab{flex:1;padding:14px 12px;font-family:'Inter',system-ui,sans-serif;font-size:14px;font-weight:600;color:#64748B;background:#F8FAFC;border:none;cursor:pointer;text-align:center;transition:all .18s;line-height:1.2;}
-.sc-tab.sc-on{background:#fff;color:#0F2744;box-shadow:inset 0 -3px 0 #C9A227;}
-.sc-tab:hover:not(.sc-on){background:#F0F4F8;color:#0F2744;}
-
-/* Rows */
-.sc-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1.5px solid #E2E8F0;box-sizing:border-box;position:relative;}
-.sc-rows>.sc-row:last-child{border-bottom:none;}
-.sc-ico{width:38px;height:38px;border-radius:50%;background:#EEF2F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sc-body{flex:1;min-width:0;}
-.sc-lbl{display:block;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
-.sc-val{font-size:15px;font-weight:600;color:#0F2744;}
-.sc-val.sc-ph{color:#94A3B8;font-weight:400;}
-
-/* Invisible overlay for age select */
-.sc-over{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px;border:none;background:transparent;z-index:5;-webkit-appearance:none;appearance:none;}
-
-/* Location input */
-.sc-loc{width:100%;min-width:0;border:none;outline:none;font-family:'Inter',system-ui,sans-serif;font-size:15px;font-weight:400;color:#0F2744;background:transparent;padding:0;display:block;box-sizing:border-box;}
-.sc-loc::placeholder{color:#94A3B8;}
-.sc-loc:focus{outline:none;box-shadow:none;}
-
-/* Date grid — two columns desktop, one column mobile */
-.sc-date-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-width:0;}
-.sc-date-col{display:flex;flex-direction:column;gap:5px;min-width:0;}
-.sc-date-lbl{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.08em;}
-.sc-date-controls{display:grid;grid-template-columns:1fr 90px;gap:8px;min-width:0;}
-.sc-date-controls input,
-.sc-date-controls select{width:100%;min-width:0;height:40px;border:1.5px solid #E2E8F0;border-radius:9px;font-family:'Inter',system-ui,sans-serif;font-size:14px;font-weight:500;color:#0F2744;background:#fff;padding:0 10px;box-sizing:border-box;-webkit-appearance:none;appearance:none;cursor:pointer;}
-.sc-date-controls input:focus,
-.sc-date-controls select:focus{outline:none;border-color:#0F2744;}
-.sc-date-controls select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2394A3B8' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:14px;padding-right:28px;}
-
-/* Strip selects */
-.sc-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px;border-top:1.5px solid #E2E8F0;background:#F8FAFC;}
-.sc-sel{width:100%;min-width:0;font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:600;color:#0F2744;background:#fff;border:1.5px solid #E2E8F0;border-radius:9px;padding:10px 28px 10px 10px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;box-sizing:border-box;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2394A3B8' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:14px;}
-.sc-sel:focus{border-color:#0F2744;}
-
-/* Search button */
-.sc-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px 20px;background:linear-gradient(135deg,#0F2744 0%,#091C33 100%);color:#fff;font-family:'Inter',system-ui,sans-serif;font-size:16px;font-weight:700;border:none;cursor:pointer;letter-spacing:-.02em;transition:opacity .18s;}
-.sc-btn:hover{opacity:.88;}
-.sc-btn:active{opacity:.76;}
-
-/* Trust pills — always white text on translucent navy */
-.sc-trust{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
-.sc-trust-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:600;color:#fff;}
-
-/* Mobile */
-@media(max-width:640px){
-  .sc-date-grid{grid-template-columns:1fr;}
-  .sc-date-controls{grid-template-columns:1fr 1fr;}
-  .sc-strip{grid-template-columns:1fr;}
-  .sc-trust{grid-template-columns:1fr 1fr;}
-}
 </style>
 </head>
 <body>
@@ -861,21 +800,19 @@ const BOOKINGS_INIT = [
 // as the base for all customer-facing prices.
 // The 30% discount and 10% reservation fee run silently — never exposed
 // as a formula on customer-facing pages.
-const calcPricing = (vehicle, days, currency) => {
+const calcPricing = (vehicle, days) => {
+  // ── Fixed-price override for internal test listings ──────────────────
+  // If the vehicle carries _fixedPricing, return those values directly
+  // without running the standard discount formula.
   if (vehicle._fixedPricing) return { ...vehicle._fixedPricing };
-  const cur    = currency || 'GBP';
-  const rate   = FX[cur] || 1;
-  const perDay = vehicle.sourceMarketPrice || vehicle.pricePerDay || 0;
-  const originalGBP    = parseFloat((perDay * days).toFixed(2));
-  const original       = parseFloat((originalGBP * rate).toFixed(2));
-  const discounted     = parseFloat((original * 0.70).toFixed(2));
-  const rawFee         = parseFloat((discounted * 0.10).toFixed(2));
-  const minFee         = getMinReservationFee(cur);
-  const reservationFee = parseFloat(Math.min(discounted, Math.max(rawFee, minFee)).toFixed(2));
-  const remaining      = parseFloat(Math.max(0, discounted - reservationFee).toFixed(2));
-  const saved          = parseFloat((original - discounted).toFixed(2));
-  const minApplied     = reservationFee > rawFee;
-  return { original, discounted, reservationFee, remaining, saved, minApplied };
+
+  const perDay   = vehicle.sourceMarketPrice || vehicle.pricePerDay || 0;
+  const original = parseFloat((perDay * days).toFixed(2));          // Original Market Price
+  const discounted  = parseFloat((original * 0.70).toFixed(2));     // DriveEuro Price
+  const reservationFee = parseFloat((discounted * 0.10).toFixed(2)); // Reserve with 10% upfront
+  const remaining   = parseFloat((discounted - reservationFee).toFixed(2)); // Balance due at collection
+  const saved       = parseFloat((original - discounted).toFixed(2));
+  return { original, discounted, reservationFee, remaining, saved };
 };
 
 // ── Hidden test vehicle ────────────────────────────────────────────────
@@ -1097,7 +1034,7 @@ const PricingBlock = ({ p, days, supplier, fmt: fmtFn }) => {
       <span className="price-row-val price-row-green">Save {f(p.saved)}</span>
     </div>
     <div className="price-row">
-      <span className="price-row-label">Reservation fee due today</span>
+      <span className="price-row-label">Reserve with 10% upfront</span>
       <span className="price-row-val price-row-gold">{f(p.reservationFee)}</span>
     </div>
     <div className="price-row">
@@ -1111,9 +1048,9 @@ const PricingBlock = ({ p, days, supplier, fmt: fmtFn }) => {
 const var_gold = '#c9a227';
 
 // ── Vehicle Card ──────────────────────────────────────────────────────
-const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn, currency:vcur }) => {
+const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn }) => {
   const f = fmtFn || fmt;
-  const p = calcPricing(vehicle, days, vcur||'GBP');
+  const p = calcPricing(vehicle, days);
   return (
     <div className="vehicle-card">
       <VehicleImage vehicle={vehicle}/>
@@ -1153,7 +1090,7 @@ const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn, currency:vcur }) => 
             </div>
           </div>
           <div className="price-row">
-            <span className="price-row-label">Reservation fee due today</span>
+            <span className="price-row-label">Reserve with 10% upfront</span>
             <span className="price-row-val price-row-gold">{f(p.reservationFee)}</span>
           </div>
           <div className="price-row">
@@ -1178,11 +1115,6 @@ const Toggle = ({ on, onChange, label }) => (
 // ── Static FX rates (MVP) ──────────────────────────────────────────────
 // These are static MVP exchange rates. Replace with live FX API before production.
 const FX = { GBP: 1, EUR: 1.18, USD: 1.27 };
-const MIN_RESERVATION_FEE_GBP = 20;
-function getMinReservationFee(currency) {
-  const rate = FX[currency] || 1;
-  return parseFloat((MIN_RESERVATION_FEE_GBP * rate).toFixed(2));
-}
 const CURRENCY_SYMBOLS = { GBP: '£', EUR: '€', USD: '$' };
 
 const convertPrice = (amountGBP, currency) =>
@@ -1314,7 +1246,7 @@ const searchLocations = (q) => {
 const locPillClass = (type) => ({airport:'lp-airport',city:'lp-city',station:'lp-station',hub:'lp-hub'}[type]||'lp-hub');
 
 // ── LocationInput component ────────────────────────────────────────────
-function LocationInput({ value, onChange, placeholder, onSelect, inputCls }) {
+function LocationInput({ value, onChange, placeholder, onSelect }) {
   const [open, setOpen] = useState(false);
   const [hov, setHov] = useState(-1);
   const suggestions = searchLocations(value);
@@ -1383,7 +1315,7 @@ const LS_KEY = 'driveeuro_search';
 const loadSearch = () => { try { const s = localStorage.getItem(LS_KEY); return s ? JSON.parse(s) : null; } catch { return null; } };
 const saveSearch = (s) => { try { localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch {} };
 
-const SEARCH_DEFAULTS = { pickup:'', dropoff:'', pickupCode:'', dropoffCode:'', pickupDate:'', pickupTime:'10:00', returnDate:'', returnTime:'10:00', driverAge:'30-65', vehicleType:'', country:'', diffDropoff:false };
+const SEARCH_DEFAULTS = { pickup:'', dropoff:'', pickupCode:'', dropoffCode:'', pickupDate:'', pickupTime:'10:00', returnDate:'', returnTime:'10:00', driverAge:'30-65', vehicleType:'' };
 
 function App() {
   const [page, setPage] = useState('home');
@@ -1419,17 +1351,22 @@ function App() {
   // Persist currency selection
   useEffect(() => { try { localStorage.setItem('driveeuro_cur', currency); } catch {} }, [currency]);
 
-  // ── Handle Rampex return redirect ─────────────────────────────────────
-  // Rampex redirects back to /?payment=success|cancelled&provider=rampex&booking=REF
-  // This effect runs once on mount and handles both outcomes.
+  // ── Handle payment return redirect ────────────────────────────────────
+  // Rampex redirects back to the site with one of these URLs:
+  //   https://www.driveeurocars.com/?payment=success
+  //   https://www.driveeurocars.com/?payment=cancelled
+  //   https://www.driveeurocars.com/?payment=failed
+  // The &provider=rampex and &booking=REF params may also be present.
+  // This effect runs once on mount and handles all three outcomes.
   useEffect(() => {
     const handleRampexReturnIfNeeded = async () => {
-      const params   = new URLSearchParams(window.location.search);
-      const payment  = params.get('payment');
-      const provider = params.get('provider');
-      if (provider !== 'rampex') return; // not a Rampex return
+      const params  = new URLSearchParams(window.location.search);
+      const payment = params.get('payment');
+      // Accept both the new clean URLs (?payment=X) and the legacy
+      // (?payment=X&provider=rampex) format so old links keep working.
+      if (!payment) return; // no payment param — normal page load
 
-      // Clean the URL so refreshing does not re-trigger
+      // Clean the URL immediately so refreshing does not re-trigger
       window.history.replaceState({}, document.title, window.location.pathname);
 
       // Retrieve the pending payment record saved before redirect
@@ -1439,16 +1376,70 @@ function App() {
         if (raw) pending = JSON.parse(raw);
       } catch { /* malformed — treat as null */ }
 
+      // ── Cancelled ────────────────────────────────────────────────────
       if (payment === 'cancelled') {
-        // ── Customer cancelled at Rampex checkout ─────────────────────
         try { localStorage.removeItem('driveEuroPendingPayment'); } catch {}
-        alert('Payment was not completed. Your vehicle has not been reserved yet.');
-        setPage('home');
+        // Show an in-app cancelled state on the confirmation page
+        // rather than a browser alert — more premium UX
+        setConfirmData({
+          _paymentCancelled: true,
+          id:       pending?.bookingReference || '—',
+          vehicle:  pending?.vehicleName      || '',
+          supplier: pending?.supplierName     || '',
+          pickup:   pending?.trip?.pickupLocation  || '',
+          dropoff:  pending?.trip?.dropoffLocation || '',
+          pickupDate: pending?.trip?.pickupDate || '',
+          pickupTime: pending?.trip?.pickupTime || '',
+          returnDate: pending?.trip?.returnDate || '',
+          returnTime: pending?.trip?.returnTime || '',
+          customer:   pending?.customer?.fullName || '',
+          email:      pending?.customer?.email   || '',
+          currency:   pending?.currency || 'GBP',
+          originalPrice:   pending?.originalPrice  || 0,
+          discountedPrice: pending?.discountedPrice || 0,
+          reservationFee:  pending?.reservationFee  || 0,
+          remaining:       pending?.remaining       || 0,
+          saved:           pending?.saved           || 0,
+          driverAge:       pending?.customer?.driverAge || '',
+          days:            pending?.days || 7,
+        });
+        setPage('confirmation');
+        window.scrollTo(0, 0);
         return;
       }
 
+      // ── Failed ───────────────────────────────────────────────────────
+      if (payment === 'failed') {
+        try { localStorage.removeItem('driveEuroPendingPayment'); } catch {}
+        setConfirmData({
+          _paymentFailed: true,
+          id:       pending?.bookingReference || '—',
+          vehicle:  pending?.vehicleName      || '',
+          supplier: pending?.supplierName     || '',
+          pickup:   pending?.trip?.pickupLocation  || '',
+          dropoff:  pending?.trip?.dropoffLocation || '',
+          pickupDate: pending?.trip?.pickupDate || '',
+          pickupTime: pending?.trip?.pickupTime || '',
+          returnDate: pending?.trip?.returnDate || '',
+          returnTime: pending?.trip?.returnTime || '',
+          customer:   pending?.customer?.fullName || '',
+          email:      pending?.customer?.email   || '',
+          currency:   pending?.currency || 'GBP',
+          originalPrice:   pending?.originalPrice  || 0,
+          discountedPrice: pending?.discountedPrice || 0,
+          reservationFee:  pending?.reservationFee  || 0,
+          remaining:       pending?.remaining       || 0,
+          saved:           pending?.saved           || 0,
+          driverAge:       pending?.customer?.driverAge || '',
+          days:            pending?.days || 7,
+        });
+        setPage('confirmation');
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      // ── Success ──────────────────────────────────────────────────────
       if (payment === 'success') {
-        // ── Customer returned after Rampex checkout ────────────────────
         const bookingRef = params.get('booking') || pending?.bookingReference || genId();
         const paymentId  = pending?.paymentId || null;
 
@@ -1464,7 +1455,7 @@ function App() {
             if (res.ok) statusResult = await res.json();
           } catch (err) {
             console.error('[DriveEuro] rampex-payment-status error:', err.message);
-            // Non-fatal — we continue and show the booking anyway
+            // Non-fatal — continue and show the booking anyway
           }
         }
 
@@ -1472,7 +1463,7 @@ function App() {
         const paidStatuses = ['paid', 'completed', 'success', 'captured', 'approved', 'settled'];
         const isPaid = statusResult
           ? paidStatuses.includes((statusResult.status || '').toLowerCase())
-          : true; // if we could not verify, optimistically continue and advise customer to contact us
+          : true; // optimistically continue if status unavailable
 
         // Persist result
         try {
@@ -1481,9 +1472,8 @@ function App() {
         } catch {}
 
         // Build the booking confirmation object
-        const ref = bookingRef;
         const booking = {
-          id:              ref,
+          id:              bookingRef,
           customer:        pending?.customer?.fullName   || '',
           email:           pending?.customer?.email      || '',
           phone:           pending?.customer?.phone      || '',
@@ -1504,7 +1494,7 @@ function App() {
           reservationFee:  pending?.reservationFee       || 0,
           remaining:       pending?.remaining            || 0,
           saved:           pending?.saved                || 0,
-          status:          isPaid ? 'reserved' : 'reserved', // still reserved — balance due later
+          status:          'reserved',
           paymentMethod:   'rampex',
           paymentId:       paymentId,
           providerRef:     statusResult?.providerReference || null,
@@ -1601,7 +1591,7 @@ function App() {
 }
 
 // ── Home ──────────────────────────────────────────────────────────────
-function HomePage({ navigate, searchParams, setSearchParams, currency, setCurrency, fmt }) {
+function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
   const [local, setLocal] = useState({ ...SEARCH_DEFAULTS, ...searchParams });
   const [rentalDays, setRentalDays] = useState(() => {
     if (searchParams.pickupDate && searchParams.returnDate) {
@@ -1611,11 +1601,6 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
     return 7;
   });
   const set = (k,v) => setLocal(p => ({...p,[k]:v}));
-  const diffDropoff = !!local.diffDropoff;
-  const fmtPickupDate = local.pickupDate ? new Date(local.pickupDate + 'T12:00:00').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'}) : null;
-  const fmtReturnDate = local.returnDate ? new Date(local.returnDate + 'T12:00:00').toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'}) : null;
-  const AGE_LABEL = {'Under 21':'Under 21','21-24':'21\u201324','25-29':'25\u201329','30-65':'30\u201365','66+':'66+'};
-
 
   const today = todayStr();
 
@@ -1658,187 +1643,67 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
           <h1 className="hero-title">Great rates on rentals,<br /><span>no membership required</span></h1>
           <p className="hero-sub">Compare discounted prices at 50+ rental desks across Europe. Pay just 10% upfront to reserve — settle the balance at collection.</p>
           <div className="search-box">
-           {/* ── Compact search card ── */}
-          <div className="sc-wrap">
-            <div className="sc-card">
-
-              {/* Tabs */}
-              <div className="sc-tabs">
-                <button className={`sc-tab${!diffDropoff ? ' sc-on' : ''}`}
-                  onClick={() => { set('diffDropoff', false); set('dropoff', local.pickup); set('dropoffCode', local.pickupCode); }}>
-                  Same drop-off
-                </button>
-                <button className={`sc-tab${diffDropoff ? ' sc-on' : ''}`}
-                  onClick={() => set('diffDropoff', true)}>
-                  Different drop-off
-                </button>
+            <div className="search-grid">
+              <div className="form-group">
+                <label className="form-label">Pickup location</label>
+                <LocationInput value={local.pickup} onChange={v=>set('pickup',v)} placeholder="Where are you collecting from?" onSelect={loc=>{set('pickup',loc.name);set('pickupCode',loc.locationCode);}}/>
               </div>
-
-              <div className="sc-rows">
-
-                {/* Pickup location */}
-                <div className="sc-row">
-                  <div className="sc-ico">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#0F2744"/></svg>
-                  </div>
-                  <div className="sc-body">
-                    <span className="sc-lbl">{diffDropoff ? 'Pickup location' : 'Pickup & drop-off location'}</span>
-                    <LocationInput
-                      value={local.pickup}
-                      onChange={v => { set('pickup', v); if (!diffDropoff) set('dropoff', v); }}
-                      placeholder="Where are you collecting from?"
-                      onSelect={loc => {
-                        set('pickup', loc.name); set('pickupCode', loc.locationCode);
-                        if (!diffDropoff) { set('dropoff', loc.name); set('dropoffCode', loc.locationCode); }
-                      }}
-                      inputCls="sc-loc"
-                    />
-                  </div>
-                </div>
-
-                {/* Drop-off location — different mode only */}
-                {diffDropoff && (
-                  <div className="sc-row">
-                    <div className="sc-ico">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#64748B"/></svg>
-                    </div>
-                    <div className="sc-body">
-                      <span className="sc-lbl">Drop-off location</span>
-                      <LocationInput
-                        value={local.dropoff}
-                        onChange={v => set('dropoff', v)}
-                        placeholder="Where are you returning the vehicle?"
-                        onSelect={loc => { set('dropoff', loc.name); set('dropoffCode', loc.locationCode); }}
-                        inputCls="sc-loc"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Rental period — real date+time inputs */}
-                <div className="sc-row" style={{alignItems:'flex-start'}}>
-                  <div className="sc-ico" style={{marginTop:6}}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7z" fill="#0F2744"/></svg>
-                  </div>
-                  <div className="sc-date-grid">
-                    <div className="sc-date-col">
-                      <span className="sc-date-lbl">Collection</span>
-                      <div className="sc-date-controls">
-                        <input
-                          type="date"
-                          value={local.pickupDate}
-                          min={today}
-                          onChange={e => handlePickupDateChange(e.target.value)}
-                        />
-                        <select value={local.pickupTime} onChange={e => set('pickupTime', e.target.value)}>
-                          {TIMES.map(t => <option key={t}>{t}</option>)}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="sc-date-col">
-                      <span className="sc-date-lbl">Return</span>
-                      <div className="sc-date-controls">
-                        <input
-                          type="date"
-                          value={local.returnDate}
-                          min={local.pickupDate || today}
-                          onChange={e => handleReturnDateChange(e.target.value)}
-                        />
-                        <select value={local.returnTime} onChange={e => set('returnTime', e.target.value)}>
-                          {TIMES.map(t => <option key={t}>{t}</option>)}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Driver age */}
-                <div className="sc-row" style={{cursor:'pointer'}}>
-                  <div className="sc-ico">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#0F2744"/></svg>
-                  </div>
-                  <div className="sc-body" style={{position:'relative'}}>
-                    <span className="sc-lbl">Driver's age</span>
-                    <span className={`sc-val${!local.driverAge ? ' sc-ph' : ''}`}>
-                      {AGE_LABEL[local.driverAge] || local.driverAge || 'Select age'}
-                    </span>
-                    <select className="sc-over" value={local.driverAge} onChange={e => set('driverAge', e.target.value)}>
-                      <option value="">Select driver age</option>
-                      <option value="Under 21">Under 21</option>
-                      <option value="21-24">21–24</option>
-                      <option value="25-29">25–29</option>
-                      <option value="30-65">30–65</option>
-                      <option value="66+">66+</option>
-                    </select>
-                  </div>
-                </div>
-
-              </div>{/* /sc-rows */}
-
-              {/* Vehicle / Country / Currency */}
-              <div className="sc-strip">
-                <select className="sc-sel" value={local.vehicleType} onChange={e => set('vehicleType', e.target.value)}>
-                  <option value="">All vehicle types</option>
-                  <option value="Economy">Economy</option>
-                  <option value="Premium">Premium</option>
-                  <option value="Luxury">Luxury</option>
-                  <option value="Electric">Electric</option>
-                  <option value="SUV">SUV</option>
-                </select>
-                <select className="sc-sel" value={local.country || ''} onChange={e => set('country', e.target.value)}>
-                  <option value="">All countries</option>
-                  <option value="UK">United Kingdom</option>
-                  <option value="France">France</option>
-                  <option value="Germany">Germany</option>
-                  <option value="Spain">Spain</option>
-                  <option value="Italy">Italy</option>
-                  <option value="Netherlands">Netherlands</option>
-                  <option value="Portugal">Portugal</option>
-                  <option value="Ireland">Ireland</option>
-                </select>
-                <select className="sc-sel" value={currency} onChange={e => setCurrency && setCurrency(e.target.value)}>
-                  <option value="GBP">£ GBP</option>
-                  <option value="EUR">€ EUR</option>
-                  <option value="USD">$ USD</option>
+              <div className="form-group">
+                <label className="form-label">Drop-off location</label>
+                <LocationInput value={local.dropoff} onChange={v=>set('dropoff',v)} placeholder="Same location or choose another" onSelect={loc=>{set('dropoff',loc.name);set('dropoffCode',loc.locationCode);}}/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Pickup date</label>
+                <input type="date" className="form-input" value={local.pickupDate} min={today} onChange={e=>handlePickupDateChange(e.target.value)}/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Pickup time</label>
+                <select className="form-input" value={local.pickupTime} onChange={e=>set('pickupTime',e.target.value)}>
+                  {TIMES.map(t=><option key={t}>{t}</option>)}
                 </select>
               </div>
-
-              {/* Search */}
-              <button className="sc-btn" onClick={handleSearch}>
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#C9A227"/></svg>
-                Search
-                {local.pickupDate && local.returnDate && (
-                  <span style={{fontWeight:400, fontSize:13, opacity:.65}}>
-                    &nbsp;· {rentalDays} day{rentalDays !== 1 ? 's' : ''}
-                  </span>
-                )}
-              </button>
-
-            </div>{/* /sc-card */}
-
-            {/* Benefit pills — white text on translucent, always visible on navy hero */}
-            <div className="sc-trust">
-              <span className="sc-trust-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" fill="#C9A227"/></svg>
-                Reserve with 10% upfront
-              </span>
-              <span className="sc-trust-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 2v11h3v9l7-12h-4l4-8z" fill="#C9A227"/></svg>
-                Save up to 30% on rentals
-              </span>
-              <span className="sc-trust-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#C9A227"/></svg>
-                50+ verified suppliers
-              </span>
-              <span className="sc-trust-pill">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" fill="#C9A227"/></svg>
-                Balance due at collection
+              <div className="form-group">
+                <label className="form-label">Return date</label>
+                <input type="date" className="form-input" value={local.returnDate} min={local.pickupDate||today} onChange={e=>handleReturnDateChange(e.target.value)}/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Return time</label>
+                <select className="form-input" value={local.returnTime} onChange={e=>set('returnTime',e.target.value)}>
+                  {TIMES.map(t=><option key={t}>{t}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Driver age</label>
+                <select className="form-input" value={local.driverAge} onChange={e=>set('driverAge',e.target.value)}>
+                  <option value="">Select driver age</option>
+                  <option>Under 21</option><option>21-24</option><option>25-29</option><option value="30-65">30–65</option><option>66+</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Vehicle type</label>
+                <select className="form-input" value={local.vehicleType} onChange={e=>set('vehicleType',e.target.value)}>
+                  <option value="">Choose vehicle type</option><option>Economy</option><option>Premium</option><option>Luxury</option><option>Electric</option><option>SUV</option>
+                </select>
+              </div>
+            </div>
+            <div style={{marginTop:'1rem', display:'flex', gap:'1rem', alignItems:'center', flexWrap:'wrap'}}>
+              <button className="btn btn-primary" style={{minWidth:200}} onClick={handleSearch}>Search available cars →</button>
+              <span style={{fontSize:13, color:'var(--text-faint)'}}>
+                {local.pickupDate && local.returnDate ? `${rentalDays}-day rental · ` : ''}DriveEuro prices shown
               </span>
             </div>
-
-          </div>{/* /sc-wrap */}
-
           </div>
+        </div>
+      </div>
+
+      <div className="trust-bar">
+        <div className="trust-inner">
+          <div className="trust-item"><Icon name="mdi:lock-check-outline" sz={18} cls="icon-gold"/> Reserve with 10% upfront</div>
+          <div className="trust-item"><Icon name="mdi:sale-outline" sz={18} cls="icon-gold"/> Save up to 30% on rentals</div>
+          <div className="trust-item"><Icon name="mdi:shield-star-outline" sz={18} cls="icon-gold"/> 50+ verified suppliers</div>
+          <div className="trust-item"><Icon name="mdi:airplane-marker" sz={18} cls="icon-gold"/> Airport meet &amp; greet</div>
+          <div className="trust-item"><Icon name="mdi:cash-clock" sz={18} cls="icon-gold"/> Balance due at collection</div>
+          <div className="trust-item"><Icon name="mdi:refresh" sz={18} cls="icon-gold"/> Refund if unavailable</div>
         </div>
       </div>
 
@@ -1867,7 +1732,7 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, setCurren
           <p style={{color:'var(--text-muted)', marginBottom:'1.75rem'}}>Discounted rentals at top UK and EU destinations</p>
           <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1.25rem'}}>
             {VEHICLES.slice(0,4).map(v => (
-              <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} onSelect={() => navigate('details', {vehicle:v, days:rentalDays})}  currency={currency}/>
+              <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} onSelect={() => navigate('details', {vehicle:v, days:rentalDays})} />
             ))}
           </div>
           <div style={{textAlign:'center', marginTop:'2rem'}}>
@@ -1944,7 +1809,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
 
       <div className="filter-section">
         <div className="filter-title">Rental days</div>
-        <input type="number" className={inputCls || "form-input"} style={{fontSize:13}} min={1} max={90} value={rentalDays} onChange={e=>setRentalDays(Math.max(1,Number(e.target.value)))} />
+        <input type="number" className="form-input" style={{fontSize:13}} min={1} max={90} value={rentalDays} onChange={e=>setRentalDays(Math.max(1,Number(e.target.value)))} />
       </div>
 
       <div className="filter-section">
@@ -2048,7 +1913,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
             ) : (
               <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1.25rem'}}>
                 {results.map(v=>(
-                  <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} onSelect={()=>navigate('details',{vehicle:v,days:rentalDays})} currency={currency}/>
+                  <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} onSelect={()=>navigate('details',{vehicle:v,days:rentalDays})}/>
                 ))}
               </div>
             )}
@@ -2063,7 +1928,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
 // ── Vehicle Details ───────────────────────────────────────────────────
 function DetailsPage({ navigate, vehicle, days, currency, fmt, testMode }) {
   if (!vehicle) return <div className="container" style={{padding:'3rem 1.5rem'}}><p>No vehicle selected. <button className="btn btn-navy btn-sm" onClick={()=>navigate('results',{days:7})}>Back to results</button></p></div>;
-  const p = calcPricing(vehicle, days, currency);
+  const p = calcPricing(vehicle, days);
 
   return (
     <div className="page">
@@ -2191,7 +2056,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   const [payMsg, setPayMsg] = useState(''); // inline user-facing message during pay flow
 
   if (!vehicle) return <div className="container" style={{padding:'3rem'}}><button className="btn btn-navy btn-sm" onClick={()=>navigate('results',{days:7})}>← Back to results</button></div>;
-  const p = calcPricing(vehicle, days || 7, currency);
+  const p = calcPricing(vehicle, days||7);
   const setF = (k,v) => setForm(f=>({...f,[k]:v}));
 
   // Date logic helpers
@@ -2241,9 +2106,14 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   // stores a pending payment record in localStorage, then redirects the customer
   // to the Rampex-hosted checkout page.
   //
+  // Rampex redirects back to one of:
+  //   https://www.driveeurocars.com/?payment=success
+  //   https://www.driveeurocars.com/?payment=cancelled
+  //   https://www.driveeurocars.com/?payment=failed
+  //
   // On return, handleRampexReturnIfNeeded() (mounted in App on page load) reads
   // the URL query params, optionally calls /api/rampex-payment-status,
-  // and routes to the confirmation page.
+  // and routes to the confirmation page for all three outcomes.
   //
   // Klarna remains disabled until merchant integration is approved and tested.
   const startPaymentFlow = async (method) => {
@@ -2398,7 +2268,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
             <strong style={{color:'var(--navy)'}}>{fmt(p.discounted)}</strong>
           </div>
           <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
-            <span style={{color:'var(--text-muted)'}}>Reservation fee due today</span>
+            <span style={{color:'var(--text-muted)'}}>Reserve with 10% upfront</span>
             <strong style={{color:'var(--warn)'}}>{fmt(p.reservationFee)}</strong>
           </div>
           <div style={{display:'flex', justifyContent:'space-between', fontSize:13}}>
@@ -2423,7 +2293,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
         <div className="price-row"><span className="price-row-label">You save</span><span className="price-row-val price-row-green">Save {fmt(p.saved)}</span></div>
         <div className="price-row"><span className="price-row-label" style={{fontWeight:600, color:'#fff'}}>DriveEuro Price</span><span className="price-row-val price-row-gold" style={{fontWeight:800, fontSize:'1.05rem'}}>{fmt(p.discounted)}</span></div>
         <div style={{height:1, background:'rgba(255,255,255,0.12)', margin:'0.6rem 0'}}/>
-        <div className="price-row"><span className="price-row-label">Reservation fee due today</span><span className="price-row-val price-row-gold" style={{fontWeight:800, fontSize:'1.1rem'}}>{fmt(p.reservationFee)}</span></div>
+        <div className="price-row"><span className="price-row-label">Reserve with 10% upfront</span><span className="price-row-val price-row-gold" style={{fontWeight:800, fontSize:'1.1rem'}}>{fmt(p.reservationFee)}</span></div>
         <div className="price-row"><span className="price-row-label">Balance due at collection</span><span className="price-row-val">{fmt(p.remaining)}</span></div>
         <div className="disclaimer-box" style={{fontSize:11}}>{OPERATIONAL_DISCLAIMER}</div>
       </div>
@@ -2692,6 +2562,59 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
   const [emailOpen, setEmailOpen] = useState(false);
   if (!data) return <div className="container" style={{padding:'3rem'}}><button className="btn btn-navy btn-sm" onClick={()=>navigate('home')}>Home</button></div>;
 
+  // ── Payment cancelled ──────────────────────────────────────────────
+  if (data._paymentCancelled) {
+    return (
+      <div className="page">
+        <div className="confirm-hero" style={{background:'linear-gradient(135deg,#374151,#1f2937)'}}>
+          <div className="confirm-icon"><Icon name="mdi:close-circle-outline" sz={36} cls="icon-gold"/></div>
+          <h1 style={{fontSize:'1.9rem', fontWeight:800, marginBottom:'0.5rem'}}>Payment Not Completed</h1>
+          <p style={{color:'rgba(255,255,255,0.8)', fontSize:'1.05rem', maxWidth:520, margin:'0 auto'}}>Your vehicle has not been reserved yet. No charge has been made.</p>
+        </div>
+        <div className="container" style={{padding:'2rem 1.5rem', maxWidth:640}}>
+          <div className="card card-body" style={{marginBottom:'1rem'}}>
+            <h2 style={{color:'var(--navy)', fontWeight:700, marginBottom:'0.875rem', fontSize:'1.1rem'}}>What happened?</h2>
+            <p style={{fontSize:14, color:'var(--text-muted)', lineHeight:1.7, marginBottom:'1rem'}}>You cancelled or closed the payment page before completing your reservation. Your vehicle selection and trip details have not been lost — you can go back and try again.</p>
+            <div style={{background:'var(--ice)', borderRadius:8, padding:'0.875rem', fontSize:13, color:'var(--text-muted)', lineHeight:1.7, marginBottom:'1rem'}}>
+              <strong>Need help?</strong> Contact us at <strong><a href="mailto:help@driveeurocars.com" style={{color:'var(--navy)'}}>help@driveeurocars.com</a></strong> and we'll be happy to assist with your booking.
+            </div>
+            <div style={{display:'flex', gap:'0.75rem', flexWrap:'wrap'}}>
+              <button className="btn btn-primary" onClick={()=>navigate('checkout')}>Try again →</button>
+              <button className="btn btn-outline" onClick={()=>navigate('home')}>Back to search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Payment failed ─────────────────────────────────────────────────
+  if (data._paymentFailed) {
+    return (
+      <div className="page">
+        <div className="confirm-hero" style={{background:'linear-gradient(135deg,#7f1d1d,#991b1b)'}}>
+          <div className="confirm-icon"><Icon name="mdi:alert-circle-outline" sz={36} cls="icon-gold"/></div>
+          <h1 style={{fontSize:'1.9rem', fontWeight:800, marginBottom:'0.5rem'}}>Payment Failed</h1>
+          <p style={{color:'rgba(255,255,255,0.8)', fontSize:'1.05rem', maxWidth:520, margin:'0 auto'}}>We were unable to process your payment. No charge has been made.</p>
+        </div>
+        <div className="container" style={{padding:'2rem 1.5rem', maxWidth:640}}>
+          <div className="card card-body" style={{marginBottom:'1rem'}}>
+            <h2 style={{color:'var(--navy)', fontWeight:700, marginBottom:'0.875rem', fontSize:'1.1rem'}}>What to do next</h2>
+            <p style={{fontSize:14, color:'var(--text-muted)', lineHeight:1.7, marginBottom:'1rem'}}>This can happen if a card was declined, the session timed out, or there was a temporary issue with the payment provider. Please check your card details and try again, or use a different payment method.</p>
+            <div style={{background:'var(--ice)', borderRadius:8, padding:'0.875rem', fontSize:13, color:'var(--text-muted)', lineHeight:1.7, marginBottom:'1rem'}}>
+              <strong>Still having trouble?</strong> Email <strong><a href="mailto:help@driveeurocars.com" style={{color:'var(--navy)'}}>help@driveeurocars.com</a></strong> with your booking reference <strong>{data.id !== '—' ? data.id : '(see above)'}</strong> and we'll help you complete your reservation.
+            </div>
+            <div style={{display:'flex', gap:'0.75rem', flexWrap:'wrap'}}>
+              <button className="btn btn-primary" onClick={()=>navigate('checkout')}>Try again →</button>
+              <button className="btn btn-outline" onClick={()=>navigate('home')}>Back to search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Payment success ────────────────────────────────────────────────
   return (
     <div className="page">
       <div className="confirm-hero">
@@ -2717,6 +2640,10 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
                   <div className="how-content"><h3>{h}</h3><p style={{fontSize:13}}>{p}</p></div>
                 </div>
               ))}
+              {/* Contact email always visible on confirmation */}
+              <div style={{background:'var(--ice)', borderRadius:8, padding:'0.875rem', fontSize:13, color:'var(--text-muted)', lineHeight:1.7, marginTop:'0.75rem'}}>
+                <strong>Questions about your booking?</strong> Contact us at <strong><a href="mailto:help@driveeurocars.com" style={{color:'var(--navy)'}}>help@driveeurocars.com</a></strong> and quote your reference <strong>{data.id}</strong>.
+              </div>
               <div style={{background:'var(--ice)', borderRadius:8, padding:'0.875rem', fontSize:12, color:'var(--text-muted)', lineHeight:1.7, marginTop:'0.5rem'}}>{OPERATIONAL_DISCLAIMER}</div>
             </div>
 
@@ -2744,14 +2671,14 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
                   </div>
                   <div className="email-body">
                     <div style={{background:'var(--navy)', padding:'1.5rem', textAlign:'center'}}>
-                      <div style={{fontWeight:800, fontSize:'1.3rem', color:'#fff', letterSpacing:'-0.03em'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
+                      <div style={{fontWeight:800, fontSize:'1.3rem', color:'#fff', letterSpacing:'-0.03em'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span>Cars</div>
                     </div>
                     <div className="email-inner">
                       <p style={{marginBottom:'1rem'}}>Dear {data.customer},</p>
                       <p style={{marginBottom:'1rem'}}>Your vehicle is reserved and your booking is confirmed. Here are your collection details:</p>
                       <div style={{background:'#f8f9fa', border:'1px solid var(--border)', borderRadius:10, padding:'1rem', marginBottom:'1rem', fontSize:13}}>
                         <div style={{fontWeight:700, color:'var(--navy)', marginBottom:'0.5rem'}}>Booking reference: <span style={{color:'var(--gold)'}}>{data.id}</span></div>
-                        {[['Vehicle',data.vehicle],['Supplier',data.supplier],['Pickup',`${data.pickup} · ${data.pickupDate} at ${data.pickupTime||'10:00'}`],['Return',`${data.returnDate||''} at ${data.returnTime||'10:00'}`]].map(([k,v])=>(
+                        {[['Vehicle',`${data.vehicle} or similar`],['Supplier',data.supplier],['Pickup',`${data.pickup} · ${data.pickupDate} at ${data.pickupTime||'10:00'}`],['Return',`${data.dropoff||data.pickup} · ${data.returnDate||''} at ${data.returnTime||'10:00'}`]].map(([k,v])=>(
                           <div key={k} style={{display:'flex', gap:'1rem', padding:'0.25rem 0', borderBottom:'1px solid var(--border)'}}>
                             <span style={{color:'var(--text-muted)', minWidth:80}}>{k}</span><span style={{fontWeight:500}}>{v}</span>
                           </div>
@@ -2763,7 +2690,7 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
                           Standard price: <span style={{textDecoration:'line-through'}}>{fmt(data.originalPrice)}</span><br/>
                           DriveEuro Price: <strong>{fmt(data.discountedPrice)}</strong><br/>
                           You saved: <strong style={{color:'var(--success)'}}>{fmt(data.saved)}</strong><br/>
-                          Paid today (10% reservation fee): <strong style={{color:'#92400e'}}>{fmt(data.reservationFee)}</strong><br/>
+                          Paid today (reservation fee): <strong style={{color:'#92400e'}}>{fmt(data.reservationFee)}</strong><br/>
                           <strong>Balance due at collection: {fmt(data.remaining)}</strong>
                         </div>
                       </div>
@@ -2775,7 +2702,7 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
                       </div>
                       <div style={{marginTop:'1.5rem', borderTop:'1px solid var(--border)', paddingTop:'1rem', fontSize:12, color:'var(--text-faint)', lineHeight:1.7}}>
                         DriveEuroCars · help@driveeurocars.com · +44 20 7946 0300<br/>
-                        You're receiving this because you made a reservation on DriveEuro.
+                        You're receiving this because you made a reservation on DriveEuroCars.
                       </div>
                     </div>
                   </div>
@@ -2793,7 +2720,7 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
               {data.paymentId && !data.providerRef && <div className="price-row"><span className="price-row-label">Payment ID</span><span className="price-row-val" style={{fontSize:11}}>{data.paymentId}</span></div>}
               {data.isPaid === false && (
                 <div style={{background:'var(--warn-bg)', border:'1px solid #fde68a', borderRadius:8, padding:'0.6rem 0.75rem', fontSize:12, color:'var(--warn)', marginTop:'0.5rem', lineHeight:1.5}}>
-                  Payment is being verified. If you have completed payment, please contact DriveEuro with your booking reference.
+                  Payment is being verified. If you have completed payment, please contact <strong>help@driveeurocars.com</strong> with your booking reference.
                 </div>
               )}
               <div className="price-row"><span className="price-row-label">Vehicle</span><span className="price-row-val" style={{fontSize:12}}>{data.vehicle} or similar</span></div>
@@ -2807,12 +2734,16 @@ function ConfirmationPage({ navigate, data, currency, fmt }) {
               <div style={{height:1, background:'rgba(255,255,255,0.12)', margin:'0.4rem 0'}}/>
               <div className="price-row"><span className="price-row-label">DriveEuro Price</span><span className="price-row-val price-row-gold">{fmt(data.discountedPrice)}</span></div>
               <div className="price-row"><span className="price-row-label">You saved</span><span className="price-row-val price-row-green">Save {fmt(data.saved)}</span></div>
-              <div className="price-row"><span className="price-row-label">Paid today (10%)</span><span className="price-row-val price-row-gold" style={{fontWeight:800}}>{fmt(data.reservationFee)}</span></div>
+              <div className="price-row"><span className="price-row-label">Reservation fee paid</span><span className="price-row-val price-row-gold" style={{fontWeight:800}}>{fmt(data.reservationFee)}</span></div>
               <div className="price-row"><span className="price-row-label">Balance due at collection</span><span className="price-row-val">{fmt(data.remaining)}</span></div>
               {data.currency && data.currency !== 'GBP' && <div style={{fontSize:11, color:'rgba(255,255,255,0.5)', marginTop:4}}>Prices shown in {data.currency}</div>}
               <div className="disclaimer-box" style={{fontSize:11}}>{OPERATIONAL_DISCLAIMER}</div>
             </div>
             <div className="alert alert-success" style={{fontSize:12, marginBottom:'0.875rem'}}><Icon name="mdi:check-decagram-outline" sz={16} cls="icon-green" style={{flexShrink:0}}/> Status: <strong>Booking Confirmed</strong></div>
+            <div style={{fontSize:12, color:'var(--text-muted)', marginBottom:'0.875rem', lineHeight:1.6}}>
+              <Icon name="mdi:email-outline" sz={13} cls="icon-muted" style={{verticalAlign:'middle', marginRight:4}}/>
+              <a href="mailto:help@driveeurocars.com" style={{color:'var(--navy)', fontWeight:600}}>help@driveeurocars.com</a>
+            </div>
             <button className="btn btn-navy btn-full" onClick={()=>navigate('home')}>Book another car</button>
           </div>
         </div>
