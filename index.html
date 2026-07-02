@@ -152,6 +152,23 @@
   /* Constrain the calendar icon so it never pushes input wider */
   input[type="date"]::-webkit-calendar-picker-indicator { max-width:24px; flex-shrink:0; }
 
+  /* ── Disabled date picker day cells ──────────────────────────────────────
+     Browsers that render a custom calendar overlay (Chromium, Edge) apply
+     these rules to greyed-out dates. Pointer-events:none prevents selection. */
+  .calendar-day.is-disabled,
+  .date-day.is-disabled,
+  .day.disabled {
+    opacity: 0.28;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+  .calendar-day.is-disabled:hover,
+  .date-day.is-disabled:hover,
+  .day.disabled:hover {
+    background: transparent;
+    color: inherit;
+  }
+
   /* Placeholder colour — premium and readable */
   input::placeholder, textarea::placeholder { color:#7A869A; opacity:1; }
   select:invalid, select option[value=""] { color:var(--text-faint); }
@@ -1464,35 +1481,52 @@ const isValidDate = (dateStr, requireFuture = false) => {
 /**
  * Returns today's date as YYYY-MM-DD (local time).
  */
-const todayStr = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+/**
+ * toISODateLocal — convert a Date to YYYY-MM-DD using LOCAL time.
+ * Never uses toISOString() which shifts to UTC and can cause off-by-one-day bugs.
+ */
+const toISODateLocal = (date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
+// Keep todayStr as an alias so other helpers still work
+const todayStr = () => toISODateLocal(new Date());
+
+/**
+ * parseISODateLocal — parse YYYY-MM-DD as a local-midnight Date.
+ * new Date('2026-07-02') parses as UTC midnight which is wrong in UK/EU timezones.
+ */
+const parseISODateLocal = (value) => {
+  const [y, m, d] = value.split('-').map(Number);
+  return new Date(y, m - 1, d);  // local midnight, no UTC shift
 };
 
 /**
- * Returns a date string N days from today as YYYY-MM-DD.
+ * addDaysISO — add N calendar days to a YYYY-MM-DD string.
+ * Returns a YYYY-MM-DD string in local time.
+ */
+const addDaysISO = (dateString, days) => {
+  const date = parseISODateLocal(dateString);
+  date.setDate(date.getDate() + days);
+  return toISODateLocal(date);
+};
+
+/**
+ * daysFromTodayStr — N calendar days from today as YYYY-MM-DD (local).
+ * Kept for backward compatibility.
  */
 const daysFromTodayStr = (n) => {
   const d = new Date(); d.setDate(d.getDate() + n);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return toISODateLocal(d);
 };
 
 /**
- * Convert a Date object to YYYY-MM-DD (local time, no UTC shift).
+ * toISODate — alias for toISODateLocal.
  */
-const toISODate = (date) => {
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
-};
-
-/**
- * Add N calendar days to a YYYY-MM-DD string and return a new YYYY-MM-DD string.
- * Uses local midnight to avoid UTC day-boundary issues.
- */
-const addDaysISO = (dateString, days) => {
-  const d = new Date(dateString + 'T00:00:00');
-  d.setDate(d.getDate() + days);
-  return toISODate(d);
-};
+const toISODate = toISODateLocal;
 
 /**
  * Safe price formatter — returns '—' if value is invalid.
@@ -1874,7 +1908,13 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
               </div>
               <div className="form-group">
                 <label className="form-label">Pickup date</label>
-                <input type="date" className="form-input" value={local.pickupDate} min={today} onChange={e=>handlePickupDateChange(e.target.value)}/>
+                <input type="date" className="form-input" value={local.pickupDate} min={today}
+                  onChange={e => {
+                    const v = e.target.value;
+                    // Enforce min — mobile pickers can bypass the min attribute
+                    if (v && v < today) { e.target.value = today; handlePickupDateChange(today); return; }
+                    handlePickupDateChange(v);
+                  }}/>
               </div>
               <div className="form-group">
                 <label className="form-label">Pickup time</label>
@@ -1884,7 +1924,13 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
               </div>
               <div className="form-group">
                 <label className="form-label">Return date</label>
-                <input type="date" className="form-input" value={local.returnDate} min={minReturnDate} onChange={e=>handleReturnDateChange(e.target.value)}/>
+                <input type="date" className="form-input" value={local.returnDate} min={minReturnDate}
+                  onChange={e => {
+                    const v = e.target.value;
+                    // Enforce min — reset to minimum return date if mobile picker bypasses restriction
+                    if (v && v < minReturnDate) { e.target.value = minReturnDate; handleReturnDateChange(minReturnDate); return; }
+                    handleReturnDateChange(v);
+                  }}/>
               </div>
               <div className="form-group">
                 <label className="form-label">Return time</label>
@@ -2734,7 +2780,12 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                         className={`form-input ${errors.pickupDate?'input-error':''}`}
                         value={form.pickupDate}
                         min={today}
-                        onChange={e=>handlePickupDateChange(e.target.value)}
+                        onChange={e => {
+                          const v = e.target.value;
+                          // Enforce min — reject past dates selected on mobile browsers
+                          if (v && v < today) { e.target.value = today; handlePickupDateChange(today); return; }
+                          handlePickupDateChange(v);
+                        }}
                       />
                       {errors.pickupDate && <span className="error-msg">{errors.pickupDate}</span>}
                     </div>
@@ -2749,13 +2800,23 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                   <div className="grid-2">
                     <div className="form-group">
                       <label className="form-label">Return date</label>
-                      <input
-                        type="date"
-                        className={`form-input ${errors.returnDate?'input-error':''}`}
-                        value={form.returnDate}
-                        min={form.pickupDate ? addDaysISO(form.pickupDate, 1) : daysFromTodayStr(1)}
-                        onChange={e=>handleReturnDateChange(e.target.value)}
-                      />
+                      {(() => {
+                        const minRet = form.pickupDate ? addDaysISO(form.pickupDate, 1) : daysFromTodayStr(1);
+                        return (
+                          <input
+                            type="date"
+                            className={`form-input ${errors.returnDate?'input-error':''}`}
+                            value={form.returnDate}
+                            min={minRet}
+                            onChange={e => {
+                              const v = e.target.value;
+                              // Enforce min — reject dates before pickup+1 on mobile browsers
+                              if (v && v < minRet) { e.target.value = minRet; handleReturnDateChange(minRet); return; }
+                              handleReturnDateChange(v);
+                            }}
+                          />
+                        );
+                      })()}
                       {errors.returnDate && <span className="error-msg">{errors.returnDate}</span>}
                     </div>
                     <div className="form-group">
