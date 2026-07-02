@@ -1338,43 +1338,118 @@ function LocationInput({ value, onChange, placeholder, onSelect }) {
   );
 }
 
-// ── App ───────────────────────────────────────────────────────────────
-// Date helper — today's date as YYYY-MM-DD string
-const todayStr = () => new Date().toISOString().split('T')[0];
-
-// Time helpers for validation
-const timeToMinutes = (t) => { const [h,m] = (t||'00:00').split(':').map(Number); return h*60+(m||0); };
-
-// ── Rental duration validation ─────────────────────────────────────────
-// Maximum rental duration: 90 days for normal rentals.
-// Anything above this is treated as an invalid input.
+// ── Date/time validation helpers ──────────────────────────────────────
+// All validation uses Date objects internally, not string comparison.
+// Strings are ONLY used for storage (ISO YYYY-MM-DD) and display.
+// Maximum rental duration: 90 days.
 const MAX_RENTAL_DAYS = 90;
+const MS_PER_DAY = 86400000; // 24 × 60 × 60 × 1000
 
 /**
- * Safely compute rental days from two YYYY-MM-DD strings.
- * Returns an integer 1–90, or null if the range is invalid / impossible.
+ * Combine a YYYY-MM-DD date string and an HH:MM time string into a Date object.
+ * Treats the input as local time (not UTC).
  */
-const safeDays = (pickupDate, returnDate) => {
-  if (!pickupDate || !returnDate) return null;
-  // Reject obviously bogus years (before 2020 or after 2030)
-  const pickupYear = parseInt(pickupDate.slice(0, 4), 10);
-  const returnYear = parseInt(returnDate.slice(0, 4), 10);
-  if (isNaN(pickupYear) || isNaN(returnYear)) return null;
-  if (pickupYear < 2020 || pickupYear > 2030) return null;
-  if (returnYear < 2020 || returnYear > 2030) return null;
-
-  const ms = new Date(returnDate) - new Date(pickupDate);
-  if (!isFinite(ms) || ms <= 0) return null;          // return not after pickup
-  const d = Math.ceil(ms / 86400000);                  // ceil = partial day counts
-  if (d < 1 || d > MAX_RENTAL_DAYS) return null;       // out of allowed range
+const combineDateAndTime = (dateStr, timeStr) => {
+  if (!dateStr) return null;
+  const [h, m] = (timeStr || '10:00').split(':').map(Number);
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return null;
+  // Use local date parts to avoid UTC midnight shifting
+  d.setHours(h || 0, m || 0, 0, 0);
   return d;
 };
 
 /**
- * Validate a single date string:
- * - must parse as a valid date
- * - year must be 2020–2030
- * - must not be in the past (optional, pass requireFuture=true)
+ * Add a number of hours to a Date object. Returns a new Date.
+ */
+const addHours = (dt, hours) => dt ? new Date(dt.getTime() + hours * 3600000) : null;
+
+/**
+ * Check whether a pickup date+time is valid:
+ * - Must parse as a real date
+ * - Year must be 2020–2030
+ * - The combined datetime must be strictly in the future
+ */
+const isPickupValid = (pickupDate, pickupTime) => {
+  if (!pickupDate) return false;
+  const year = parseInt(pickupDate.slice(0, 4), 10);
+  if (isNaN(year) || year < 2020 || year > 2030) return false;
+  const dt = combineDateAndTime(pickupDate, pickupTime);
+  if (!dt) return false;
+  return dt.getTime() > Date.now(); // must be strictly future
+};
+
+/**
+ * Check whether a return date+time is valid relative to a pickup:
+ * - Must parse as a real date
+ * - Year must be 2020–2030
+ * - Must be at least 24 hours after pickup datetime
+ */
+const isReturnValid = (pickupDate, pickupTime, returnDate, returnTime) => {
+  if (!pickupDate || !returnDate) return false;
+  const year = parseInt(returnDate.slice(0, 4), 10);
+  if (isNaN(year) || year < 2020 || year > 2030) return false;
+  const pickupDt = combineDateAndTime(pickupDate, pickupTime);
+  const returnDt = combineDateAndTime(returnDate, returnTime);
+  if (!pickupDt || !returnDt) return false;
+  // Return must be at least 24 hours after pickup (same-day rentals not allowed)
+  return returnDt.getTime() >= pickupDt.getTime() + MS_PER_DAY;
+};
+
+/**
+ * Validate both dates and return a user-facing error message, or null if valid.
+ * Uses exact business rules:
+ *   - pickup must be in the future
+ *   - return must be ≥24h after pickup
+ *   - max 90 days
+ */
+const validateTripDates = (pickupDate, pickupTime, returnDate, returnTime) => {
+  if (!pickupDate) return 'Please select a pickup date.';
+  const pYear = parseInt(pickupDate.slice(0, 4), 10);
+  if (isNaN(pYear) || pYear < 2020 || pYear > 2030)
+    return 'Pickup must be later than the current time.';
+  const pickupDt = combineDateAndTime(pickupDate, pickupTime);
+  if (!pickupDt) return 'Pickup must be later than the current time.';
+  if (pickupDt.getTime() <= Date.now())
+    return 'Pickup must be later than the current time.';
+
+  if (!returnDate) return 'Please select a return date.';
+  const rYear = parseInt(returnDate.slice(0, 4), 10);
+  if (isNaN(rYear) || rYear < 2020 || rYear > 2030)
+    return 'Return must be after pickup.';
+  const returnDt = combineDateAndTime(returnDate, returnTime);
+  if (!returnDt) return 'Return must be after pickup.';
+  if (returnDt.getTime() <= pickupDt.getTime())
+    return 'Return must be after pickup.';
+  if (returnDt.getTime() < pickupDt.getTime() + MS_PER_DAY)
+    return 'Minimum hire period is 24 hours.';
+
+  const durationMs = returnDt.getTime() - pickupDt.getTime();
+  const durationDays = Math.ceil(durationMs / MS_PER_DAY);
+  if (durationDays > MAX_RENTAL_DAYS)
+    return `Maximum rental duration is ${MAX_RENTAL_DAYS} days.`;
+
+  return null; // valid
+};
+
+/**
+ * Compute rental days from validated date+time inputs.
+ * Requires at least 24 hours. Returns integer 1–90, or null if invalid.
+ * Always validates first — never trust raw input.
+ */
+const safeDays = (pickupDate, returnDate, pickupTime, returnTime) => {
+  const err = validateTripDates(pickupDate, pickupTime || '10:00', returnDate, returnTime || '10:00');
+  if (err) return null;
+  const pickupDt = combineDateAndTime(pickupDate, pickupTime || '10:00');
+  const returnDt = combineDateAndTime(returnDate, returnTime || '10:00');
+  const durationMs = returnDt.getTime() - pickupDt.getTime();
+  const d = Math.max(1, Math.ceil(durationMs / MS_PER_DAY));
+  return d > MAX_RENTAL_DAYS ? null : d;
+};
+
+/**
+ * isValidDate kept for backward compatibility with calcPricing guards.
+ * Uses year range + parseability only, no time check.
  */
 const isValidDate = (dateStr, requireFuture = false) => {
   if (!dateStr) return false;
@@ -1387,13 +1462,33 @@ const isValidDate = (dateStr, requireFuture = false) => {
 };
 
 /**
- * Safe price formatter — returns an error placeholder if the value is
- * not a finite, reasonable number, so broken values are never silently rendered.
+ * Returns today's date as YYYY-MM-DD (local time).
+ */
+const todayStr = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+};
+
+/**
+ * Returns a date string N days from today as YYYY-MM-DD.
+ */
+const daysFromTodayStr = (n) => {
+  const d = new Date(); d.setDate(d.getDate() + n);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+};
+
+/**
+ * Safe price formatter — returns '—' if value is invalid.
  */
 const safeFmt = (n, fmtFn) => {
   if (!isFinite(n) || isNaN(n) || n < 0 || n > 999999) return '—';
   return fmtFn(n);
 };
+
+// Remove the old timeToMinutes — same-day rentals are no longer allowed
+// const timeToMinutes = ... (removed)
+
+// ── App ───────────────────────────────────────────────────────────────
 
 // localStorage persistence helpers
 const LS_KEY = 'driveeuro_search';
@@ -1679,48 +1774,62 @@ function App() {
 function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
   const [local, setLocal] = useState({ ...SEARCH_DEFAULTS, ...searchParams });
   const [rentalDays, setRentalDays] = useState(() => {
-    const d = safeDays(searchParams.pickupDate, searchParams.returnDate);
+    const d = safeDays(searchParams.pickupDate, searchParams.returnDate, searchParams.pickupTime, searchParams.returnTime);
     return d || 7;
   });
   const [dateError, setDateError] = useState('');
   const set = (k,v) => setLocal(p => ({...p,[k]:v}));
 
   const today = todayStr();
+  // min for return date input = pickup date + 1 calendar day (enforces 24h minimum at the date level)
+  const minReturnDate = local.pickupDate ? daysFromTodayStr(
+    Math.max(1, Math.ceil((new Date(local.pickupDate).getTime() - Date.now()) / MS_PER_DAY) + 1)
+  ) : daysFromTodayStr(1);
 
   const handlePickupDateChange = (v) => {
     setDateError('');
     set('pickupDate', v);
-    if (!isValidDate(v, true)) { setDateError('Please select a valid future pickup date (within 2030).'); return; }
-    const d = safeDays(v, local.returnDate);
-    if (local.returnDate && !d) {
-      set('returnDate', '');      // clear invalid return
-      setRentalDays(7);
-    } else if (d) {
-      setRentalDays(d);
+    // If return date would now violate 24h minimum, clear it
+    if (local.returnDate) {
+      const err = validateTripDates(v, local.pickupTime || '10:00', local.returnDate, local.returnTime || '10:00');
+      if (err) { set('returnDate', ''); setRentalDays(7); }
+      else {
+        const d = safeDays(v, local.returnDate, local.pickupTime, local.returnTime);
+        if (d) setRentalDays(d);
+      }
     }
   };
 
   const handleReturnDateChange = (v) => {
     setDateError('');
     set('returnDate', v);
-    if (!isValidDate(v)) { setDateError('Please select a valid return date (within 2030).'); return; }
-    const d = safeDays(local.pickupDate, v);
-    if (!d) {
-      setDateError(`Return date must be after pickup date and within ${MAX_RENTAL_DAYS} days.`);
-    } else {
-      setRentalDays(d);
+    const err = validateTripDates(local.pickupDate, local.pickupTime || '10:00', v, local.returnTime || '10:00');
+    if (err) { setDateError(err); }
+    else {
+      const d = safeDays(local.pickupDate, v, local.pickupTime, local.returnTime);
+      if (d) setRentalDays(d);
+    }
+  };
+
+  const handleTimeChange = (field, v) => {
+    set(field, v);
+    // Re-validate after time changes — a time change can make an otherwise valid range invalid
+    const pd = local.pickupDate; const rd = local.returnDate;
+    const pt = field === 'pickupTime' ? v : (local.pickupTime || '10:00');
+    const rt = field === 'returnTime' ? v : (local.returnTime || '10:00');
+    if (pd && rd) {
+      const err = validateTripDates(pd, pt, rd, rt);
+      setDateError(err || '');
+      if (!err) { const d = safeDays(pd, rd, pt, rt); if (d) setRentalDays(d); }
     }
   };
 
   const handleSearch = () => {
     if (!local.pickup) { alert('Please enter a pickup location'); return; }
-    if (!isValidDate(local.pickupDate, true)) { alert('Please select a valid future pickup date (2020–2030).'); return; }
-    if (!isValidDate(local.returnDate)) { alert('Please select a valid return date (2020–2030).'); return; }
-    const d = safeDays(local.pickupDate, local.returnDate);
-    if (!d) {
-      alert(`Invalid date range. Return date must be after pickup date and the rental must be 1–${MAX_RENTAL_DAYS} days.`);
-      return;
-    }
+    const err = validateTripDates(local.pickupDate, local.pickupTime || '10:00', local.returnDate, local.returnTime || '10:00');
+    if (err) { setDateError(err); return; }
+    const d = safeDays(local.pickupDate, local.returnDate, local.pickupTime, local.returnTime);
+    if (!d) { setDateError(`Invalid date range. Rentals must be 1–${MAX_RENTAL_DAYS} days and at least 24 hours.`); return; }
     setDateError('');
     setSearchParams({ ...local });
     navigate('results', { days: d });
@@ -1751,17 +1860,17 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
               </div>
               <div className="form-group">
                 <label className="form-label">Pickup time</label>
-                <select className="form-input" value={local.pickupTime} onChange={e=>set('pickupTime',e.target.value)}>
+                <select className="form-input" value={local.pickupTime} onChange={e=>handleTimeChange('pickupTime', e.target.value)}>
                   {TIMES.map(t=><option key={t}>{t}</option>)}
                 </select>
               </div>
               <div className="form-group">
                 <label className="form-label">Return date</label>
-                <input type="date" className="form-input" value={local.returnDate} min={local.pickupDate||today} onChange={e=>handleReturnDateChange(e.target.value)}/>
+                <input type="date" className="form-input" value={local.returnDate} min={minReturnDate} onChange={e=>handleReturnDateChange(e.target.value)}/>
               </div>
               <div className="form-group">
                 <label className="form-label">Return time</label>
-                <select className="form-input" value={local.returnTime} onChange={e=>set('returnTime',e.target.value)}>
+                <select className="form-input" value={local.returnTime} onChange={e=>handleTimeChange('returnTime', e.target.value)}>
                   {TIMES.map(t=><option key={t}>{t}</option>)}
                 </select>
               </div>
@@ -1789,8 +1898,8 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
               <div style={{display:'flex', gap:'1rem', alignItems:'center', flexWrap:'wrap'}}>
                 <button className="btn btn-primary" style={{minWidth:200}} onClick={handleSearch}>Search available cars →</button>
                 <span style={{fontSize:13, color:'var(--text-faint)'}}>
-                  {local.pickupDate && local.returnDate && safeDays(local.pickupDate, local.returnDate)
-                    ? `${safeDays(local.pickupDate, local.returnDate)}-day rental · `
+                  {local.pickupDate && local.returnDate && safeDays(local.pickupDate, local.returnDate, local.pickupTime, local.returnTime)
+                    ? `${safeDays(local.pickupDate, local.returnDate, local.pickupTime, local.returnTime)}-day rental · `
                     : ''}DriveEuro prices shown
                 </span>
               </div>
@@ -2208,7 +2317,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   // display — it is NEVER used for the actual payment amount.
   // If the user changes dates in checkout, pricing recalculates immediately.
   // If dates are invalid, liveP is null and payment is blocked.
-  const liveFormDays = safeDays(form.pickupDate, form.returnDate);
+  const liveFormDays = safeDays(form.pickupDate, form.returnDate, form.pickupTime, form.returnTime);
   const liveP = liveFormDays ? calcPricing(vehicle, liveFormDays, currency) : null;
   const pricingValid = !!(liveP && !liveP.invalid && isFinite(liveP.reservationFee));
 
@@ -2218,22 +2327,21 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
 
   const setF = (k,v) => setForm(f=>({...f,[k]:v}));
 
-  // Date logic helpers — use safeDays so invalid year ranges are always caught
+  // Date/time change handlers — re-validate 24h minimum on every change
   const handlePickupDateChange = (v) => {
     setF('pickupDate', v);
-    if (!isValidDate(v, true)) return; // invalid pickup — keep but don't adjust return
-    if (form.returnDate && !safeDays(v, form.returnDate)) {
-      setF('returnDate', ''); // clear return date if it's now invalid relative to new pickup
+    if (form.returnDate) {
+      const err = validateTripDates(v, form.pickupTime || '10:00', form.returnDate, form.returnTime || '10:00');
+      if (err) setF('returnDate', ''); // clear return if it no longer satisfies 24h minimum
     }
   };
   const handleReturnDateChange = (v) => {
     setF('returnDate', v);
-    // Note: do not early-return here — let validate() produce the error so user sees it
+    // validation happens via tripDateError / validate() — no early return needed here
   };
 
-  // Same-day return time validation
-  const sameDay = form.pickupDate && form.returnDate && form.pickupDate === form.returnDate;
-  const returnTimeInvalid = sameDay && timeToMinutes(form.returnTime) <= timeToMinutes(form.pickupTime);
+  // ── Live 24h validation (recalculates on every form change) ───────────
+  const tripDateError = validateTripDates(form.pickupDate, form.pickupTime || '10:00', form.returnDate, form.returnTime || '10:00');
 
   const validate = () => {
     const e = {};
@@ -2246,20 +2354,21 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     }
     if (step===2) {
       if (!form.pickupLocation.trim()) e.pickupLocation='Required';
-      // Full date validation using central helpers — catches bogus years like 1111, 2222, 2507
-      if (!isValidDate(form.pickupDate, true))
-        e.pickupDate = form.pickupDate
-          ? 'Invalid pickup date. Please select a date between today and 2030.'
-          : 'Please select a pickup date';
-      if (!isValidDate(form.returnDate))
-        e.returnDate = form.returnDate
-          ? 'Invalid return date. Please select a date between today and 2030.'
-          : 'Please select a return date';
-      if (!e.pickupDate && !e.returnDate) {
-        const d = safeDays(form.pickupDate, form.returnDate);
-        if (!d) e.returnDate = `Return date must be after pickup date and within ${MAX_RENTAL_DAYS} days.`;
+      // Use validateTripDates for all date/time validation — checks year range,
+      // future pickup, 24h minimum, and max 90 days in one place
+      const dtErr = validateTripDates(
+        form.pickupDate, form.pickupTime || '10:00',
+        form.returnDate, form.returnTime || '10:00'
+      );
+      if (dtErr) {
+        // Route the error to the most relevant field
+        if (!form.pickupDate || dtErr === 'Pickup must be later than the current time.')
+          e.pickupDate = dtErr;
+        else if (!form.returnDate)
+          e.returnDate = dtErr;
+        else
+          e.returnDate = dtErr;
       }
-      if (returnTimeInvalid) e.returnTime='Return time must be later than pickup time for same-day rentals';
       if (!form.agreedTerms) e.agreedTerms='You must agree to the terms';
       if (!form.agreedAge) e.agreedAge='Please confirm your licence';
     }
@@ -2315,20 +2424,17 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     const bookingReference = genId();
 
     // ── Central payment guards — derived from current form state ───────────
-    // These use liveFormDays and liveP which are recalculated from form.pickupDate/
-    // returnDate on every render. This means manipulating dates in checkout
-    // immediately affects the payment amount and these guards.
-    if (!isValidDate(form.pickupDate, true)) {
-      setPayMsg('Invalid pickup date. Please select a valid future date.');
+    const dtGuardErr = validateTripDates(
+      form.pickupDate, form.pickupTime || '10:00',
+      form.returnDate, form.returnTime || '10:00'
+    );
+    if (dtGuardErr) {
+      setPayMsg(dtGuardErr);
       setPayProcessing(false); return;
     }
-    if (!isValidDate(form.returnDate)) {
-      setPayMsg('Invalid return date. Please select a date between today and 2030.');
-      setPayProcessing(false); return;
-    }
-    const paymentDays = safeDays(form.pickupDate, form.returnDate);
+    const paymentDays = safeDays(form.pickupDate, form.returnDate, form.pickupTime, form.returnTime);
     if (!paymentDays) {
-      setPayMsg(`Invalid rental period. Rentals must be 1–${MAX_RENTAL_DAYS} days with valid dates.`);
+      setPayMsg(`Invalid rental period. Rentals must be 1–${MAX_RENTAL_DAYS} days and at least 24 hours.`);
       setPayProcessing(false); return;
     }
     // Recalculate pricing one final time from the current form dates
@@ -2614,7 +2720,8 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     </div>
                     <div className="form-group">
                       <label className="form-label">Pickup time</label>
-                      <select className="form-input" value={form.pickupTime} onChange={e=>setF('pickupTime',e.target.value)}>
+                      <select className="form-input" value={form.pickupTime}
+                        onChange={e=>{setF('pickupTime',e.target.value); if(form.returnDate){const err=validateTripDates(form.pickupDate,e.target.value,form.returnDate,form.returnTime||'10:00'); if(err)setF('returnDate','');}}}>
                         {TIMES.map(t=><option key={t}>{t}</option>)}
                       </select>
                     </div>
@@ -2626,20 +2733,17 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                         type="date"
                         className={`form-input ${errors.returnDate?'input-error':''}`}
                         value={form.returnDate}
-                        min={form.pickupDate||today}
+                        min={form.pickupDate ? daysFromTodayStr(Math.max(1, Math.ceil((new Date(form.pickupDate).getTime()-Date.now())/MS_PER_DAY)+1)) : daysFromTodayStr(1)}
                         onChange={e=>handleReturnDateChange(e.target.value)}
                       />
                       {errors.returnDate && <span className="error-msg">{errors.returnDate}</span>}
                     </div>
                     <div className="form-group">
                       <label className="form-label">Return time</label>
-                      <select className={`form-input ${errors.returnTime?'input-error':''}`} value={form.returnTime} onChange={e=>setF('returnTime',e.target.value)}>
+                      <select className="form-input" value={form.returnTime}
+                        onChange={e=>setF('returnTime',e.target.value)}>
                         {TIMES.map(t=><option key={t}>{t}</option>)}
                       </select>
-                      {errors.returnTime && <span className="error-msg">{errors.returnTime}</span>}
-                      {returnTimeInvalid && !errors.returnTime && (
-                        <span className="error-msg">Return time must be later than pickup time for same-day rentals.</span>
-                      )}
                     </div>
                   </div>
 
