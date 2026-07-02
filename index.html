@@ -476,8 +476,36 @@
   .pay-label{font-weight:700;font-size:14px;color:var(--text);}
   .pay-sub{font-size:12px;color:var(--text-muted);margin-top:1px;}
   .pay-soon{font-size:10px;font-weight:700;background:#f3e8ff;color:#7e22ce;padding:.15rem .5rem;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0;}
-  .btn-pay-secure{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-weight:700;padding:1rem 1.5rem;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:15px;border:none;cursor:pointer;transition:opacity .2s;letter-spacing:-0.01em;}
-  .btn-pay-secure:hover{opacity:.88;}
+  /* ── Payment CTA — the primary conversion action ─────────────────────── */
+  .btn-secure-checkout {
+    width:100%; min-height:60px; border:0; border-radius:18px;
+    background:linear-gradient(135deg, #0F2744 0%, #091C33 100%);
+    color:#fff; font-weight:800; font-size:17px; letter-spacing:-0.01em;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    box-shadow:0 18px 36px rgba(9,28,51,0.28);
+    cursor:pointer; margin-top:24px; margin-bottom:12px;
+    transition:transform 0.18s ease, box-shadow 0.18s ease;
+    padding:14px 20px;
+  }
+  .btn-secure-checkout:hover { transform:translateY(-1px); box-shadow:0 22px 44px rgba(9,28,51,0.34); }
+  .btn-secure-checkout:active { transform:translateY(0); box-shadow:0 12px 24px rgba(9,28,51,0.24); }
+  .btn-secure-checkout:disabled { opacity:0.55; cursor:not-allowed; transform:none; }
+  .btn-secure-checkout .pay-icon { color:#C9A227; font-size:18px; flex-shrink:0; }
+  /* Disabled / error state — retains button shape, reduces opacity */
+  .btn-pay-secure { width:100%; min-height:60px; border:0; border-radius:18px;
+    background:linear-gradient(135deg, #0F2744 0%, #091C33 100%);
+    color:#fff; font-weight:800; font-size:17px; letter-spacing:-0.01em;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    cursor:not-allowed; margin-top:24px; margin-bottom:12px; padding:14px 20px;
+  }
+  .btn-pay-secure:hover { opacity:.88; }
+  /* Trust line under the payment button */
+  .payment-trust-line { text-align:center; color:#64748B; font-size:13px; line-height:1.5; margin-bottom:18px; }
+  @media(max-width:768px) {
+    .btn-secure-checkout, .btn-pay-secure {
+      min-height:62px; font-size:16px; border-radius:16px; padding:14px 16px; flex-wrap:wrap;
+    }
+  }
   /* ── Mobile responsive (≤768px) ── */
   @media(max-width:768px) {
 
@@ -2924,31 +2952,31 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                 )}
 
                 {payProcessing ? (
-                  <div style={{textAlign:'center', padding:'1.5rem', background:'var(--ice)', borderRadius:10}}>
-                    <div style={{marginBottom:'0.5rem'}}><Icon name="mdi:loading" sz={32} cls="icon-muted"/></div>
-                    <div style={{fontWeight:700, color:'var(--navy)', marginBottom:'0.25rem'}}>Redirecting to secure checkout…</div>
-                    <div style={{fontSize:13, color:'var(--text-muted)'}}>Please do not close this page.</div>
-                  </div>
+                  <button className="btn-secure-checkout" disabled style={{opacity:0.85, cursor:'wait'}}>
+                    <Icon name="mdi:loading" sz={20} style={{color:'#C9A227', flexShrink:0}}/>
+                    Creating secure checkout…
+                  </button>
                 ) : !pricingValid ? (
-                  <button className="btn-pay-secure" style={{opacity:.35, cursor:'not-allowed'}} disabled>
-                    <Icon name="mdi:lock-check-outline" sz={18} cls="icon-white"/>
+                  <button className="btn-pay-secure" style={{opacity:.35}} disabled>
+                    <Icon name="mdi:lock-check-outline" sz={20} style={{color:'#C9A227', flexShrink:0}}/>
                     Fix your dates to enable payment
                   </button>
                 ) : (payMethod === 'rampex' || payMethod === 'card') ? (
-                  <button className="btn-secure-checkout" onClick={()=>startPaymentFlow(payMethod)}>
-                    <Icon name="mdi:lock-check-outline" sz={18} cls="icon-white"/>
+                  <button className="btn-secure-checkout" data-payment-submit="true" onClick={()=>startPaymentFlow(payMethod)}>
+                    <Icon name="mdi:shield-check-outline" sz={22} style={{color:'#C9A227', flexShrink:0}}/>
                     Continue to Secure Checkout — {fmt(liveP.reservationFee)}
                   </button>
                 ) : (
-                  <button className="btn-pay-secure" style={{opacity:.5,cursor:'not-allowed'}} disabled>
-                    <Icon name="mdi:lock-check-outline" sz={18} cls="icon-white"/>
+                  <button className="btn-pay-secure" style={{opacity:.5}} disabled>
+                    <Icon name="mdi:lock-check-outline" sz={20} style={{color:'#C9A227', flexShrink:0}}/>
                     Select a payment method to continue
                   </button>
                 )}
-                <div className="stripe-lock" style={{marginTop:'.75rem'}}>
-                  <Icon name="mdi:lock-outline" sz={14} cls="icon-faint"/> SSL encrypted · No card details stored by DriveEuro
+                <div className="payment-trust-line">
+                  <Icon name="mdi:lock-outline" sz={13} style={{verticalAlign:'middle', marginRight:4, color:'#64748B'}}/>
+                  Secure reservation payment · SSL encrypted · No card details stored by DriveEuroCars
                 </div>
-                <div style={{fontSize:12, color:'var(--text-faint)', marginTop:'0.625rem', lineHeight:1.6}}>
+                <div style={{fontSize:12, color:'var(--text-faint)', marginTop:'0.25rem', lineHeight:1.6, textAlign:'center'}}>
                   Your reservation fee is processed securely. Available payment methods may vary by region and provider.
                 </div>
                 <div style={{marginTop:'1rem'}}>
