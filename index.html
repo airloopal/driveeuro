@@ -1478,6 +1478,23 @@ const daysFromTodayStr = (n) => {
 };
 
 /**
+ * Convert a Date object to YYYY-MM-DD (local time, no UTC shift).
+ */
+const toISODate = (date) => {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+};
+
+/**
+ * Add N calendar days to a YYYY-MM-DD string and return a new YYYY-MM-DD string.
+ * Uses local midnight to avoid UTC day-boundary issues.
+ */
+const addDaysISO = (dateString, days) => {
+  const d = new Date(dateString + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  return toISODate(d);
+};
+
+/**
  * Safe price formatter — returns '—' if value is invalid.
  */
 const safeFmt = (n, fmtFn) => {
@@ -1781,22 +1798,23 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
   const set = (k,v) => setLocal(p => ({...p,[k]:v}));
 
   const today = todayStr();
-  // min for return date input = pickup date + 1 calendar day (enforces 24h minimum at the date level)
-  const minReturnDate = local.pickupDate ? daysFromTodayStr(
-    Math.max(1, Math.ceil((new Date(local.pickupDate).getTime() - Date.now()) / MS_PER_DAY) + 1)
-  ) : daysFromTodayStr(1);
+  const todayISO = today;
+  const tomorrowISO = addDaysISO(todayISO, 1);
+  // Return date min = pickup date + 1 day (enforces 24h / no same-day rentals at the picker level)
+  const minReturnDate = local.pickupDate ? addDaysISO(local.pickupDate, 1) : tomorrowISO;
 
   const handlePickupDateChange = (v) => {
     setDateError('');
     set('pickupDate', v);
-    // If return date would now violate 24h minimum, clear it
-    if (local.returnDate) {
-      const err = validateTripDates(v, local.pickupTime || '10:00', local.returnDate, local.returnTime || '10:00');
-      if (err) { set('returnDate', ''); setRentalDays(7); }
-      else {
-        const d = safeDays(v, local.returnDate, local.pickupTime, local.returnTime);
-        if (d) setRentalDays(d);
-      }
+    if (!v) return;
+    const minReturn = addDaysISO(v, 1);
+    // Auto-advance return date: if empty or before the new minimum, set it to pickup + 1 day
+    if (!local.returnDate || local.returnDate < minReturn) {
+      set('returnDate', minReturn);
+      setRentalDays(1);
+    } else {
+      const d = safeDays(v, local.returnDate, local.pickupTime, local.returnTime);
+      if (d) setRentalDays(d);
     }
   };
 
@@ -2330,9 +2348,11 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   // Date/time change handlers — re-validate 24h minimum on every change
   const handlePickupDateChange = (v) => {
     setF('pickupDate', v);
-    if (form.returnDate) {
-      const err = validateTripDates(v, form.pickupTime || '10:00', form.returnDate, form.returnTime || '10:00');
-      if (err) setF('returnDate', ''); // clear return if it no longer satisfies 24h minimum
+    if (!v) return;
+    const minReturn = addDaysISO(v, 1);
+    // Auto-advance return date to pickup + 1 day if empty or before the new minimum
+    if (!form.returnDate || form.returnDate < minReturn) {
+      setF('returnDate', minReturn);
     }
   };
   const handleReturnDateChange = (v) => {
@@ -2733,7 +2753,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                         type="date"
                         className={`form-input ${errors.returnDate?'input-error':''}`}
                         value={form.returnDate}
-                        min={form.pickupDate ? daysFromTodayStr(Math.max(1, Math.ceil((new Date(form.pickupDate).getTime()-Date.now())/MS_PER_DAY)+1)) : daysFromTodayStr(1)}
+                        min={form.pickupDate ? addDaysISO(form.pickupDate, 1) : daysFromTodayStr(1)}
                         onChange={e=>handleReturnDateChange(e.target.value)}
                       />
                       {errors.returnDate && <span className="error-msg">{errors.returnDate}</span>}
