@@ -288,7 +288,10 @@
   .vimg-fallback-icon { font-size:2.5rem; }
   .vimg-fallback-label { font-size:12px; color:var(--text-muted); font-weight:600; letter-spacing:0.04em; }
   .vehicle-name { font-size:1.05rem; font-weight:700; color:var(--navy); }
-  .vehicle-supplier { font-size:12px; color:var(--text-faint); margin-bottom:0.6rem; }
+  .supplier-logo { display:inline-flex; align-items:center; justify-content:center; background:#fff; border-radius:6px; padding:6px 8px; width:100px; height:38px; vertical-align:middle; flex-shrink:0; }
+  .supplier-logo--sixt { background:#111; }
+  .supplier-logo img { max-width:100%; max-height:100%; object-fit:contain; }
+  .vehicle-supplier { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-faint); margin-bottom:0.6rem; }
   .spec-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.875rem; }
   .spec-tag { font-size:11px; color:var(--text-muted); background:var(--ice); padding:0.2rem 0.55rem; border-radius:6px; display:flex; align-items:center; gap:3px; }
   .feature-tags { display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.875rem; }
@@ -669,7 +672,16 @@
   .site-header .nav-btn { white-space:nowrap; padding:12px 16px; }
   .header-services { display:flex; justify-content:center; gap:32px; flex-wrap:wrap; padding:10px 20px; border-top:1px solid #ffffff18; font-size:11px; color:#d0dbe5; }
   .header-services a { color:#efcf7c; }
-  .christmas-hero { background:radial-gradient(ellipse at top right,#e0ece6,transparent 55%),#edf2f5; }
+  .christmas-hero { background:#edf2f5 url('/assets/showroom-reception.jpg') center 35%/cover no-repeat; }
+  .christmas-hero::before { background:linear-gradient(90deg,rgba(245,248,247,.96),rgba(245,248,247,.90) 33%,rgba(245,248,247,.14) 66%),linear-gradient(0deg,rgba(245,248,247,.9),transparent 65%); }
+  .christmas-hero .hero-top { min-height:325px; }
+  .christmas-hero .hero-car { visibility:hidden; }
+  .christmas-hero .christmas-trim { display:none; }
+  @media(max-width:600px) {
+    .christmas-hero { background-size:auto 280px; background-position:right top; background-color:#edf2f5; }
+    .christmas-hero::before { background:linear-gradient(180deg,rgba(245,248,247,.05) 70px,rgba(245,248,247,.95) 240px,#edf2f5 440px); }
+    .christmas-hero .hero-top { padding-top:155px; min-height:0; }
+  }
   .christmas-trim { position:absolute; right:6%; top:0; display:flex; align-items:start; gap:28px; height:90px; pointer-events:none; color:#aa8129; z-index:2; }
   .christmas-trim span { font-size:25px; padding-top:20px; text-shadow:0 0 15px #e8cd8a; }
   .christmas-trim i { width:21px; height:26px; background:#174d40; border-radius:50%; margin-top:40px; position:relative; box-shadow:inset -5px -4px 0 #0002; }
@@ -679,6 +691,8 @@
   .destination-section { background:#fff; }
   .destination-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
   .destination-card { text-align:left; padding:24px; border:1px solid var(--border); border-radius:16px; background:#f5f8f7; color:var(--navy); transition:border-color .2s,transform .2s; }
+  .destination-card { position:relative; isolation:isolate; overflow:hidden; background-size:cover; background-position:center; }
+  .destination-card::before { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,rgba(245,248,247,.97) 0%,rgba(245,248,247,.94) 45%,rgba(245,248,247,.58) 100%); }
   .destination-card:hover { border-color:#174d40; transform:translateY(-3px); }
   .destination-card h3 { margin:12px 0 8px; font-size:20px; }
   .destination-card p { color:var(--text-muted); font-size:13px; min-height:42px; }
@@ -708,6 +722,9 @@
 
   .site-header .nav-links { gap:16px; }
   .site-header .vip-nav-link { color:#efcf7c; }
+  .trip-search-summary { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:20px; font-size:13px; }
+  #checkout-step-title { scroll-margin-top:160px; outline:none; }
+  @media(max-width:600px) { .checkout-layout .grid-2 { grid-template-columns:1fr; } .checkout-layout .btn { min-height:48px; white-space:normal; } .checkout-layout .card-body { padding:20px; } .checkout-layout .card-body>div:last-child { flex-wrap:wrap; } }
   .vip-page { background:#f2f4f6; }
   .vip-hero { padding:64px 0; background:radial-gradient(ellipse at top right,#293b4b,transparent 65%),#091c33; color:#fff; }
   .vip-hero .hero-kicker { color:#efcf7c; }
@@ -982,13 +999,7 @@ const isVIPVehicle = vehicle => !!vehicle && VIP_VEHICLE_IDS.has(vehicle.id);
 const STANDARD_VEHICLES = VEHICLES.filter(vehicle => !isVIPVehicle(vehicle));
 const VIP_VEHICLES = VEHICLES.filter(isVIPVehicle);
 
-const BOOKINGS_INIT = [
-  { id:'DE-2025-001', customer:'Sarah Mitchell', email:'sarah@example.com', phone:'+44 7700 900123', dob:'1988-04-12', vehicle:'BMW 3 Series', supplier:'Sixt', pickup:'Paris CDG', dropoff:'Paris CDG', pickupDate:'2025-06-15', returnDate:'2025-06-22', days:7, originalPrice:1036, discountedPrice:725.20, reservationFee:72.52, status:'confirmed', supplierRef:'EUR-4521', internalNotes:'Customer requested child seat', balanceNotes:'Balance confirmed paid at desk', created:'2025-05-28' },
-  { id:'DE-2025-002', customer:'James O\'Brien', email:'james@example.com', phone:'+44 7911 200456', dob:'1995-09-20', vehicle:'Tesla Model 3', supplier:'Enterprise', pickup:'London Gatwick', dropoff:'London Gatwick', pickupDate:'2025-07-02', returnDate:'2025-07-09', days:7, originalPrice:1225, discountedPrice:857.50, reservationFee:85.75, status:'reserved', supplierRef:'', internalNotes:'', balanceNotes:'', created:'2025-06-10' },
-  { id:'DE-2025-003', customer:'Emma Lindqvist', email:'emma@example.com', phone:'+46 70 123 4567', dob:'1990-11-03', vehicle:'Volvo XC90', supplier:'Europcar', pickup:'Stockholm Arlanda', dropoff:'Stockholm Arlanda', pickupDate:'2025-08-01', returnDate:'2025-08-08', days:7, originalPrice:1540, discountedPrice:1078, reservationFee:107.80, status:'balance', supplierRef:'SAS-9987', internalNotes:'Balance reminder sent 2025-06-20', balanceNotes:'Customer to pay at desk', created:'2025-06-20' },
-  { id:'DE-2025-004', customer:'Marco Russo', email:'marco@example.com', phone:'+39 338 123 4567', dob:'1982-03-15', vehicle:'Fiat 500', supplier:'Budget', pickup:'Rome Fiumicino', dropoff:'Rome Fiumicino', pickupDate:'2025-05-28', returnDate:'2025-06-01', days:4, originalPrice:152, discountedPrice:106.40, reservationFee:10.64, status:'completed', supplierRef:'BUD-3312', internalNotes:'', balanceNotes:'Completed without issues', created:'2025-05-01' },
-  { id:'DE-2025-005', customer:'Charlotte Webb', email:'charlotte@example.com', phone:'+44 7800 111222', dob:'1997-07-22', vehicle:'Range Rover Sport', supplier:'Sixt', pickup:'Edinburgh Airport', dropoff:'Edinburgh Airport', pickupDate:'2025-07-15', returnDate:'2025-07-22', days:7, originalPrice:1995, discountedPrice:1396.50, reservationFee:139.65, status:'ready', supplierRef:'SIX-7743', internalNotes:'VIP customer — priority desk', balanceNotes:'', created:'2025-06-15' },
-];
+const BOOKINGS_INIT = [];
 
 // ── Pricing helpers ───────────────────────────────────────────────────
 // calcPricing returns ALL values in GBP.
@@ -1159,6 +1170,11 @@ function getVehicleIcon(vehicle) {
 // ── VehicleImage component ────────────────────────────────────────────
 // detail=true → tall hero variant on the vehicle details page.
 // Uses getVehicleImage() — never reads vehicle.image or any Unsplash URL.
+const SUPPLIER_LOGOS = {Europcar:'europcar.svg',Sixt:'sixt.svg',Hertz:'hertz.png',Enterprise:'enterprise.png',Avis:'avis.png',Budget:'budget.jpg'};
+function SupplierLogo({name}) {
+  const [failed,setFailed]=useState(false);
+  return SUPPLIER_LOGOS[name]&&!failed?<span className={`supplier-logo supplier-logo--${name.toLowerCase()}`}><img src={`/assets/suppliers/${SUPPLIER_LOGOS[name]}`} alt={`${name} logo`} onError={()=>setFailed(true)}/></span>:<span>{name}</span>;
+}
 const VehicleImage = ({ vehicle, detail = false }) => {
   const [imgErr, setImgErr] = useState(false);
   useEffect(()=>setImgErr(false),[vehicle.name]);
@@ -1232,7 +1248,7 @@ const VehicleCard = ({ vehicle, days, onSelect, fmt: fmtFn, currency: cur }) => 
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:3}}>
           <div>
             <div className="vehicle-name">{vehicle.name} <span style={{fontWeight:400, color:'var(--text-faint)', fontSize:'0.82rem'}}>or similar</span></div>
-            <div className="vehicle-supplier"><Icon name="mdi:domain" sz={13} cls="icon-muted"/> {vehicle.supplier} · {vehicle.city}</div>
+            <div className="vehicle-supplier"><SupplierLogo name={vehicle.supplier}/><span>{vehicle.city}</span></div>
           </div>
           <span className="badge badge-navy">{vehicle.class}</span>
         </div>
@@ -1427,6 +1443,24 @@ const searchLocations = (q) => {
 const locPillClass = (type) => ({airport:'lp-airport',city:'lp-city',station:'lp-station',hub:'lp-hub'}[type]||'lp-hub');
 
 // ── LocationInput component ────────────────────────────────────────────
+const VEHICLE_PICKUP_CODES = {'London Heathrow':'LHR','London Gatwick':'LGW','Manchester':'MAN-CTR','Manchester Airport':'MAN','Birmingham Airport':'BHX','Edinburgh Airport':'EDI','Paris CDG':'CDG','Amsterdam Schiphol':'AMS','Rome Fiumicino':'FCO','Stockholm Arlanda':'ARN','Berlin Brandenburg':'BER','Munich Airport':'MUC','Barcelona Airport':'BCN','Dublin Airport':'DUB','Kraków Airport':'KRK','Lisbon Airport':'LIS','Madrid Airport':'MAD','Milan Malpensa':'MXP','Nice Airport':'NCE','Warsaw Chopin Airport':'WAW'};
+const pickupForVehicle = vehicle => LOCATION_SUGGESTIONS.find(l=>l.locationCode===VEHICLE_PICKUP_CODES[vehicle.city]);
+const normalizeLocation = value => (value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+function matchesPickup(vehicle, search) {
+  if (!search?.pickup?.trim()) return true;
+  const loc = pickupForVehicle(vehicle);
+  if (search.pickupCode) return loc?.locationCode === search.pickupCode;
+  const query = normalizeLocation(search.pickup);
+  return [vehicle.city,loc?.name,loc?.locationCode,loc?.city].some(value=>normalizeLocation(value).includes(query));
+}
+function driverAgeOnDate(dob, pickupDate) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dob||'') || !pickupDate) return null;
+  const birth = parseISODateLocal(dob), pickup = parseISODateLocal(pickupDate);
+  if (toISODateLocal(birth)!==dob || birth>pickup) return null;
+  return pickup.getFullYear()-birth.getFullYear()-((pickup.getMonth()<birth.getMonth() || (pickup.getMonth()===birth.getMonth() && pickup.getDate()<birth.getDate()))?1:0);
+}
+const ageCategory = age => age<21?'Under 21':age<25?'21-24':age<30?'25-29':age<=65?'30-65':'66+';
+
 function LocationInput({ value, onChange, placeholder, onSelect, id, label }) {
   const [open, setOpen] = useState(false);
   const [hov, setHov] = useState(-1);
@@ -1684,7 +1718,8 @@ function App() {
   // Restore search from localStorage on mount; fall back to defaults
   const [searchParams, setSearchParams] = useState(() => ({ ...SEARCH_DEFAULTS, ...(loadSearch()||{}) }));
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [days, setDays] = useState(7);
+  const [days, setDays] = useState(()=>safeDays(searchParams.pickupDate,searchParams.returnDate,searchParams.pickupTime,searchParams.returnTime)||7);
+  const [checkoutDraft, setCheckoutDraft] = useState(null);
   const [bookings, setBookings] = useState(BOOKINGS_INIT);
   const [confirmData, setConfirmData] = useState(null);
   const [navOpen, setNavOpen] = useState(false);
@@ -1900,7 +1935,17 @@ function App() {
 
   const navigate = (p, extra = {}) => {
     setPage(p); setNavOpen(false);
-    if (extra.vehicle) setSelectedVehicle(extra.vehicle);
+    if (extra.vehicle) {
+      setSelectedVehicle(extra.vehicle);
+      if (p==='details') {
+        const loc=pickupForVehicle(extra.vehicle);
+        const pickupDate=searchParams.pickupDate && searchParams.pickupDate>=todayStr()?searchParams.pickupDate:daysFromTodayStr(1);
+        const pickupTime=searchParams.pickupTime||'10:00';
+        const keepDates=safeDays(pickupDate,searchParams.returnDate,pickupTime,searchParams.returnTime)===(extra.days||days);
+        const samePickup=matchesPickup(extra.vehicle,searchParams);
+        setSearchParams(current=>({...current,pickup:loc?.name||extra.vehicle.city,pickupCode:loc?.locationCode||'',dropoff:samePickup&&current.dropoff?current.dropoff:loc?.name||extra.vehicle.city,dropoffCode:samePickup&&current.dropoff?current.dropoffCode:loc?.locationCode||'',pickupDate,pickupTime,returnDate:keepDates?current.returnDate:addDaysISO(pickupDate,extra.days||days),returnTime:keepDates?current.returnTime:pickupTime}));
+      }
+    }
     if (extra.days) setDays(extra.days);
     if (extra.confirmation) setConfirmData(extra.confirmation);
     window.scrollTo(0, 0);
@@ -1934,10 +1979,10 @@ function App() {
       </header>
 
       {page==='home'         && <HomePage navigate={navigate} searchParams={searchParams} setSearchParams={setSearchParams} currency={currency} fmt={fmt}/>}
-      {page==='results'      && <ResultsPage navigate={navigate} days={days} currency={currency} fmt={fmt}/>}
-      {page==='vip' && <VIPPage navigate={navigate} days={days} currency={currency} fmt={fmt}/>}
+      {page==='results'      && <ResultsPage navigate={navigate} searchParams={searchParams} days={days} currency={currency} fmt={fmt}/>}
+      {page==='vip' && <VIPPage navigate={navigate} searchParams={searchParams} days={days} currency={currency} fmt={fmt}/>}
       {page==='details'      && <DetailsPage navigate={navigate} vehicle={selectedVehicle} days={days} currency={currency} fmt={fmt} testMode={testMode}/>}
-      {page==='checkout'     && <CheckoutPage navigate={navigate} vehicle={selectedVehicle} days={days} searchParams={searchParams} setBookings={setBookings} currency={currency} fmt={fmt} testMode={testMode}/>}
+      {page==='checkout'     && <CheckoutPage checkoutDraft={checkoutDraft} setCheckoutDraft={setCheckoutDraft} navigate={navigate} vehicle={selectedVehicle} days={days} searchParams={searchParams} setBookings={setBookings} currency={currency} fmt={fmt} testMode={testMode}/>}
       {page==='confirmation' && <ConfirmationPage navigate={navigate} data={confirmData} currency={currency} fmt={fmt}/>}
       {page==='how'          && <HowItWorksPage navigate={navigate}/>}
       {page==='faqs'         && <FAQsPage/>}
@@ -2162,7 +2207,7 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
         <div className="container">
           <h2 style={{fontSize:'1.75rem', fontWeight:800, color:'var(--navy)', marginBottom:'0.35rem'}}>Featured rental cars</h2>
           <p style={{color:'var(--text-muted)', marginBottom:'1.75rem'}}>Explore models, rental rates and pickup locations for your next journey.</p>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1.25rem'}}>
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,280px),1fr))', gap:'1.25rem'}}>
             {STANDARD_VEHICLES.slice(0,4).map(v => (
               <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} currency={currency} onSelect={() => navigate('details', {vehicle:v, days:rentalDays})} />
             ))}
@@ -2177,7 +2222,7 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
         <div className="container">
           <div className="section-heading"><div><h2 id="destinations-title">Where will Christmas take you?</h2><p>Explore rental cars at popular UK and European pickup locations.</p></div></div>
           <div className="destination-grid">
-            {[['London Heathrow','Airport arrivals & festive city breaks'],['Paris','Premium saloons & winter weekends'],['Rome','Compact cars & city exploring'],['Barcelona','Coastal drives & Christmas escapes']].map(([city,description])=><button className="destination-card" key={city} onClick={()=>{const loc=searchLocations(city)[0];if(loc)setLocal(p=>({...p,pickup:loc.name,pickupCode:loc.locationCode}));document.getElementById('rental-search').scrollIntoView({block:'center'});document.getElementById('search-pickup').focus({preventScroll:true});}}><Icon name="mdi:map-marker-outline" sz={24} cls="icon-gold"/><h3>{city}</h3><p>{description}</p><span>Choose pickup location →</span></button>)}
+            {[['London Heathrow','Airport arrivals & festive city breaks'],['Paris','Premium saloons & winter weekends'],['Rome','Compact cars & city exploring'],['Barcelona','Coastal drives & Christmas escapes']].map(([city,description])=><button className="destination-card" style={{backgroundImage:`url('/assets/destinations/${city==='London Heathrow'?'london':city.toLowerCase()}.jpg')`}} key={city} onClick={()=>{const loc=searchLocations(city)[0];if(loc)setLocal(p=>({...p,pickup:loc.name,pickupCode:loc.locationCode}));document.getElementById('rental-search').scrollIntoView({block:'center'});document.getElementById('search-pickup').focus({preventScroll:true});}}><Icon name="mdi:map-marker-outline" sz={24} cls="icon-gold"/><h3>{city}</h3><p>{description}</p><span>Choose pickup location →</span></button>)}
           </div>
         </div>
       </section>
@@ -2186,7 +2231,7 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
 }
 
 // ── VIP collection ─────────────────────────────────────────────────────
-function VIPPage({ navigate, days, currency, fmt }) {
+function VIPPage({ navigate, searchParams, days, currency, fmt }) {
   const rentalDays = Number.isInteger(days) && days >= 1 && days <= MAX_RENTAL_DAYS ? days : 7;
   return <main className="vip-page">
     <section className="vip-hero">
@@ -2199,7 +2244,7 @@ function VIPPage({ navigate, days, currency, fmt }) {
       </div>
     </section>
     <section className="section"><div className="container">
-      <div className="section-heading"><div><h2>Choose your VIP rental</h2><p>Prices shown for {rentalDays} days. Availability, supplier terms and security deposits apply.</p></div></div>
+      <div className="section-heading"><div><h2>Choose your VIP rental</h2><p>London Heathrow collection · Prices shown for {rentalDays} days. Choose your dates at checkout. Availability, supplier terms and security deposits apply.</p></div></div>
       <div className="vip-grid">{VIP_VEHICLES.map(vehicle=><VehicleCard key={vehicle.id} vehicle={vehicle} days={rentalDays} currency={currency} fmt={fmt} onSelect={()=>navigate('details',{vehicle,days:rentalDays})}/>)}</div>
       <div className="vip-note"><strong>Plan your collection.</strong> These vehicles have higher rental rates and security deposits. Review the minimum driver age and supplier conditions on each listing before reserving. For collection questions, <a href="mailto:help@driveeurocars.com">contact our rental team</a>.</div>
     </div></section>
@@ -2207,7 +2252,7 @@ function VIPPage({ navigate, days, currency, fmt }) {
 }
 
 // ── Results Page ──────────────────────────────────────────────────────
-function ResultsPage({ navigate, days: initDays, currency, fmt }) {
+function ResultsPage({ navigate, searchParams, days: initDays, currency, fmt }) {
   const [filters, setFilters] = useState({
     types:[], transmission:[], fuel:[], country:'', seats:0,
     airport:false, unlimitedMileage:false, crossBorder:false,
@@ -2220,22 +2265,12 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
     const d = initDays;
     return (typeof d === 'number' && d >= 1 && d <= MAX_RENTAL_DAYS) ? d : 7;
   });
-  // ── Rental days input state (separate so typing doesn't re-render cards) ──
-  // The input uses this local string; rentalDays only updates on blur or Enter
-  // so VehicleCards don't remount on every keypress, preventing focus loss.
-  const [daysInputVal, setDaysInputVal] = useState(String(rentalDays));
   const [filtersOpen, setFiltersOpen] = useState(false);
   const toggle = (k) => setFilters(f => ({...f,[k]:!f[k]}));
   const toggleArr = (k,v) => setFilters(f => ({...f,[k]:f[k].includes(v)?f[k].filter(x=>x!==v):[...f[k],v]}));
 
-  const commitDays = (raw) => {
-    const n = parseInt(raw, 10);
-    const clamped = (!isFinite(n) || n < 1) ? 1 : n > MAX_RENTAL_DAYS ? MAX_RENTAL_DAYS : n;
-    setRentalDays(clamped);
-    setDaysInputVal(String(clamped));
-  };
-
   let results = STANDARD_VEHICLES.filter(v => {
+    if (!matchesPickup(v,searchParams)) return false;
     if (filters.types.length && !filters.types.includes(v.type)) return false;
     if (filters.transmission.length && !filters.transmission.includes(v.transmission)) return false;
     if (filters.fuel.length && !filters.fuel.includes(v.fuel)) return false;
@@ -2258,20 +2293,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
     <div className="filter-panel">
       <div style={{fontWeight:700, fontSize:15, color:'var(--navy)', marginBottom:'1rem'}}>Refine results</div>
 
-      <div className="filter-section">
-        <div className="filter-title">Rental days (1–{MAX_RENTAL_DAYS})</div>
-        <input
-          type="number"
-          className="form-input"
-          style={{fontSize:13}}
-          min={1}
-          max={MAX_RENTAL_DAYS}
-          value={daysInputVal}
-          onChange={e => setDaysInputVal(e.target.value)}
-          onBlur={e => commitDays(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter') commitDays(e.target.value); }}
-        />
-      </div>
+      <div className="filter-section"><div className="filter-title">Rental dates</div><p style={{fontSize:13}}>{rentalDays} days · Use Change search to edit your dates.</p></div>
 
       <div className="filter-section">
         <div className="filter-title">Country</div>
@@ -2338,10 +2360,11 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
       <div className="page-header">
         <div className="page-header-inner">
           <div className="page-header-title">Available cars</div>
-          <div className="page-header-sub">{results.length} vehicles · {rentalDays}-day rental · DriveEuro prices</div>
+          <div className="page-header-sub">{results.length} vehicles · {rentalDays}-day rental · {searchParams.pickup || "All pickup locations"}</div>
         </div>
       </div>
       <div className="container" style={{padding:'2rem 1.5rem'}}>
+        <div className="trip-search-summary"><span>{searchParams.pickupDate ? `${searchParams.pickupDate} ${searchParams.pickupTime} → ${searchParams.returnDate} ${searchParams.returnTime}` : 'Choose your dates before reserving'}</span><button className="btn btn-outline btn-sm" onClick={()=>navigate('home')}>Change search</button></div>
         {/* Mobile filter toggle */}
         <div style={{display:'none'}} className="mobile-filter-toggle">
           <button className="btn btn-outline btn-full" style={{marginBottom:'1rem'}} onClick={()=>setFiltersOpen(!filtersOpen)}>
@@ -2369,10 +2392,10 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
               <div className="card card-body" style={{textAlign:'center', padding:'3rem'}}>
                 <div style={{marginBottom:'1rem'}}><Icon name="mdi:car-search" sz={48} cls="icon-muted"/></div>
                 <h3 style={{color:'var(--navy)', marginBottom:'0.5rem'}}>No vehicles match your filters</h3>
-                <p style={{color:'var(--text-muted)'}}>Try adjusting your selections or clearing the filters.</p>
+                <p style={{color:'var(--text-muted)'}}>Try adjusting your filters or changing your pickup location.</p>
               </div>
             ) : (
-              <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1.25rem'}}>
+              <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,280px),1fr))', gap:'1.25rem'}}>
                 {results.map(v=>(
                   <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} currency={currency} onSelect={()=>navigate('details',{vehicle:v,days:rentalDays})}/>
                 ))}
@@ -2401,7 +2424,7 @@ function DetailsPage({ navigate, vehicle, days, currency, fmt, testMode }) {
         <div className="page-header-inner">
           <button className="btn btn-sm" style={{marginBottom:'0.75rem', background:'rgba(255,255,255,0.12)', border:'1px solid rgba(255,255,255,0.2)', color:'#fff', borderRadius:8}} onClick={()=>navigate(isVIPVehicle(vehicle)?'vip':'results',{days})}>{isVIPVehicle(vehicle)?'← Back to VIP collection':'← Back to results'}</button>
           <div className="page-header-title">{vehicle.name}</div>
-          <div className="page-header-sub">{vehicle.class} · {vehicle.supplier} · {vehicle.city}, {vehicle.country}</div>
+          <div className="page-header-sub"><SupplierLogo name={vehicle.supplier}/> {vehicle.class} · {vehicle.city}, {vehicle.country}</div>
           {/* Internal test badge — only visible when testMode is active (?test=1) */}
           {testMode && vehicle._isTestListing && (
             <div style={{display:'inline-flex', alignItems:'center', gap:6, marginTop:'0.5rem', background:'rgba(201,162,39,0.2)', border:'1px solid rgba(201,162,39,0.5)', borderRadius:6, padding:'0.25rem 0.75rem', fontSize:12, color:'var(--gold)', fontWeight:700}}>
@@ -2509,14 +2532,14 @@ function DetailsPage({ navigate, vehicle, days, currency, fmt, testMode }) {
 }
 
 // ── Checkout ──────────────────────────────────────────────────────────
-function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, currency, fmt, testMode }) {
+function CheckoutPage({ checkoutDraft, setCheckoutDraft, navigate, vehicle, days, searchParams, setBookings, currency, fmt, testMode }) {
   const today = todayStr();
   const TIMES = ['06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
 
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(() => ({
     // Driver details
-    fullName:'', email:'', phone:'', dob:'',
+    fullName:checkoutDraft?.fullName||'', email:checkoutDraft?.email||'', phone:checkoutDraft?.phone||'', dob:checkoutDraft?.dob||'',
     driverAge: searchParams?.driverAge || '',
     // Trip details — pre-filled from search
     pickupLocation: searchParams?.pickup || vehicle?.city || '',
@@ -2529,6 +2552,8 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     returnTime:  searchParams?.returnTime  || '10:00',
     specialRequests:'', agreedTerms:false, agreedAge:false,
   }));
+  useEffect(()=>{ setCheckoutDraft({fullName:form.fullName,email:form.email,phone:form.phone,dob:form.dob}); },[form.fullName,form.email,form.phone,form.dob]);
+  useEffect(()=>{ const title=document.getElementById('checkout-step-title'); if(title){title.focus({preventScroll:true});title.scrollIntoView({block:'start'});} },[step]);
   const [errors, setErrors] = useState({});
   const [payProcessing, setPayProcessing] = useState(false);
   const [payMethod, setPayMethod] = useState('rampex'); // 'rampex' | 'card' | 'klarna'
@@ -2550,7 +2575,12 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
   const displayDays = liveFormDays || (typeof days === 'number' && days >= 1 && days <= MAX_RENTAL_DAYS ? Math.round(days) : 7);
   const displayP = liveP || calcPricing(vehicle, displayDays, currency);
 
-  const setF = (k,v) => setForm(f=>({...f,[k]:v}));
+  const setF = (k,v) => { setErrors(e=>({...e,[k]:undefined})); setForm(f=>{
+    const next={...f,[k]:v};
+    const age=driverAgeOnDate(next.dob,next.pickupDate);
+    if(age!==null) next.driverAge=ageCategory(age);
+    return next;
+  }); };
 
   // Date/time change handlers — re-validate 24h minimum on every change
   const handlePickupDateChange = (v) => {
@@ -2574,13 +2604,18 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     const e = {};
     if (step===1) {
       if (!form.fullName.trim()) e.fullName='Required';
-      if (!form.email.includes('@')) e.email='Valid email required';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email='Enter a valid email address';
       if (!form.phone.trim()) e.phone='Required';
-      if (!form.dob) e.dob='Required';
+      const age=driverAgeOnDate(form.dob,form.pickupDate);
+      if(age===null || age>110) e.dob='Enter a valid date of birth';
+      else if(age<vehicle.minAge) e.dob=`You must be at least ${vehicle.minAge} on the pickup date to rent this vehicle.`;
       if (!form.driverAge) e.driverAge='Required';
     }
     if (step===2) {
+      if (!matchesPickup(vehicle,{pickup:form.pickupLocation,pickupCode:form.pickupCode})) e.pickupLocation=`This vehicle is listed at ${vehicle.city}. Choose that pickup or return to search for another car.`;
       if (!form.pickupLocation.trim()) e.pickupLocation='Required';
+      const age=driverAgeOnDate(form.dob,form.pickupDate);
+      if(age===null||age<vehicle.minAge) e.pickupDate=`The driver must be at least ${vehicle.minAge} on the pickup date.`;
       // Use validateTripDates for all date/time validation — checks year range,
       // future pickup, 24h minimum, and max 90 days in one place
       const dtErr = validateTripDates(
@@ -2603,7 +2638,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     return Object.keys(e).length===0;
   };
 
-  const handleNext = () => { if (validate()) setStep(s=>s+1); };
+  const handleNext = () => { if (validate()) setStep(s=>s+1); else requestAnimationFrame(()=>{const field=document.querySelector('.checkout-layout .input-error');if(field){field.focus();field.scrollIntoView({block:'center'});}}); };
 
   // ── Rampex payment integration ─────────────────────────────────────────
   //
@@ -2627,9 +2662,11 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
     // Full form validation before initiating payment
     const preValidateErrors = {};
     if (!form.fullName.trim())          preValidateErrors.fullName       = 'Required';
-    if (!form.email.includes('@'))      preValidateErrors.email          = 'Valid email required';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) preValidateErrors.email='Enter a valid email address';
     if (!form.phone.trim())             preValidateErrors.phone          = 'Required';
-    if (!form.dob)                      preValidateErrors.dob            = 'Required';
+    const driverAge=driverAgeOnDate(form.dob,form.pickupDate);
+    if(driverAge===null||driverAge<vehicle.minAge||driverAge>110) preValidateErrors.dob=`Enter a valid birth date. Minimum age: ${vehicle.minAge}.`;
+    if(!matchesPickup(vehicle,{pickup:form.pickupLocation,pickupCode:form.pickupCode})) preValidateErrors.pickupLocation=`Collection is at ${vehicle.city}.`;
     if (!form.driverAge)                preValidateErrors.driverAge      = 'Required';
     if (!form.pickupLocation.trim())    preValidateErrors.pickupLocation  = 'Required';
     if (!form.pickupDate)               preValidateErrors.pickupDate     = 'Please select a pickup date';
@@ -2776,7 +2813,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
         </div>
         {[
           ['Vehicle', `${vehicle.name} or similar`, 'mdi:car-outline'],
-          ['Supplier', vehicle.supplier, 'mdi:domain'],
+          ['Supplier', <SupplierLogo name={vehicle.supplier}/>, 'mdi:domain'],
           ['Pickup', form.pickupLocation || '—', 'mdi:map-marker-outline'],
           ['Drop-off', form.dropoffLocation || form.pickupLocation || '—', 'mdi:map-marker-check-outline'],
           ['Pickup date & time', form.pickupDate ? `${form.pickupDate} at ${form.pickupTime}` : '—', 'mdi:calendar-start-outline'],
@@ -2849,7 +2886,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
       <div className="page-header">
         <div className="page-header-inner">
           <div className="page-header-title">Complete your reservation</div>
-          <div className="page-header-sub">{vehicle.name} or similar · {vehicle.supplier} · {days} days</div>
+          <div className="page-header-sub">{vehicle.name} or similar · {vehicle.supplier} · {displayDays} days</div>
         </div>
       </div>
       <div className="container" style={{padding:'2rem 1.5rem'}}>
@@ -2862,34 +2899,34 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
           <div>
             {step===1 && (
               <div className="card card-body">
-                <h2 style={{color:'var(--navy)', fontWeight:700, marginBottom:'1.1rem', fontSize:'1.15rem'}}>Driver details</h2>
+                <h2 id="checkout-step-title" tabIndex="-1" style={{color:'var(--navy)', fontWeight:700, marginBottom:'1.1rem', fontSize:'1.15rem'}}>Driver details</h2>
                 <div style={{display:'flex', flexDirection:'column', gap:'0.9rem'}}>
                   <div className="form-group">
-                    <label className="form-label">Full name (as on licence)</label>
-                    <input className={`form-input ${errors.fullName?'input-error':''}`} value={form.fullName} onChange={e=>setF('fullName',e.target.value)} placeholder="Your full name (as on licence)"/>
+                    <label className="form-label" htmlFor="checkout-fullName">Full name (as on licence)</label>
+                    <input id="checkout-fullName" aria-invalid={!!errors.fullName} autoComplete="name"  className={`form-input ${errors.fullName?'input-error':''}`} value={form.fullName} onChange={e=>setF('fullName',e.target.value)} placeholder="Your full name (as on licence)"/>
                     {errors.fullName && <span className="error-msg">{errors.fullName}</span>}
                   </div>
                   <div className="grid-2">
                     <div className="form-group">
-                      <label className="form-label">Email address</label>
-                      <input type="email" className={`form-input ${errors.email?'input-error':''}`} value={form.email} onChange={e=>setF('email',e.target.value)} placeholder="you@example.com"/>
+                      <label className="form-label" htmlFor="checkout-email">Email address</label>
+                      <input id="checkout-email" aria-invalid={!!errors.email} autoComplete="email" inputMode="email"  type="email" className={`form-input ${errors.email?'input-error':''}`} value={form.email} onChange={e=>setF('email',e.target.value)} placeholder="you@example.com"/>
                       {errors.email && <span className="error-msg">{errors.email}</span>}
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Phone number</label>
-                      <input type="tel" className={`form-input ${errors.phone?'input-error':''}`} value={form.phone} onChange={e=>setF('phone',e.target.value)} placeholder="Mobile number"/>
+                      <label className="form-label" htmlFor="checkout-phone">Phone number</label>
+                      <input id="checkout-phone" aria-invalid={!!errors.phone} autoComplete="tel" inputMode="tel"  type="tel" className={`form-input ${errors.phone?'input-error':''}`} value={form.phone} onChange={e=>setF('phone',e.target.value)} placeholder="Mobile number"/>
                       {errors.phone && <span className="error-msg">{errors.phone}</span>}
                     </div>
                   </div>
                   <div className="grid-2">
                     <div className="form-group">
-                      <label className="form-label">Date of birth</label>
-                      <input type="date" className={`form-input ${errors.dob?'input-error':''}`} value={form.dob} onChange={e=>setF('dob',e.target.value)}/>
+                      <label className="form-label" htmlFor="checkout-dob">Date of birth</label>
+                      <input id="checkout-dob" aria-invalid={!!errors.dob} autoComplete="bday" max={today}  type="date" className={`form-input ${errors.dob?'input-error':''}`} value={form.dob} onChange={e=>setF('dob',e.target.value)}/>
                       {errors.dob && <span className="error-msg">{errors.dob}</span>}
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Driver age category</label>
-                      <select className={`form-input ${errors.driverAge?'input-error':''}`} value={form.driverAge} onChange={e=>setF('driverAge',e.target.value)}>
+                      <label className="form-label" htmlFor="checkout-driverAge">Age category (calculated)</label>
+                      <select disabled id="checkout-driverAge" aria-invalid={!!errors.driverAge}   className={`form-input ${errors.driverAge?'input-error':''}`} value={form.driverAge} onChange={e=>setF('driverAge',e.target.value)}>
                         <option value="">Select age</option>
                         <option>Under 21</option><option>21-24</option><option>25-29</option><option>30-65</option><option>66+</option>
                       </select>
@@ -2906,7 +2943,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
 
             {step===2 && (
               <div className="card card-body">
-                <h2 style={{color:'var(--navy)', fontWeight:700, marginBottom:'1.1rem', fontSize:'1.15rem'}}>Trip details &amp; terms</h2>
+                <h2 id="checkout-step-title" tabIndex="-1" style={{color:'var(--navy)', fontWeight:700, marginBottom:'1.1rem', fontSize:'1.15rem'}}>Trip details &amp; terms</h2>
                 <div style={{display:'flex', flexDirection:'column', gap:'0.9rem'}}>
 
                   {/* Location fields with autofill */}
@@ -2914,8 +2951,8 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     <div className="form-group">
                       <label className="form-label">Pickup location</label>
                       <LocationInput
-                        value={form.pickupLocation}
-                        onChange={v=>setF('pickupLocation',v)}
+                        label="Pickup location" value={form.pickupLocation}
+                        onChange={v=>{setF('pickupLocation',v);setF('pickupCode','');}}
                         placeholder="Where are you collecting from?"
                         onSelect={loc=>{setF('pickupLocation',loc.name);setF('pickupCode',loc.locationCode);}}
                       />
@@ -2924,8 +2961,8 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     <div className="form-group">
                       <label className="form-label">Drop-off location</label>
                       <LocationInput
-                        value={form.dropoffLocation}
-                        onChange={v=>setF('dropoffLocation',v)}
+                        label="Drop-off location" value={form.dropoffLocation}
+                        onChange={v=>{setF('dropoffLocation',v);setF('dropoffCode','');}}
                         placeholder="Same location or choose another"
                         onSelect={loc=>{setF('dropoffLocation',loc.name);setF('dropoffCode',loc.locationCode);}}
                       />
@@ -2935,8 +2972,8 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                   {/* Date fields with min constraints */}
                   <div className="grid-2">
                     <div className="form-group">
-                      <label className="form-label">Pickup date</label>
-                      <input
+                      <label className="form-label" htmlFor="checkout-pickupDate">Pickup date</label>
+                      <input id="checkout-pickupDate" aria-invalid={!!errors.pickupDate}
                         type="date"
                         className={`form-input ${errors.pickupDate?'input-error':''}`}
                         value={form.pickupDate}
@@ -2951,8 +2988,8 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                       {errors.pickupDate && <span className="error-msg">{errors.pickupDate}</span>}
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Pickup time</label>
-                      <select className="form-input" value={form.pickupTime}
+                      <label className="form-label" htmlFor="checkout-pickupTime">Pickup time</label>
+                      <select id="checkout-pickupTime" aria-invalid={!!errors.pickupTime}   className="form-input" value={form.pickupTime}
                         onChange={e=>{setF('pickupTime',e.target.value); if(form.returnDate){const err=validateTripDates(form.pickupDate,e.target.value,form.returnDate,form.returnTime||'10:00'); if(err)setF('returnDate','');}}}>
                         {TIMES.map(t=><option key={t}>{t}</option>)}
                       </select>
@@ -2960,11 +2997,11 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                   </div>
                   <div className="grid-2">
                     <div className="form-group">
-                      <label className="form-label">Return date</label>
+                      <label className="form-label" htmlFor="checkout-returnDate">Return date</label>
                       {(() => {
                         const minRet = form.pickupDate ? addDaysISO(form.pickupDate, 1) : daysFromTodayStr(1);
                         return (
-                          <input
+                          <input id="checkout-returnDate" aria-invalid={!!errors.returnDate}
                             type="date"
                             className={`form-input ${errors.returnDate?'input-error':''}`}
                             value={form.returnDate}
@@ -2981,8 +3018,8 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                       {errors.returnDate && <span className="error-msg">{errors.returnDate}</span>}
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Return time</label>
-                      <select className="form-input" value={form.returnTime}
+                      <label className="form-label" htmlFor="checkout-returnTime">Return time</label>
+                      <select id="checkout-returnTime" aria-invalid={!!errors.returnTime}   className="form-input" value={form.returnTime}
                         onChange={e=>setF('returnTime',e.target.value)}>
                         {TIMES.map(t=><option key={t}>{t}</option>)}
                       </select>
@@ -3018,7 +3055,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
 
             {step===3 && (
               <div className="card card-body">
-                <h2 style={{color:'var(--navy)', fontWeight:700, marginBottom:'0.5rem', fontSize:'1.15rem'}}>Pay to reserve your vehicle</h2>
+                <h2 id="checkout-step-title" tabIndex="-1" style={{color:'var(--navy)', fontWeight:700, marginBottom:'0.5rem', fontSize:'1.15rem'}}>Pay to reserve your vehicle</h2>
                 <p style={{color:'var(--text-muted)', fontSize:14, marginBottom:'1.25rem'}}>
                   {pricingValid && liveP
                     ? <>You're paying <strong style={{color:'var(--navy)'}}>{fmt(liveP.reservationFee)}</strong> to reserve the {vehicle.name} with {vehicle.supplier}. The balance is due at collection.</>
