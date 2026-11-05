@@ -267,10 +267,13 @@
 
   /* Trust bar */
   .trust-bar { background:var(--white); border-bottom:1px solid var(--border); }
-  .trust-inner { max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:0; justify-content:stretch; }
-  .trust-item { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--text-muted); padding:0.875rem 1.25rem; border-right:1px solid var(--border); }
-  .trust-item:last-child { border-right:none; }
-  @media(max-width:600px) { .trust-item { border-right:none; border-bottom:1px solid var(--border); } }
+  .trust-inner { max-width:1200px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .trust-item { min-width:0; display:flex; align-items:center; gap:10px; font-size:clamp(12px,1vw,14px); line-height:1.35; font-weight:600; color:var(--text-muted); padding:14px 16px; border-bottom:1px solid var(--border); }
+  .trust-item:nth-child(n+4) { border-bottom:0; }
+  .trust-item iconify-icon { flex:none; }
+  @media(min-width:1500px) { .trust-inner { max-width:1440px; grid-template-columns:repeat(6,minmax(0,1fr)); } .trust-item { border-bottom:0; } }
+  @media(max-width:800px) { .trust-inner { grid-template-columns:repeat(2,minmax(0,1fr)); } .trust-item:nth-child(4) { border-bottom:1px solid var(--border); } }
+  @media(max-width:480px) { .trust-inner { padding:0 16px; grid-template-columns:1fr; } .trust-item:nth-child(n) { border-bottom:1px solid var(--border); padding:10px 4px; } .trust-item:last-child { border-bottom:0; } }
 
   /* Vehicle card */
   .vehicle-card { background:#fff; border-radius:var(--radius-lg); border:1px solid var(--border); overflow:hidden; transition:transform 0.2s,box-shadow 0.2s; display:flex; flex-direction:column; }
@@ -620,15 +623,16 @@
   .quick-destinations { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:20px; font-size:12px; color:#53657a; }
   .quick-destinations button { background:#fff; border:1px solid #d6dfe5; border-radius:24px; padding:7px 13px; font-size:12px; color:var(--navy); }
   .quick-destinations button:hover { background:var(--gold-pale); border-color:var(--gold); }
-  .offers-section { padding:44px 0; background:#fff; }
+  .offers-section { padding:clamp(32px,4vw,56px) clamp(16px,3vw,32px); background:#fff; }
   .section-heading { display:flex; justify-content:space-between; align-items:end; gap:18px; margin-bottom:22px; }
   .section-heading h2 { font-size:28px; color:var(--navy); }
   .section-heading p { color:var(--text-muted); font-size:14px; margin-top:6px; }
-  .offer-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-  .offer-card { text-align:left; background:#f8f3e6; border:1px solid #e9dfc6; border-radius:16px; padding:26px; display:flex; gap:18px; align-items:center; transition:transform .2s,box-shadow .2s; color:var(--navy); }
+  .offer-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+  .offer-card { min-width:0; text-align:left; background:#f8f3e6; border:1px solid #e9dfc6; border-radius:16px; padding:clamp(18px,2vw,26px); display:flex; gap:clamp(12px,2vw,18px); align-items:center; transition:transform .2s,box-shadow .2s; color:var(--navy); }
+  .offer-card > div { min-width:0; }
   .offer-card:nth-child(2) { background:#edf3f6; border-color:#dbe5ec; }
   .offer-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
-  .offer-number { font-size:42px; font-weight:800; letter-spacing:-.05em; min-width:100px; }
+  .offer-number { font-size:clamp(32px,3vw,42px); font-weight:800; letter-spacing:-.05em; flex:0 0 auto; }
   .offer-card h3 { font-size:19px; margin-bottom:6px; }
   .offer-card p { font-size:13px; color:#53657a; }
   .offer-link { display:block; margin-top:12px; font-size:13px; font-weight:700; }
@@ -645,12 +649,13 @@
   .offer-dialog .offer-number { color:#86630b; }
   @keyframes offer-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
   @media(max-width:1050px) { .quick-search-grid { grid-template-columns:1fr 1fr; } .search-submit { width:100%; } }
+  @media(max-width:800px) { .offer-grid { grid-template-columns:1fr; } }
   @media(max-width:640px) {
     .rental-hero { padding:28px 16px 24px; } .hero-top { grid-template-columns:1fr; gap:0; } .hero-car { display:none; }
     .rental-hero .hero-title { font-size:38px; } .rental-hero .hero-sub { font-size:14px; margin-bottom:22px; }
     .quick-search { padding:16px; } .quick-search-grid { grid-template-columns:1fr; gap:14px; }
     .date-time-pair { grid-template-columns:1fr 95px; } .search-heading span { display:none; }
-    .search-extras, .offer-grid { grid-template-columns:1fr; } .offer-card { padding:22px; } .offer-number { font-size:36px; min-width:85px; }
+    .search-extras, .offer-grid { grid-template-columns:1fr; } .offer-card { padding:18px; } .offer-number { font-size:34px; }
     .section-heading h2 { font-size:25px; } .offer-launcher { bottom:12px; right:12px; } .offer-nudge { right:12px; bottom:70px; }
     .offer-dialog { padding:28px 22px; } .quick-search .form-input { font-size:16px; }
   }
