@@ -15,7 +15,7 @@
 <!-- Primary SEO -->
 <title>DriveEuroCars — Discounted UK &amp; EU Car Rental</title>
 <meta name="title"       content="DriveEuroCars — Discounted UK &amp; EU Car Rental">
-<meta name="description" content="Compare UK and European car rental prices, reserve your vehicle with 10% upfront, and pay the balance at collection. No membership needed — just better prices.">
+<meta name="description" content="Compare UK and European car rental prices, reserve your vehicle with 10% upfront, and pay the balance at collection. Explore city cars, spacious SUVs and premium rentals.">
 <meta name="robots"      content="index, follow, max-image-preview:large">
 <link rel="canonical"    href="https://www.driveeurocars.com/">
 
@@ -279,8 +279,8 @@
 
   /* Vehicle image */
   .vimg-wrap { position:relative; overflow:hidden; background:linear-gradient(135deg,#e8edf2 0%,#d4dce6 100%); flex-shrink:0; }
-  .vimg-wrap--card { height:185px; }
-  .vimg-wrap--detail { height:280px; }
+  .vimg-wrap--card { height:auto; aspect-ratio:4/3; }
+  .vimg-wrap--detail { height:auto; aspect-ratio:4/3; max-height:460px; }
   .vimg-wrap img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease; }
   .vehicle-card:hover .vimg-wrap img { transform:scale(1.03); }
   .vimg-class-tag { position:absolute; bottom:10px; left:10px; background:rgba(15,39,68,0.82); backdrop-filter:blur(4px); color:#fff; font-size:11px; font-weight:700; padding:0.25rem 0.6rem; border-radius:6px; letter-spacing:0.04em; text-transform:uppercase; }
@@ -586,6 +586,141 @@
     h2 { font-size:clamp(1.4rem,7vw,2rem); }
     input, select, textarea { font-size:16px !important; }
   }
+
+  /* Rental discovery and offers */
+  :focus-visible { outline:3px solid #a47c0e; outline-offset:4px; }
+  .rental-hero { background:#edf2f5; color:var(--navy); padding:48px 24px 32px; }
+  .rental-hero .hero-inner { max-width:1200px; }
+  .hero-top { display:grid; grid-template-columns:1.2fr 1fr; align-items:center; gap:24px; }
+  .hero-kicker { font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#53657a; margin-bottom:16px; }
+  .rental-hero .hero-title { color:var(--navy); font-size:clamp(36px,4.5vw,60px); line-height:1.07; letter-spacing:-.05em; margin-bottom:20px; }
+  .rental-hero .hero-title span { color:#86630b; }
+  .rental-hero .hero-sub { color:#53657a; font-size:16px; max-width:490px; margin-bottom:28px; }
+  .hero-car { position:relative; padding:20px; }
+  .hero-car::before { content:''; position:absolute; inset:12% 3%; border-radius:50%; background:#e2e9eb; }
+  .hero-car img { position:relative; width:100%; border-radius:24px; box-shadow:0 16px 36px #0f27441a; }
+  .hero-car-note { position:relative; display:block; text-align:center; font-size:12px; color:#53657a; margin-top:12px; }
+  .quick-search { position:relative; background:#fff; border:1px solid #d6dfe5; border-radius:16px; padding:22px; box-shadow:0 12px 32px #0f27440c; }
+  .search-heading { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:16px; }
+  .search-heading h2 { font-size:19px; }
+  .search-heading span { font-size:12px; color:var(--text-muted); }
+  .quick-search-grid { display:grid; grid-template-columns:1.2fr 1fr 1fr auto; gap:12px; align-items:end; }
+  .date-time-pair { display:grid; grid-template-columns:minmax(130px,1fr) 85px; gap:5px; }
+  .quick-search .form-input { padding:12px 10px; min-height:48px; font-size:14px; background:#f8fafb; }
+  .search-submit { min-height:48px; white-space:nowrap; background:var(--gold-light); }
+  .search-options { display:flex; align-items:center; flex-wrap:wrap; gap:20px; margin-top:16px; font-size:13px; color:#53657a; }
+  .search-options label { display:flex; align-items:center; gap:8px; cursor:pointer; }
+  .search-options input { width:16px; height:16px; accent-color:var(--navy); }
+  .search-options button { font-size:13px; text-decoration:underline; color:var(--navy); }
+  .search-extras { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding-top:16px; }
+  .search-error { margin-top:12px; background:#fff0ef; color:#991b1b; padding:10px; border-radius:8px; font-size:13px; }
+  .quick-destinations { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:20px; font-size:12px; color:#53657a; }
+  .quick-destinations button { background:#fff; border:1px solid #d6dfe5; border-radius:24px; padding:7px 13px; font-size:12px; color:var(--navy); }
+  .quick-destinations button:hover { background:var(--gold-pale); border-color:var(--gold); }
+  .offers-section { padding:44px 0; background:#fff; }
+  .section-heading { display:flex; justify-content:space-between; align-items:end; gap:18px; margin-bottom:22px; }
+  .section-heading h2 { font-size:28px; color:var(--navy); }
+  .section-heading p { color:var(--text-muted); font-size:14px; margin-top:6px; }
+  .offer-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .offer-card { text-align:left; background:#f8f3e6; border:1px solid #e9dfc6; border-radius:16px; padding:26px; display:flex; gap:18px; align-items:center; transition:transform .2s,box-shadow .2s; color:var(--navy); }
+  .offer-card:nth-child(2) { background:#edf3f6; border-color:#dbe5ec; }
+  .offer-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+  .offer-number { font-size:42px; font-weight:800; letter-spacing:-.05em; min-width:100px; }
+  .offer-card h3 { font-size:19px; margin-bottom:6px; }
+  .offer-card p { font-size:13px; color:#53657a; }
+  .offer-link { display:block; margin-top:12px; font-size:13px; font-weight:700; }
+  .offer-launcher { position:fixed; bottom:20px; right:20px; z-index:90; background:var(--navy); color:#fff; border-radius:30px; box-shadow:var(--shadow-lg); padding:13px 20px; font-size:13px; font-weight:700; }
+  .offer-nudge { position:fixed; bottom:78px; right:20px; z-index:90; width:320px; max-width:calc(100vw - 32px); padding:22px; background:#fff; color:var(--navy); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow-lg); animation:offer-in .25s ease-out; }
+  .offer-nudge h3 { font-size:18px; padding-right:20px; }
+  .offer-nudge p { font-size:13px; margin:10px 0 16px; }
+  .offer-close { position:absolute; right:10px; top:10px; width:36px; height:36px; border-radius:50%; background:#edf2f5; color:var(--navy); font-size:24px; }
+  .offer-dialog { position:fixed; margin:auto; width:500px; max-width:calc(100vw - 32px); max-height:85vh; overflow:auto; border:0; border-radius:20px; padding:36px; color:var(--navy); box-shadow:var(--shadow-lg); }
+  .offer-dialog::backdrop { background:#091c33a6; }
+  .offer-dialog h2 { font-size:30px; margin:12px 0; }
+  .offer-dialog p { color:var(--text-muted); margin-bottom:18px; font-size:15px; }
+  .offer-dialog .offer-fine-print { font-size:12px; margin:16px 0 0; }
+  .offer-dialog .offer-number { color:#86630b; }
+  @keyframes offer-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  @media(max-width:1050px) { .quick-search-grid { grid-template-columns:1fr 1fr; } .search-submit { width:100%; } }
+  @media(max-width:640px) {
+    .rental-hero { padding:28px 16px 24px; } .hero-top { grid-template-columns:1fr; gap:0; } .hero-car { display:none; }
+    .rental-hero .hero-title { font-size:38px; } .rental-hero .hero-sub { font-size:14px; margin-bottom:22px; }
+    .quick-search { padding:16px; } .quick-search-grid { grid-template-columns:1fr; gap:14px; }
+    .date-time-pair { grid-template-columns:1fr 95px; } .search-heading span { display:none; }
+    .search-extras, .offer-grid { grid-template-columns:1fr; } .offer-card { padding:22px; } .offer-number { font-size:36px; min-width:85px; }
+    .section-heading h2 { font-size:25px; } .offer-launcher { bottom:12px; right:12px; } .offer-nudge { right:12px; bottom:70px; }
+    .offer-dialog { padding:28px 22px; } .quick-search .form-input { font-size:16px; }
+  }
+  @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .offer-card,.offer-nudge { animation:none; transition:none; } }
+
+
+  /* Christmas campaign: decorative elements never cover booking controls. */
+  .site-header { background:var(--navy-deep); color:#fff; position:relative; z-index:100; }
+  .seasonal-bar { background:#174d40; text-align:center; padding:8px 16px; font-size:12px; letter-spacing:.04em; }
+  .seasonal-bar span { color:#efcf7c; padding:0 14px; }
+  .site-header .nav { position:relative; top:auto; }
+  .site-header .nav-inner { max-width:1280px; height:86px; gap:20px; }
+  .brand-home { display:flex; align-items:center; gap:12px; color:white; text-align:left; flex-shrink:0; }
+  .brand-wordmark { font-size:25px; font-weight:800; line-height:1.1; letter-spacing:-.04em; }
+  .brand-wordmark>span { color:var(--gold-light); }
+  .brand-wordmark small { display:block; font-size:9px; font-weight:500; letter-spacing:.12em; margin-top:7px; }
+  .site-header .nav-links { gap:22px; }
+  .site-header .nav-link { white-space:nowrap; font-weight:600; }
+  .site-header .nav-btn { white-space:nowrap; padding:12px 16px; }
+  .header-services { display:flex; justify-content:center; gap:32px; flex-wrap:wrap; padding:10px 20px; border-top:1px solid #ffffff18; font-size:11px; color:#d0dbe5; }
+  .header-services a { color:#efcf7c; }
+  .christmas-hero { background:radial-gradient(ellipse at top right,#e0ece6,transparent 55%),#edf2f5; }
+  .christmas-trim { position:absolute; right:6%; top:0; display:flex; align-items:start; gap:28px; height:90px; pointer-events:none; color:#aa8129; z-index:2; }
+  .christmas-trim span { font-size:25px; padding-top:20px; text-shadow:0 0 15px #e8cd8a; }
+  .christmas-trim i { width:21px; height:26px; background:#174d40; border-radius:50%; margin-top:40px; position:relative; box-shadow:inset -5px -4px 0 #0002; }
+  .christmas-trim i::before { content:''; width:1px; height:40px; background:#aa8129; position:absolute; bottom:100%; left:50%; }
+  .christmas-trim i:nth-of-type(2) { background:#b7403d; margin-top:22px; }
+  .christmas-hero .hero-kicker { color:#174d40; }
+  .destination-section { background:#fff; }
+  .destination-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .destination-card { text-align:left; padding:24px; border:1px solid var(--border); border-radius:16px; background:#f5f8f7; color:var(--navy); transition:border-color .2s,transform .2s; }
+  .destination-card:hover { border-color:#174d40; transform:translateY(-3px); }
+  .destination-card h3 { margin:12px 0 8px; font-size:20px; }
+  .destination-card p { color:var(--text-muted); font-size:13px; min-height:42px; }
+  .destination-card>span { display:block; font-size:12px; font-weight:700; margin-top:20px; }
+  #rental-search,#rental-destinations,#rental-offers { scroll-margin-top:20px; }
+  @media(max-width:1100px) {
+    .site-header .nav-inner { height:auto; min-height:78px; flex-wrap:wrap; padding:16px 24px; }
+    .site-header .nav-mobile-toggle { display:block; margin-left:auto; }
+    .site-header .nav-links { display:none; }
+    .site-header .nav-links.open { display:flex; position:static; width:100%; flex-direction:column; align-items:stretch; padding:18px 0 0; gap:0; }
+    .site-header .nav-links.open .nav-link { text-align:left; padding:14px 4px; border-top:1px solid #ffffff18; }
+    .site-header .nav-links.open select { margin:12px 0; width:100%; }
+    .header-services { gap:10px 24px; } .header-services span:nth-child(2),.header-services span:nth-child(3) { display:none; }
+    .destination-grid { grid-template-columns:1fr 1fr; }
+  }
+  @media(max-width:640px) {
+    .offer-launcher { display:none; }
+    .brand-wordmark { font-size:22px; } .brand-logo { height:36px; }
+    .seasonal-bar { font-size:10px; } .seasonal-bar span { padding:0 5px; }
+    .site-header .nav-inner { padding:14px 16px; } .header-services { font-size:10px; padding:8px; }
+    .christmas-trim { opacity:.7; right:12px; gap:12px; transform:scale(.6); transform-origin:top right; }
+    .christmas-hero .hero-kicker { padding-right:50px; font-size:10px; }
+    .destination-grid { grid-template-columns:1fr; } .destination-card p { min-height:0; }
+  }
+  @media(prefers-reduced-motion:reduce) { .destination-card { transition:none; } }
+
+
+  .site-header .nav-links { gap:16px; }
+  .site-header .vip-nav-link { color:#efcf7c; }
+  .vip-page { background:#f2f4f6; }
+  .vip-hero { padding:64px 0; background:radial-gradient(ellipse at top right,#293b4b,transparent 65%),#091c33; color:#fff; }
+  .vip-hero .hero-kicker { color:#efcf7c; }
+  .vip-hero h1 { font-size:clamp(36px,5vw,58px); line-height:1.12; }
+  .vip-hero h1 span { color:#efcf7c; }
+  .vip-hero p { max-width:680px; font-size:17px; color:#d4dee7; margin:22px 0; }
+  .vip-facts { display:flex; flex-wrap:wrap; gap:12px; margin:26px 0; }
+  .vip-facts span { padding:7px 12px; border:1px solid #efcf7c55; border-radius:24px; font-size:12px; color:#efcf7c; }
+  .vip-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:22px; }
+  .vip-note { padding:22px; margin-top:28px; border:1px solid #d7dfe5; border-radius:12px; color:#53657a; font-size:14px; }
+  .vip-note a { text-decoration:underline; color:var(--navy); }
+  @media(max-width:900px) { .vip-grid { grid-template-columns:1fr; } .vip-hero { padding:40px 16px; } }
+
 </style>
 </head>
 <body>
@@ -841,6 +976,12 @@ const VEHICLES = [
   { id:40, name:'Nissan Leaf', class:'Electric', supplier:'Enterprise', seats:5, bags:2, transmission:'Automatic', fuel:'Electric', city:'Manchester Airport', country:'UK', airport:true, pricePerDay:62, type:'Electric', insurance:'Basic CDW', minAge:21, unlimitedMileage:true, crossBorder:false, depositRequired:true, hotelDelivery:false, airportMeetGreet:true, premiumInsuranceAvail:true, features:['e-Pedal','ProPILOT Assist','Fast Charge'], sourceSupplierName:'Enterprise', sourceSupplierUrl:'https://www.enterprise.co.uk', sourceMarketPrice:62, priceLastCheckedAt:'2025-06-11T08:00:00Z', priceConfidence:'high', dataSourceType:'manual', sourceNotes:'MAN. EV rates competitive.' },
 ];
 
+// Ultra-luxury rentals are marketed separately from the everyday catalogue.
+const VIP_VEHICLE_IDS = new Set([16, 38, 39]);
+const isVIPVehicle = vehicle => !!vehicle && VIP_VEHICLE_IDS.has(vehicle.id);
+const STANDARD_VEHICLES = VEHICLES.filter(vehicle => !isVIPVehicle(vehicle));
+const VIP_VEHICLES = VEHICLES.filter(isVIPVehicle);
+
 const BOOKINGS_INIT = [
   { id:'DE-2025-001', customer:'Sarah Mitchell', email:'sarah@example.com', phone:'+44 7700 900123', dob:'1988-04-12', vehicle:'BMW 3 Series', supplier:'Sixt', pickup:'Paris CDG', dropoff:'Paris CDG', pickupDate:'2025-06-15', returnDate:'2025-06-22', days:7, originalPrice:1036, discountedPrice:725.20, reservationFee:72.52, status:'confirmed', supplierRef:'EUR-4521', internalNotes:'Customer requested child seat', balanceNotes:'Balance confirmed paid at desk', created:'2025-05-28' },
   { id:'DE-2025-002', customer:'James O\'Brien', email:'james@example.com', phone:'+44 7911 200456', dob:'1995-09-20', vehicle:'Tesla Model 3', supplier:'Enterprise', pickup:'London Gatwick', dropoff:'London Gatwick', pickupDate:'2025-07-02', returnDate:'2025-07-09', days:7, originalPrice:1225, discountedPrice:857.50, reservationFee:85.75, status:'reserved', supplierRef:'', internalNotes:'', balanceNotes:'', created:'2025-06-10' },
@@ -972,36 +1113,10 @@ const fmtChecked = (iso) => {
 const OPERATIONAL_DISCLAIMER = 'Your vehicle reservation is confirmed once the reservation fee is paid. Collection remains subject to the rental provider\'s standard driver checks, licence verification, deposit hold, and local rental terms.';
 const REFUND_NOTE = 'If your selected vehicle or a suitable alternative cannot be provided, your reservation fee will be refunded in full.';
 
-// ── Vehicle image map ─────────────────────────────────────────────────
-// Keys match vehicle.class values. Swap any URL for your own CDN path.
-// All images are sourced from Unsplash (free to use, no attribution required for display).
-// ── Image system ──────────────────────────────────────────────────────
-// CLASS_IMAGES uses normalised lowercase-hyphen keys so lookups are
-// immune to capitalisation differences in vehicle.class values.
-// Missing file classes fall back to the nearest visual equivalent.
-const CLASS_IMAGES = {
-  'mini':              '/assets/cars/mini.png',
-  'economy':           '/assets/cars/economy.png',
-  'compact':           '/assets/cars/compact.png',
-  'estate':            '/assets/cars/estate.png',
-  'suv':               '/assets/cars/suv.png',
-  'premium':           '/assets/cars/premium.png',
-  'executive':         '/assets/cars/executive-saloon.png',
-  'executive-saloon':  '/assets/cars/executive-saloon.png',
-  'electric':          '/assets/cars/electric.png',
-  'electric-premium':  '/assets/cars/electric.png',
-  'sports-car':        '/assets/cars/sports-car.png',
-  'van':               '/assets/cars/van.png',
-  '7-seater':          '/assets/cars/seven-seater.png',
-  'seven-seater':      '/assets/cars/seven-seater.png',
-  // Fallback mappings — no dedicated local file for these classes
-  'convertible':       '/assets/cars/sports-car.png',
-  'luxury':            '/assets/cars/executive-saloon.png',
-  'luxury-saloon':     '/assets/cars/executive-saloon.png',
-  'luxury-suv':        '/assets/cars/suv.png',
-  'suv-luxury':        '/assets/cars/suv.png',
-  'premium-suv':       '/assets/cars/suv.png',
-};
+// Model-specific catalogue artwork. Keep model names and asset names paired.
+const MODEL_IMAGES = Object.fromEntries(VEHICLES.map(vehicle => [vehicle.name,
+  '/assets/cars/models/' + vehicle.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') + '.jpg'
+]));
 
 // Icon fallbacks per normalised class key (used when image fails to load)
 const CLASS_ICONS = {
@@ -1016,7 +1131,7 @@ const CLASS_ICONS = {
 };
 
 /**
- * Normalise any vehicle class string to the lowercase-hyphen key used in CLASS_IMAGES.
+ * Normalise any vehicle class string to the lowercase-hyphen key used for icon fallbacks.
  * e.g. "SUV Luxury" → "suv-luxury", "Electric Premium" → "electric-premium"
  */
 function normalizeClassKey(value) {
@@ -1027,24 +1142,9 @@ function normalizeClassKey(value) {
     .replace(/[^a-z0-9-]/g, '');
 }
 
-/**
- * Resolve the best available image URL for a vehicle.
- * Priority:
- *   A. vehicle.localImage         — explicit per-vehicle local override
- *   B. CLASS_IMAGES[normalised]   — class-based local file
- *   C. null                       — triggers icon fallback in VehicleImage
- *
- * Reads vehicle.vehicleClass || vehicle.class || vehicle.category || vehicle.type
- * so it works whether the vehicle came from VEHICLES array or an adapter layer.
- */
+// An unrecognised model deliberately has no photographic fallback.
 function getVehicleImage(vehicle) {
-  if (!vehicle) return null;
-  // A — explicit local image on the vehicle object
-  if (vehicle.localImage) return vehicle.localImage;
-  // B — resolve from class using normalised key
-  const raw = vehicle.vehicleClass || vehicle.class || vehicle.category || vehicle.type || '';
-  const key = normalizeClassKey(raw);
-  return CLASS_IMAGES[key] || CLASS_IMAGES[normalizeClassKey(raw.split(' ')[0])] || CLASS_IMAGES['economy'] || null;
+  return vehicle ? (vehicle.localImage || MODEL_IMAGES[vehicle.name] || null) : null;
 }
 
 /**
@@ -1061,6 +1161,7 @@ function getVehicleIcon(vehicle) {
 // Uses getVehicleImage() — never reads vehicle.image or any Unsplash URL.
 const VehicleImage = ({ vehicle, detail = false }) => {
   const [imgErr, setImgErr] = useState(false);
+  useEffect(()=>setImgErr(false),[vehicle.name]);
   const imgUrl  = getVehicleImage(vehicle);
   const icon    = getVehicleIcon(vehicle);
   const label   = vehicle.vehicleClass || vehicle.class || 'Vehicle';
@@ -1074,7 +1175,7 @@ const VehicleImage = ({ vehicle, detail = false }) => {
           alt={`${label} — ${vehicle.name || ''} or similar`}
           onError={() => setImgErr(true)}
           loading="lazy"
-          style={{width:'100%', height:'100%', objectFit:'cover', display:'block'}}
+          style={{width:'100%', height:'100%', objectFit:'contain', display:'block'}}
         />
       ) : (
         <div className="vimg-fallback">
@@ -1326,7 +1427,7 @@ const searchLocations = (q) => {
 const locPillClass = (type) => ({airport:'lp-airport',city:'lp-city',station:'lp-station',hub:'lp-hub'}[type]||'lp-hub');
 
 // ── LocationInput component ────────────────────────────────────────────
-function LocationInput({ value, onChange, placeholder, onSelect }) {
+function LocationInput({ value, onChange, placeholder, onSelect, id, label }) {
   const [open, setOpen] = useState(false);
   const [hov, setHov] = useState(-1);
   const suggestions = searchLocations(value);
@@ -1345,7 +1446,7 @@ function LocationInput({ value, onChange, placeholder, onSelect }) {
     if (!open || !suggestions.length) return;
     if (e.key === 'ArrowDown') { e.preventDefault(); setHov(h => Math.min(h+1, suggestions.length-1)); }
     if (e.key === 'ArrowUp')   { e.preventDefault(); setHov(h => Math.max(h-1, 0)); }
-    if (e.key === 'Enter' && hov >= 0) pick(suggestions[hov]);
+    if (e.key === 'Enter' && hov >= 0) { e.preventDefault(); pick(suggestions[hov]); }
     if (e.key === 'Escape') setOpen(false);
   };
 
@@ -1353,6 +1454,8 @@ function LocationInput({ value, onChange, placeholder, onSelect }) {
     <div className="loc-wrap" ref={wrapRef}>
       <input
         className="form-input"
+        id={id}
+        aria-label={label || placeholder}
         placeholder={placeholder}
         value={value}
         onChange={e => { onChange(e.target.value); setOpen(true); setHov(-1); }}
@@ -1585,6 +1688,13 @@ function App() {
   const [bookings, setBookings] = useState(BOOKINGS_INIT);
   const [confirmData, setConfirmData] = useState(null);
   const [navOpen, setNavOpen] = useState(false);
+  const [homeTarget, setHomeTarget] = useState(null);
+  useEffect(()=>{
+    if(page !== 'home' || !homeTarget) return;
+    const target=document.getElementById(homeTarget);
+    if(target) { target.scrollIntoView({block:'start'}); target.focus({preventScroll:true}); }
+    setHomeTarget(null);
+  },[page,homeTarget]);
   const [currency, setCurrency] = useState(() => { try { return localStorage.getItem('driveeuro_cur')||'GBP'; } catch { return 'GBP'; } });
 
   // ── Test mode — activated by ?test=1 in the URL ────────────────────────
@@ -1800,40 +1910,32 @@ function App() {
 
   return (
     <div>
-      <nav className="nav">
-        <div className="nav-inner">
-          <div className="logo" onClick={() => navigate('home')} aria-label="DriveEuro home">
-            <img
-              src="/assets/driveeuro-logo-white.png"
-              alt="DriveEuro"
-              className="brand-logo"
-              onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='block'; }}
-            />
-            <span style={{display:'none'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></span>
+      <header className="site-header">
+        <div className="seasonal-bar"><span aria-hidden="true">✦</span> Christmas car hire across the UK &amp; Europe <span aria-hidden="true">✦</span></div>
+        <nav className="nav" aria-label="Main navigation">
+          <div className="nav-inner">
+            <button className="brand-home" onClick={()=>navigate('home')} aria-label="DriveEuroCars home">
+              <img src="/assets/driveeuro-logo-white.png" alt="" className="brand-logo"/>
+              <span className="brand-wordmark">Drive<span>Euro</span><small>CAR RENTAL · UK &amp; EUROPE</small></span>
+            </button>
+            <button className="nav-mobile-toggle" aria-label={navOpen?'Close navigation':'Open navigation'} aria-expanded={navOpen} aria-controls="main-menu" onClick={()=>setNavOpen(!navOpen)}>{navOpen?'×':'☰'}</button>
+            <div id="main-menu" className={`nav-links ${navOpen?'open':''}`} onKeyDown={e=>{if(e.key==='Escape')setNavOpen(false);}}>
+              <button className="nav-link" onClick={()=>navigate('results',{days})}>Browse cars</button>
+              <button className="nav-link vip-nav-link" onClick={()=>navigate('vip',{days})}>VIP collection</button>
+              <button className="nav-link" onClick={()=>{navigate('home');setHomeTarget('rental-destinations');}}>Destinations</button>
+              <button className="nav-link" onClick={()=>{navigate('home');setHomeTarget('rental-offers');}}>Rental offers</button>
+              <button className="nav-link" onClick={()=>navigate('faqs')}>Rental help</button>
+              <select className="currency-sel" value={currency} onChange={e=>setCurrency(e.target.value)} aria-label="Select currency"><option value="GBP">£ GBP</option><option value="EUR">€ EUR</option><option value="USD">$ USD</option></select>
+              <button className="nav-btn" onClick={()=>{navigate('home');setHomeTarget('rental-search');}}>Find a rental →</button>
+            </div>
           </div>
-          <div className={`nav-links ${navOpen ? 'open' : ''}`}>
-            <span className="nav-link" onClick={() => navigate('home')}>Home</span>
-            <span className="nav-link" onClick={() => navigate('how')}>How It Works</span>
-            <span className="nav-link" onClick={() => navigate('faqs')}>FAQs</span>
-            {/* Currency selector */}
-            <select
-              className="currency-sel"
-              value={currency}
-              onChange={e => setCurrency(e.target.value)}
-              aria-label="Select currency"
-            >
-              <option value="GBP">£ GBP</option>
-              <option value="EUR">€ EUR</option>
-              <option value="USD">$ USD</option>
-            </select>
-            {/* Staff portal hidden from public nav — access via Ctrl+Shift+A or #admin */}
-          </div>
-          <button className="nav-mobile-toggle" onClick={() => setNavOpen(!navOpen)}>☰</button>
-        </div>
-      </nav>
+        </nav>
+        <div className="header-services"><span>City cars &amp; compact rentals</span><span>SUVs &amp; family vehicles</span><span>Premium &amp; electric cars</span><a href="mailto:help@driveeurocars.com">Contact rental support ↗</a></div>
+      </header>
 
       {page==='home'         && <HomePage navigate={navigate} searchParams={searchParams} setSearchParams={setSearchParams} currency={currency} fmt={fmt}/>}
       {page==='results'      && <ResultsPage navigate={navigate} days={days} currency={currency} fmt={fmt}/>}
+      {page==='vip' && <VIPPage navigate={navigate} days={days} currency={currency} fmt={fmt}/>}
       {page==='details'      && <DetailsPage navigate={navigate} vehicle={selectedVehicle} days={days} currency={currency} fmt={fmt} testMode={testMode}/>}
       {page==='checkout'     && <CheckoutPage navigate={navigate} vehicle={selectedVehicle} days={days} searchParams={searchParams} setBookings={setBookings} currency={currency} fmt={fmt} testMode={testMode}/>}
       {page==='confirmation' && <ConfirmationPage navigate={navigate} data={confirmData} currency={currency} fmt={fmt}/>}
@@ -1844,14 +1946,79 @@ function App() {
       {page==='cancellation' && <LegalPage which="cancellation"/>}
       {page==='admin'        && <AdminPage navigate={navigate} bookings={bookings} setBookings={setBookings}/>}
 
+      <OfferCenter page={page} navigate={navigate} fmt={fmt}/>
       <Footer navigate={navigate}/>
     </div>
   );
 }
 
+// Offer copy reflects the existing pricing rules; no extra discount is applied.
+function OfferCenter({ page, navigate, fmt }) {
+  const [offer, setOffer] = useState(null);
+  const [nudge, setNudge] = useState(false);
+  const seen = React.useRef(false);
+  const dialog = React.useRef(null);
+  const eligible = ['home','results','details'].includes(page);
+  const markSeen = () => { seen.current=true; try { sessionStorage.setItem('driveeuro_offer_seen','1'); } catch {} };
+  const openOffer = (kind) => { markSeen(); setNudge(false); setOffer(kind); };
+  useEffect(()=>{
+    const handler=e=>openOffer(e.detail === 'reserve' ? 'reserve' : 'saving');
+    window.addEventListener('driveeuro-offer',handler);
+    return ()=>window.removeEventListener('driveeuro-offer',handler);
+  },[]);
+  useEffect(()=>{
+    setNudge(false); setOffer(null);
+    if (!eligible || seen.current) return;
+    try { if(sessionStorage.getItem('driveeuro_offer_seen')) return; } catch {}
+    const timer=setTimeout(()=>{
+      if(document.hidden || window.matchMedia('(max-width:640px)').matches || ['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName)) return;
+      markSeen(); setNudge(true);
+    },25000);
+    return ()=>clearTimeout(timer);
+  },[page]);
+  useEffect(()=>{
+    if(!offer || !eligible) return;
+    const el=dialog.current;
+    el.showModal();
+    return ()=>{ if(el.open) el.close(); };
+  },[offer,eligible]);
+  if(!eligible) return null;
+  const close=()=>setOffer(null);
+  const continueBooking=()=>{
+    close();
+    if(page === 'home') { document.getElementById('rental-search').scrollIntoView({block:'center'}); document.getElementById('search-pickup').focus({preventScroll:true}); }
+  };
+  return <>
+    <button className="offer-launcher" onClick={()=>openOffer('saving')}>✦ Rental offers</button>
+    {nudge && <aside className="offer-nudge" aria-label="Rental savings reminder">
+      <button className="offer-close" aria-label="Dismiss offer reminder" onClick={()=>{markSeen();setNudge(false);}}>×</button>
+      <h3>Find your Christmas rental.</h3><p>Explore compact cars for festive breaks and spacious rentals for the journey home. See the saving with every car.</p>
+      <button className="btn btn-primary btn-sm" onClick={()=>openOffer('saving')}>Explore your savings</button>
+    </aside>}
+    <dialog ref={dialog} className="offer-dialog" aria-labelledby="offer-title" aria-describedby="offer-description" onCancel={close} onClick={e=>{if(e.target===e.currentTarget) {const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close();}}}>
+      <button className="offer-close" aria-label="Close offer" onClick={close}>×</button>
+      <div className="hero-kicker">The DriveEuro advantage</div>
+      <div className="offer-number">{offer==='reserve'?'10%':'30%'}</div>
+      <h2 id="offer-title">{offer==='reserve'?'A smaller payment today.':'More journey for your money.'}</h2>
+      <p id="offer-description">{offer==='reserve'?`Reserve with 10% of your rental price, subject to a ${fmt(MIN_FEE_GBP)} minimum reservation fee. The remaining balance is due at collection.`:'Explore city cars, SUVs and premium saloons with 30% savings against the listed standard rental rate. Compare prices and choose the car for your journey.'}</p>
+      <button className="btn btn-primary btn-full" onClick={continueBooking}>{page==='home'?'Find my rental →':'Continue choosing my car →'}</button>
+      <p className="offer-fine-print">{offer==='reserve'?'This is part of your total rental price, not an additional discount. Review the cancellation policy and supplier terms before paying.':'Already included in displayed prices. Supplier terms and any optional extras apply.'}</p>
+    </dialog>
+  </>;
+}
+
 // ── Home ──────────────────────────────────────────────────────────────
 function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
-  const [local, setLocal] = useState({ ...SEARCH_DEFAULTS, ...searchParams });
+  const [local, setLocal] = useState(() => {
+    const initial = { ...SEARCH_DEFAULTS, ...searchParams };
+    if (!initial.pickupDate || initial.pickupDate < todayStr()) {
+      initial.pickupDate = daysFromTodayStr(1);
+      initial.returnDate = daysFromTodayStr(8);
+    }
+    return initial;
+  });
+  const [differentDropoff, setDifferentDropoff] = useState(!!searchParams.dropoff && searchParams.dropoff !== searchParams.pickup);
+  const [showOptions, setShowOptions] = useState(false);
   const [rentalDays, setRentalDays] = useState(() => {
     const d = safeDays(searchParams.pickupDate, searchParams.returnDate, searchParams.pickupTime, searchParams.returnTime);
     return d || 7;
@@ -1905,13 +2072,14 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
   };
 
   const handleSearch = () => {
-    if (!local.pickup) { alert('Please enter a pickup location'); return; }
+    if (!local.pickup.trim()) { setDateError('Enter a pickup location to find your rental.'); document.getElementById('search-pickup').focus(); return; }
+    if (differentDropoff && !local.dropoff.trim()) { setDateError('Enter your return location, or choose the same drop-off.'); return; }
     const err = validateTripDates(local.pickupDate, local.pickupTime || '10:00', local.returnDate, local.returnTime || '10:00');
     if (err) { setDateError(err); return; }
     const d = safeDays(local.pickupDate, local.returnDate, local.pickupTime, local.returnTime);
     if (!d) { setDateError(`Invalid date range. Rentals must be 1–${MAX_RENTAL_DAYS} days and at least 24 hours.`); return; }
     setDateError('');
-    setSearchParams({ ...local });
+    setSearchParams({ ...local, dropoff: differentDropoff ? local.dropoff : local.pickup, dropoffCode: differentDropoff ? local.dropoffCode : local.pickupCode });
     navigate('results', { days: d });
   };
 
@@ -1919,84 +2087,52 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
 
   return (
     <div>
-      <div className="hero">
+      <div className="hero rental-hero christmas-hero">
+        <div className="christmas-trim" aria-hidden="true"><span>✦</span><i/><span>✧</span><i/><span>✦</span></div>
         <div className="hero-inner">
-          <div className="hero-eyebrow">✦ Save up to 30% on car rentals across the UK &amp; EU</div>
-          <h1 className="hero-title">Great rates on rentals,<br /><span>no membership required</span></h1>
-          <p className="hero-sub">Compare discounted prices at 50+ rental desks across Europe. Pay just 10% upfront to reserve — settle the balance at collection.</p>
-          <div className="search-box">
-            <div className="search-grid">
-              <div className="form-group">
-                <label className="form-label">Pickup location</label>
-                <LocationInput value={local.pickup} onChange={v=>set('pickup',v)} placeholder="Where are you collecting from?" onSelect={loc=>{set('pickup',loc.name);set('pickupCode',loc.locationCode);}}/>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Drop-off location</label>
-                <LocationInput value={local.dropoff} onChange={v=>set('dropoff',v)} placeholder="Same location or choose another" onSelect={loc=>{set('dropoff',loc.name);set('dropoffCode',loc.locationCode);}}/>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Pickup date</label>
-                <input type="date" className="form-input" value={local.pickupDate} min={today}
-                  onChange={e => {
-                    const v = e.target.value;
-                    // Enforce min — mobile pickers can bypass the min attribute
-                    if (v && v < today) { e.target.value = today; handlePickupDateChange(today); return; }
-                    handlePickupDateChange(v);
-                  }}/>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Pickup time</label>
-                <select className="form-input" value={local.pickupTime} onChange={e=>handleTimeChange('pickupTime', e.target.value)}>
-                  {TIMES.map(t=><option key={t}>{t}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Return date</label>
-                <input type="date" className="form-input" value={local.returnDate} min={minReturnDate}
-                  onChange={e => {
-                    const v = e.target.value;
-                    // Enforce min — reset to minimum return date if mobile picker bypasses restriction
-                    if (v && v < minReturnDate) { e.target.value = minReturnDate; handleReturnDateChange(minReturnDate); return; }
-                    handleReturnDateChange(v);
-                  }}/>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Return time</label>
-                <select className="form-input" value={local.returnTime} onChange={e=>handleTimeChange('returnTime', e.target.value)}>
-                  {TIMES.map(t=><option key={t}>{t}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Driver age</label>
-                <select className="form-input" value={local.driverAge} onChange={e=>set('driverAge',e.target.value)}>
-                  <option value="">Select driver age</option>
-                  <option>Under 21</option><option>21-24</option><option>25-29</option><option value="30-65">30–65</option><option>66+</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Vehicle type</label>
-                <select className="form-input" value={local.vehicleType} onChange={e=>set('vehicleType',e.target.value)}>
-                  <option value="">Choose vehicle type</option><option>Economy</option><option>Premium</option><option>Luxury</option><option>Electric</option><option>SUV</option>
-                </select>
-              </div>
+          <div className="hero-top">
+            <div>
+              <div className="hero-kicker">Christmas journeys, made memorable</div>
+              <h1 className="hero-title">Your Christmas plans.<br/><span>Your perfect rental.</span></h1>
+              <p className="hero-sub">City cars for festive weekends. Spacious SUVs for the family. Premium saloons for the journey home. Explore rentals across the UK and Europe.</p>
             </div>
-            <div style={{marginTop:'1rem', display:'flex', flexDirection:'column', gap:'0.5rem'}}>
-              {dateError && (
-                <div style={{background:'#fef2f2', border:'1px solid #fca5a5', borderRadius:8, padding:'0.6rem 0.875rem', fontSize:13, color:'#991b1b', display:'flex', alignItems:'center', gap:6}}>
-                  <Icon name="mdi:alert-circle-outline" sz={15} cls="icon-gold" style={{flexShrink:0,color:'#991b1b'}}/>
-                  {dateError}
-                </div>
-              )}
-              <div style={{display:'flex', gap:'1rem', alignItems:'center', flexWrap:'wrap'}}>
-                <button className="btn btn-primary" style={{minWidth:200}} onClick={handleSearch}>Search available cars →</button>
-                <span style={{fontSize:13, color:'var(--text-faint)'}}>
-                  {local.pickupDate && local.returnDate && safeDays(local.pickupDate, local.returnDate, local.pickupTime, local.returnTime)
-                    ? `${safeDays(local.pickupDate, local.returnDate, local.pickupTime, local.returnTime)}-day rental · `
-                    : ''}DriveEuro prices shown
-                </span>
-              </div>
-            </div>
+            <div className="hero-car"><img src="/assets/cars/models/bmw-3-series.jpg" alt="Blue BMW 3 Series saloon"/><span className="hero-car-note">BMW 3 Series or similar · Premium saloon</span></div>
           </div>
+          <form className="quick-search" id="rental-search" tabIndex="-1" onSubmit={e=>{e.preventDefault();handleSearch();}} noValidate>
+            <div className="search-heading"><h2>Where are you heading?</h2><span>Find a car for your dates</span></div>
+            <div className="quick-search-grid">
+              <div className="form-group">
+                <label className="form-label" htmlFor="search-pickup">Pickup location</label>
+                <LocationInput id="search-pickup" label="Pickup location" value={local.pickup} onChange={v=>{set('pickup',v);set('pickupCode','');}} placeholder="City or airport" onSelect={loc=>{set('pickup',loc.name);set('pickupCode',loc.locationCode);}}/>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="search-pickup-date">Pickup</label>
+                <div className="date-time-pair">
+                  <input id="search-pickup-date" aria-label="Pickup date" type="date" className="form-input" value={local.pickupDate} min={today} max="2030-12-31" onChange={e=>handlePickupDateChange(e.target.value && e.target.value < today ? today : e.target.value)}/>
+                  <select aria-label="Pickup time" className="form-input" value={local.pickupTime} onChange={e=>handleTimeChange('pickupTime',e.target.value)}>{TIMES.map(t=><option key={t}>{t}</option>)}</select>
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="search-return-date">Return</label>
+                <div className="date-time-pair">
+                  <input id="search-return-date" aria-label="Return date" type="date" className="form-input" value={local.returnDate} min={minReturnDate} max="2030-12-31" onChange={e=>handleReturnDateChange(e.target.value && e.target.value < minReturnDate ? minReturnDate : e.target.value)}/>
+                  <select aria-label="Return time" className="form-input" value={local.returnTime} onChange={e=>handleTimeChange('returnTime',e.target.value)}>{TIMES.map(t=><option key={t}>{t}</option>)}</select>
+                </div>
+              </div>
+              <button type="submit" className="btn search-submit">Search rental cars →</button>
+            </div>
+            <div className="search-options">
+              <label><input type="checkbox" checked={differentDropoff} onChange={e=>setDifferentDropoff(e.target.checked)}/> Return to a different location</label>
+              <button type="button" aria-expanded={showOptions} aria-controls="driver-options" onClick={()=>setShowOptions(!showOptions)}>Driver age: {local.driverAge || 'choose age'} · Change</button>
+              <span>{safeDays(local.pickupDate,local.returnDate,local.pickupTime,local.returnTime) || '—'} days · Minimum 24 hours</span>
+            </div>
+            {(differentDropoff || showOptions) && <div className="search-extras">
+              {differentDropoff && <div className="form-group"><label className="form-label" htmlFor="search-dropoff">Return location</label><LocationInput id="search-dropoff" label="Return location" value={local.dropoff} onChange={v=>{set('dropoff',v);set('dropoffCode','');}} placeholder="Return city or airport" onSelect={loc=>{set('dropoff',loc.name);set('dropoffCode',loc.locationCode);}}/></div>}
+              {showOptions && <div className="form-group" id="driver-options"><label className="form-label" htmlFor="search-age">Driver age</label><select id="search-age" className="form-input" value={local.driverAge} onChange={e=>set('driverAge',e.target.value)}><option value="">Select driver age</option><option>Under 21</option><option>21-24</option><option>25-29</option><option value="30-65">30–65</option><option>66+</option></select></div>}
+            </div>}
+            {dateError && <div className="search-error" role="alert">{dateError}</div>}
+          </form>
+          <div className="quick-destinations"><span>Popular pickups</span>{['London Heathrow','Paris','Rome','Barcelona'].map(city=><button key={city} onClick={()=>{const loc=searchLocations(city)[0]; if(loc) setLocal(p=>({...p,pickup:loc.name,pickupCode:loc.locationCode})); document.getElementById('search-pickup').focus();}}>{city} ↗</button>)}</div>
         </div>
       </div>
 
@@ -2004,38 +2140,30 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
         <div className="trust-inner">
           <div className="trust-item"><Icon name="mdi:lock-check-outline" sz={18} cls="icon-gold"/> Reserve with 10% upfront</div>
           <div className="trust-item"><Icon name="mdi:sale-outline" sz={18} cls="icon-gold"/> Save up to 30% on rentals</div>
-          <div className="trust-item"><Icon name="mdi:shield-star-outline" sz={18} cls="icon-gold"/> 50+ verified suppliers</div>
+          <div className="trust-item"><Icon name="mdi:shield-star-outline" sz={18} cls="icon-gold"/> UK & European pickup locations</div>
           <div className="trust-item"><Icon name="mdi:airplane-marker" sz={18} cls="icon-gold"/> Airport meet &amp; greet</div>
           <div className="trust-item"><Icon name="mdi:cash-clock" sz={18} cls="icon-gold"/> Balance due at collection</div>
           <div className="trust-item"><Icon name="mdi:refresh" sz={18} cls="icon-gold"/> Refund if unavailable</div>
         </div>
       </div>
 
-      {/* Why DriveEuro */}
-      <div className="section" style={{background:'var(--white)'}}>
+      <section className="offers-section" id="rental-offers" tabIndex="-1" aria-labelledby="offers-heading">
         <div className="container">
-          <div className="discount-banner">
-            <div>
-              <div style={{fontSize:13, fontWeight:700, marginBottom:4, opacity:0.75}}>WHY DRIVEEURO</div>
-              <div style={{fontSize:'1.4rem', fontWeight:800, marginBottom:8}}>Better prices on the same great rentals</div>
-              <p style={{fontSize:14, opacity:0.85, maxWidth:500}}>DriveEuro works directly with 50+ verified suppliers across the UK and EU to bring you lower prices. Pay just 10% to reserve today — the balance is settled directly with the supplier when you collect your car.</p>
-              <div style={{marginTop:'0.875rem', fontSize:12, opacity:0.8}}>{REFUND_NOTE}</div>
-            </div>
-            <div style={{textAlign:'center', flexShrink:0}}>
-              <div className="discount-number">30%</div>
-              <div style={{fontSize:13, opacity:0.8}}>typical saving</div>
-            </div>
+          <div className="section-heading"><div><h2 id="offers-heading">More car for your Christmas getaway.</h2><p>Explore rental savings and reserve your next city car, SUV or premium saloon.</p></div></div>
+          <div className="offer-grid">
+            <button className="offer-card" onClick={()=>window.dispatchEvent(new CustomEvent('driveeuro-offer',{detail:'saving'}))}><span className="offer-number">30%</span><div><h3>Savings built in</h3><p>Compare the DriveEuro price with the listed standard rate.</p><span className="offer-link">See how you save →</span></div></button>
+            <button className="offer-card" onClick={()=>window.dispatchEvent(new CustomEvent('driveeuro-offer',{detail:'reserve'}))}><span className="offer-number">10%</span><div><h3>Reserve now. Balance later.</h3><p>10% reservation fee, with a {fmt(MIN_FEE_GBP)} minimum. Pay the balance at collection.</p><span className="offer-link">See reservation details →</span></div></button>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Featured vehicles */}
       <div className="section">
         <div className="container">
-          <h2 style={{fontSize:'1.75rem', fontWeight:800, color:'var(--navy)', marginBottom:'0.35rem'}}>Today's best rates</h2>
-          <p style={{color:'var(--text-muted)', marginBottom:'1.75rem'}}>Discounted rentals at top UK and EU destinations</p>
+          <h2 style={{fontSize:'1.75rem', fontWeight:800, color:'var(--navy)', marginBottom:'0.35rem'}}>Featured rental cars</h2>
+          <p style={{color:'var(--text-muted)', marginBottom:'1.75rem'}}>Explore models, rental rates and pickup locations for your next journey.</p>
           <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1.25rem'}}>
-            {VEHICLES.slice(0,4).map(v => (
+            {STANDARD_VEHICLES.slice(0,4).map(v => (
               <VehicleCard key={v.id} vehicle={v} days={rentalDays} fmt={fmt} currency={currency} onSelect={() => navigate('details', {vehicle:v, days:rentalDays})} />
             ))}
           </div>
@@ -2045,32 +2173,37 @@ function HomePage({ navigate, searchParams, setSearchParams, currency, fmt }) {
         </div>
       </div>
 
-      {/* How it works teaser */}
-      <div className="section" style={{background:'var(--white)'}}>
+      <section className="destination-section section" id="rental-destinations" tabIndex="-1" aria-labelledby="destinations-title">
         <div className="container">
-          <div className="how-grid" style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3rem', alignItems:'center'}}>
-            <div>
-              <div style={{fontSize:11, fontWeight:700, color:'var(--gold)', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'0.6rem'}}>Simple process</div>
-              <h2 style={{fontSize:'1.75rem', fontWeight:800, color:'var(--navy)', marginBottom:'0.875rem'}}>Book in minutes,<br/>drive with confidence</h2>
-              <p style={{color:'var(--text-muted)', marginBottom:'1.5rem', lineHeight:1.75}}>Search, compare discounted prices, and pay just 10% upfront to secure your vehicle. Your booking is confirmed — show up, pay the balance, and drive.</p>
-              <button className="btn btn-primary" onClick={() => navigate('how')}>How it works</button>
-            </div>
-            <div style={{display:'flex', flexDirection:'column', gap:'1.1rem'}}>
-              {[['Search & compare','Browse verified suppliers with discounted DriveEuro prices across the UK and EU.'],
-                ['Reserve with 10% upfront','Secure your vehicle today — pay the remaining balance at collection.'],
-                ['Booking confirmed','Your reservation is confirmed the moment payment is received.'],
-                ['Drive away','Show your confirmation at the desk, pay the balance, and go.']].map(([h,p],i)=>(
-                <div key={i} className="how-step">
-                  <div className="how-num">{i+1}</div>
-                  <div className="how-content"><h3>{h}</h3><p>{p}</p></div>
-                </div>
-              ))}
-            </div>
+          <div className="section-heading"><div><h2 id="destinations-title">Where will Christmas take you?</h2><p>Explore rental cars at popular UK and European pickup locations.</p></div></div>
+          <div className="destination-grid">
+            {[['London Heathrow','Airport arrivals & festive city breaks'],['Paris','Premium saloons & winter weekends'],['Rome','Compact cars & city exploring'],['Barcelona','Coastal drives & Christmas escapes']].map(([city,description])=><button className="destination-card" key={city} onClick={()=>{const loc=searchLocations(city)[0];if(loc)setLocal(p=>({...p,pickup:loc.name,pickupCode:loc.locationCode}));document.getElementById('rental-search').scrollIntoView({block:'center'});document.getElementById('search-pickup').focus({preventScroll:true});}}><Icon name="mdi:map-marker-outline" sz={24} cls="icon-gold"/><h3>{city}</h3><p>{description}</p><span>Choose pickup location →</span></button>)}
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
+}
+
+// ── VIP collection ─────────────────────────────────────────────────────
+function VIPPage({ navigate, days, currency, fmt }) {
+  const rentalDays = Number.isInteger(days) && days >= 1 && days <= MAX_RENTAL_DAYS ? days : 7;
+  return <main className="vip-page">
+    <section className="vip-hero">
+      <div className="container">
+        <div className="hero-kicker">DriveEuro · VIP collection</div>
+        <h1>Extraordinary cars.<br/><span>Exceptional journeys.</span></h1>
+        <p>Discover Rolls-Royce, Bentley and Lamborghini rentals for landmark occasions and unforgettable drives. A dedicated collection with a higher rental budget.</p>
+        <div className="vip-facts"><span>Ultra-luxury saloons</span><span>Exotic sports cars</span><span>Special-occasion rentals</span></div>
+        <button className="btn btn-outline" onClick={()=>navigate('results',{days:rentalDays})}>Browse everyday rentals →</button>
+      </div>
+    </section>
+    <section className="section"><div className="container">
+      <div className="section-heading"><div><h2>Choose your VIP rental</h2><p>Prices shown for {rentalDays} days. Availability, supplier terms and security deposits apply.</p></div></div>
+      <div className="vip-grid">{VIP_VEHICLES.map(vehicle=><VehicleCard key={vehicle.id} vehicle={vehicle} days={rentalDays} currency={currency} fmt={fmt} onSelect={()=>navigate('details',{vehicle,days:rentalDays})}/>)}</div>
+      <div className="vip-note"><strong>Plan your collection.</strong> These vehicles have higher rental rates and security deposits. Review the minimum driver age and supplier conditions on each listing before reserving. For collection questions, <a href="mailto:help@driveeurocars.com">contact our rental team</a>.</div>
+    </div></section>
+  </main>;
 }
 
 // ── Results Page ──────────────────────────────────────────────────────
@@ -2102,7 +2235,7 @@ function ResultsPage({ navigate, days: initDays, currency, fmt }) {
     setDaysInputVal(String(clamped));
   };
 
-  let results = VEHICLES.filter(v => {
+  let results = STANDARD_VEHICLES.filter(v => {
     if (filters.types.length && !filters.types.includes(v.type)) return false;
     if (filters.transmission.length && !filters.transmission.includes(v.transmission)) return false;
     if (filters.fuel.length && !filters.fuel.includes(v.fuel)) return false;
@@ -2266,7 +2399,7 @@ function DetailsPage({ navigate, vehicle, days, currency, fmt, testMode }) {
     <div className="page">
       <div className="page-header">
         <div className="page-header-inner">
-          <button className="btn btn-sm" style={{marginBottom:'0.75rem', background:'rgba(255,255,255,0.12)', border:'1px solid rgba(255,255,255,0.2)', color:'#fff', borderRadius:8}} onClick={()=>navigate('results',{days})}>← Back to results</button>
+          <button className="btn btn-sm" style={{marginBottom:'0.75rem', background:'rgba(255,255,255,0.12)', border:'1px solid rgba(255,255,255,0.2)', color:'#fff', borderRadius:8}} onClick={()=>navigate(isVIPVehicle(vehicle)?'vip':'results',{days})}>{isVIPVehicle(vehicle)?'← Back to VIP collection':'← Back to results'}</button>
           <div className="page-header-title">{vehicle.name}</div>
           <div className="page-header-sub">{vehicle.class} · {vehicle.supplier} · {vehicle.city}, {vehicle.country}</div>
           {/* Internal test badge — only visible when testMode is active (?test=1) */}
@@ -2901,7 +3034,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     Rampex integration: create-rampex-payment-link Netlify function
                     creates a hosted payment link. Customer is redirected there.
                     On return, handleRampexReturnIfNeeded() checks status.
-                    Klarna remains disabled until merchant integration is approved.
+                    Choose a payment method to continue to secure checkout.
                     ────────────────────────────────────────────────────────────── */}
                 <div style={{fontWeight:700, color:'var(--navy)', fontSize:14, marginBottom:'0.875rem', marginTop:'1rem'}}>
                   <Icon name="mdi:credit-card-outline" sz={18} cls="icon-navy" style={{marginRight:6}}/> Choose payment method
@@ -2928,15 +3061,7 @@ function CheckoutPage({ navigate, vehicle, days, searchParams, setBookings, curr
                     <Icon name="mdi:credit-card-outline" sz={20} cls="icon-muted"/>
                   </div>
 
-                  {/* C — Klarna (disabled) */}
-                  <div className="pay-card pay-disabled">
-                    <div className="pay-radio"/>
-                    <div className="pay-info">
-                      <div className="pay-label" style={{display:'flex', alignItems:'center', gap:8}}>Klarna <span className="pay-soon">Coming Soon</span></div>
-                      <div className="pay-sub">Flexible payment options coming soon.</div>
-                    </div>
-                    <Icon name="mdi:clock-outline" sz={20} cls="icon-muted"/>
-                  </div>
+
                 </div>
 
                 {!pricingValid && (
@@ -3569,7 +3694,7 @@ function HowItWorksPage({ navigate }) {
           <div className="discount-banner" style={{marginBottom:'2rem'}}>
             <div>
               <div style={{fontWeight:700, fontSize:13, marginBottom:8}}>HOW WE SAVE YOU MONEY</div>
-              <p style={{fontSize:14, opacity:0.9, maxWidth:460}}>DriveEuro works directly with rental suppliers to offer discounted prices on the same vehicles. Reserve with just 10% upfront — the balance is paid at collection. No membership, no subscription, no hidden fees.</p>
+              <p style={{fontSize:14, opacity:0.9, maxWidth:460}}>DriveEuro works directly with rental suppliers to offer discounted prices on the same vehicles. Reserve with just 10% upfront — the balance is paid at collection. Compare vehicle categories, rental rates and collection locations.</p>
               <div style={{marginTop:'0.875rem', fontSize:12, opacity:0.85}}>{REFUND_NOTE}</div>
             </div>
             <div style={{textAlign:'center', flexShrink:0}}>
@@ -3716,14 +3841,15 @@ function Footer({ navigate }) {
       <div className="footer-grid">
         <div>
           <div style={{fontWeight:800, fontSize:'1.35rem', color:'#fff', marginBottom:'0.75rem', letterSpacing:'-0.03em'}}>Drive<span style={{color:'var(--gold)'}}>Euro</span></div>
-          <p style={{fontSize:13, lineHeight:1.75, marginBottom:'1rem'}}>Discounted car rentals across the UK and EU. No membership needed — just better prices.</p>
+          <p style={{fontSize:13, lineHeight:1.75, marginBottom:'1rem'}}>Discounted car rentals across the UK and EU. Explore city cars, spacious SUVs and premium rentals.</p>
           <div style={{fontSize:13, lineHeight:1.9}}>
             <div className="icon-with-text"><Icon name="mdi:email-outline" sz={15} cls="icon-muted"/> help@driveeurocars.com</div>
             <div className="icon-with-text"><Icon name="mdi:phone-outline" sz={15} cls="icon-muted"/> +44 20 7946 0300</div>
           </div>
         </div>
         <div>
-          <div className="footer-col-title">Platform</div>
+          <div className="footer-col-title">Car rental</div>
+          <button className="footer-link" onClick={()=>navigate('vip')}>VIP collection</button>
           <span className="footer-link" onClick={()=>navigate('how')}>How it works</span>
           <span className="footer-link" onClick={()=>navigate('faqs')}>FAQs</span>
         </div>
@@ -3739,7 +3865,7 @@ function Footer({ navigate }) {
         </div>
       </div>
       <div className="footer-bottom">
-        <div>© 2025 DriveEuro Ltd. All rights reserved. Registered in England &amp; Wales.</div>
+        <div>© {new Date().getFullYear()} DriveEuro Ltd. All rights reserved. Registered in England &amp; Wales.</div>
         <div style={{display:'flex', gap:'1rem', flexWrap:'wrap', fontSize:12}}>
           <span style={{cursor:'pointer'}} onClick={()=>navigate('terms')}>Terms</span>
           <span style={{cursor:'pointer'}} onClick={()=>navigate('privacy')}>Privacy</span>

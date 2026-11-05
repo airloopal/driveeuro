@@ -1,0 +1,246 @@
+{
+  "generator": "Built-in image_gen",
+  "purpose": "Model-specific illustrative rental catalogue artwork; actual supplied vehicles remain subject to listing terms.",
+  "artwork": [
+    {
+      "listing": "Volkswagen Golf",
+      "asset": "assets/cars/models/volkswagen-golf.jpg",
+      "sha256": "7421c6fcf7f217a0d16b94a1301b77e1c76b964a6c613337caf86070bf75a4ed",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Volkswagen Golf Mk8 five-door hatchback. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "BMW 3 Series",
+      "asset": "assets/cars/models/bmw-3-series.jpg",
+      "sha256": "2c9d095d66caff441175c95990bdbb231bee8297ba274e7371db4634136c81ad",
+      "prompt": "Create one landscape 4:3 photorealistic rental car catalogue graphic. Subject: BMW 3 Series G20 four-door saloon, correct BMW kidney grille, headlights and body proportions, metallic deep cobalt blue, black alloy wheels. Match the established DriveEuroCars visual style: modern light grey enclosed studio, polished grey concrete floor with realistic soft reflection, diagonal white ceiling light strips, front three-quarter view with car front facing right, entire car visible including wheels, generous 10% safe margin. Realistic premium commercial automotive render, crisp details. Only this single car, no people, no words, no watermark, blank dark number plate. Not a Mercedes. Save the generated asset for use in the website."
+    },
+    {
+      "listing": "Mercedes-Benz E-Class",
+      "asset": "assets/cars/models/mercedes-benz-e-class.jpg",
+      "sha256": "0230e9fc93dddf43c417f26d8160d27ae644b663dc462fe1cceb6042e93f4d05",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Mercedes-Benz E-Class W213 four-door saloon. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "Tesla Model 3",
+      "asset": "assets/cars/models/tesla-model-3.jpg",
+      "sha256": "d66cedc12fcec91b60c2235da620632b13cf887237f189067b1b13c5d075592d",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Tesla Model 3 four-door electric saloon. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "Ford Focus Estate",
+      "asset": "assets/cars/models/ford-focus-estate.jpg",
+      "sha256": "4609afc950e7eecb7bf871044736dd83b3f403e9f07ae905f8daaa407282dffc",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Ford Focus Estate five-door station wagon. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "Range Rover Sport",
+      "asset": "assets/cars/models/range-rover-sport.jpg",
+      "sha256": "f1d4283da055aec9de7758ee8650cbaa7bd2bbaface1d608ace331b33ba87ad6",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Range Rover Sport L461 SUV. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "Fiat 500",
+      "asset": "assets/cars/models/fiat-500.jpg",
+      "sha256": "c7508d7bc729712983fce8ebe6f1ac5706201904918a3e7ca9809d4dfb0e345c",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Fiat 500 three-door hatchback. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "Volvo XC90",
+      "asset": "assets/cars/models/volvo-xc90.jpg",
+      "sha256": "e358fea6488dc5f59fc62fb3b0f91d228339a93d2661d80bdc4c860c8c7cc705",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Volvo XC90 SUV. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "Polestar 2",
+      "asset": "assets/cars/models/polestar-2.jpg",
+      "sha256": "b23d5df9164029ed7bf239a2d4032a4751e082bea8303b9ea9d0424ac1edea98",
+      "prompt": "Use case: product-mockup. Create ONE landscape 4:3 photorealistic rental car catalogue graphic of exactly this model: Polestar 2 five-door electric fastback. Correct manufacturer grille, headlights, body shape and wheelbase. Metallic deep cobalt blue paint, dark alloy wheels, realistic black tyres. Match DriveEuroCars existing graphics: modern light grey enclosed automotive studio, polished grey concrete floor with soft reflection, subtle diagonal white ceiling light strips. Full car front three-quarter view, nose facing right. Entire car and wheels inside frame, 12% margin. Premium realistic commercial automotive render. No people, no text or watermark, blank dark licence plate. One car only."
+    },
+    {
+      "listing": "Porsche Cayenne",
+      "asset": "assets/cars/models/porsche-cayenne.jpg",
+      "sha256": "02c85cec2da9b8f7c63db1545cb1281753c29901cc16ab6b48b8c5ce8725e09a",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Porsche Cayenne SUV. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Vauxhall Corsa",
+      "asset": "assets/cars/models/vauxhall-corsa.jpg",
+      "sha256": "1e213bcf912eb86c2aa2c9a022c52cef4c66cbb44f6d8c00af9df0aa6d065599",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Vauxhall Corsa F five-door hatchback with Vauxhall badge. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Nissan Juke",
+      "asset": "assets/cars/models/nissan-juke.jpg",
+      "sha256": "d05d18c605641fd9d389253d34beedddb2235fb82336e462223ca92b43c363ff",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Nissan Juke second-generation compact crossover. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Toyota Corolla Estate",
+      "asset": "assets/cars/models/toyota-corolla-estate.jpg",
+      "sha256": "173f0a6f224f57f16ae51c5c0fa2563fa585bdfddaefa5540fbf2008340dbe79",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Toyota Corolla Touring Sports Estate station wagon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Kia Sportage",
+      "asset": "assets/cars/models/kia-sportage.jpg",
+      "sha256": "54fae68a103f8f9f3760a5e05518b2e87c9870d713025792f027384b76346bab",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Kia Sportage NQ5 SUV. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Jaguar XE",
+      "asset": "assets/cars/models/jaguar-xe.jpg",
+      "sha256": "5ae96049af835dfdab45a82c1a14886cb82efdb2cee2c2e8f450b7a7576b618e",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Jaguar XE four-door saloon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Rolls-Royce Ghost",
+      "asset": "assets/cars/models/rolls-royce-ghost.jpg",
+      "sha256": "9f7d0f9cee8a8b63141c89f3b812c9fa63b80a2872b01eaa307d9f72b2c00331",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Rolls-Royce Ghost four-door luxury saloon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "MINI Cooper",
+      "asset": "assets/cars/models/mini-cooper.jpg",
+      "sha256": "0221cd5918f9e9f2ae69d49e941ce9c2612d68dfb0cc58019a429a9548b1acfe",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: MINI Cooper three-door hatchback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Mercedes Vito (9-seat)",
+      "asset": "assets/cars/models/mercedes-vito-9-seat.jpg",
+      "sha256": "9e69920e07e442e625d5146983dbf678b5ed2d35e0a9d92b766291fdad9b6c76",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Mercedes-Benz Vito Tourer nine-seat passenger van with side windows. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Ford S-Max",
+      "asset": "assets/cars/models/ford-s-max.jpg",
+      "sha256": "40e3c6c27f525a89e398b54da4133d5bb560424aead5f0fcc5aff5243db66797",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Ford S-Max seven-seat MPV. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "BMW Z4 Roadster",
+      "asset": "assets/cars/models/bmw-z4-roadster.jpg",
+      "sha256": "d73e525ed722e0b423ac041679bbf2e642768b73c4ba1067f25513a846fe10dc",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: BMW Z4 G29 two-seat roadster roof down. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Renault Clio",
+      "asset": "assets/cars/models/renault-clio.jpg",
+      "sha256": "32f4ecad84be4eb2ab9c08b628aa91ca407eb8b51d5e0edd433ba4b5988a564d",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Renault Clio fifth-generation five-door hatchback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Peugeot 3008 SUV",
+      "asset": "assets/cars/models/peugeot-3008-suv.jpg",
+      "sha256": "8c86159a6485c3790b22157933741587834c52d2b485a9f8edbc4520639cab7b",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Peugeot 3008 second-generation SUV. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Audi A6 Saloon",
+      "asset": "assets/cars/models/audi-a6-saloon.jpg",
+      "sha256": "283e960da36127b7113ded50571ac72aa84443d06eb4d93fa7f47764fd9ad8d0",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Audi A6 C8 four-door saloon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Seat Ibiza",
+      "asset": "assets/cars/models/seat-ibiza.jpg",
+      "sha256": "6f171046e98e7dd9f77867ea35b830c7ae3c539f04e401081069819a588e27a6",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: SEAT Ibiza fifth-generation five-door hatchback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Cupra Formentor",
+      "asset": "assets/cars/models/cupra-formentor.jpg",
+      "sha256": "358818c56039e10012a5229853c16130346db64b6981c8bf1ca23a0dbe66695a",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Cupra Formentor crossover SUV. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Alfa Romeo Giulia",
+      "asset": "assets/cars/models/alfa-romeo-giulia.jpg",
+      "sha256": "112dca5c524d7085051f8f69673f569e03b972af68445594e8158d1e2dcde259",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Alfa Romeo Giulia four-door saloon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Fiat Tipo Estate",
+      "asset": "assets/cars/models/fiat-tipo-estate.jpg",
+      "sha256": "072ee0526c62b7e7be454b1cf799c7733163c8018b0406ab7089e69ac12f0e4c",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Fiat Tipo Estate station wagon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Volkswagen Golf GTI",
+      "asset": "assets/cars/models/volkswagen-golf-gti.jpg",
+      "sha256": "3e6188bc4468fcf015cf8625cd279d3715bdbec15c88929634d6b8bd7bdb00bc",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Volkswagen Golf GTI Mk8 five-door hatchback with red GTI grille accents. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Mercedes-Benz GLC",
+      "asset": "assets/cars/models/mercedes-benz-glc.jpg",
+      "sha256": "b6e87afce3ea0bd52c507dda176d394be01dc5afee0d6b511ca5102288aeff47",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Mercedes-Benz GLC X254 SUV. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Renault Zoe Electric",
+      "asset": "assets/cars/models/renault-zoe-electric.jpg",
+      "sha256": "5d11c422ecc0842ca5bee541dff8f801075325826a7e5792f8dd06054213d7d6",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Renault Zoe five-door electric hatchback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Skoda Octavia",
+      "asset": "assets/cars/models/skoda-octavia.jpg",
+      "sha256": "06f6d4da05266369e0b7b1a169d24aead84aae2136c989e19cd950ee2d81c923",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Skoda Octavia fourth-generation five-door liftback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Volvo V60 Cross Country",
+      "asset": "assets/cars/models/volvo-v60-cross-country.jpg",
+      "sha256": "dcb3aa6bf87091e934bf37ac28d7a099ff45d3ff9fe387a52be0fe3159cef914",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Volvo V60 Cross Country station wagon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Toyota Yaris",
+      "asset": "assets/cars/models/toyota-yaris.jpg",
+      "sha256": "65cb54a90186a1fee91dd37cf80af0f09e562cd8373b3176d665fda40dcbd1fe",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Toyota Yaris fourth-generation five-door hatchback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Skoda Fabia",
+      "asset": "assets/cars/models/skoda-fabia.jpg",
+      "sha256": "7fcd6ed7ecd93d65f69b3336ccfcf77ca6064b45a9a474df2fb3a566dd84edfd",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Skoda Fabia fourth-generation five-door hatchback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Seat Arona",
+      "asset": "assets/cars/models/seat-arona.jpg",
+      "sha256": "2d5a81fca29e534f43c32a7b443669708024500fc7bbbe090349ff8084c96037",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: SEAT Arona compact crossover. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Volkswagen Passat",
+      "asset": "assets/cars/models/volkswagen-passat.jpg",
+      "sha256": "6fb77cb507ce930936bcb6124d09ebf28ed1900b42640315995c6c248dda1fe9",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Volkswagen Passat B8 four-door saloon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Toyota RAV4 Hybrid",
+      "asset": "assets/cars/models/toyota-rav4-hybrid.jpg",
+      "sha256": "2b6cb36e47adc47d50f5251b3094462b257276a5e8635e57e7ef4a1a2e60c628",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Toyota RAV4 fifth-generation Hybrid SUV. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Bentley Flying Spur",
+      "asset": "assets/cars/models/bentley-flying-spur.jpg",
+      "sha256": "1ad41edb646d2203b6aa428bd0c5eb20daee6b5b6ae7dab1ebf2ead2b1725d69",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Bentley Flying Spur third-generation four-door luxury saloon. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Lamborghini Huracán",
+      "asset": "assets/cars/models/lamborghini-huracan.jpg",
+      "sha256": "a4889df4cc240ae52107097238bd6205463a8d024b6a86eafda0247b4fb9cccd",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Lamborghini Huracan coupe. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    },
+    {
+      "listing": "Nissan Leaf",
+      "asset": "assets/cars/models/nissan-leaf.jpg",
+      "sha256": "5a91274515dc08b3f29403e35fac3c1feb42ffe77b7f5298300fca95794fc4e4",
+      "prompt": "Use case: product-mockup. ONE landscape 4:3 photorealistic car rental catalogue image: Nissan Leaf second-generation electric hatchback. Precisely represent the named make and model: recognizable correct grille, headlights, body silhouette, door count and proportions. Deep cobalt blue metallic paint, dark alloy wheels. Grey enclosed premium studio, grey polished concrete floor, subtle diagonal white ceiling light strips. Full front three-quarter view with nose facing right. Entire car fits with 12% margin, wheels uncropped. Realistic commercial automotive render matching DriveEuroCars blue-car studio imagery. Single car, no people, no words, no watermark, blank dark plate."
+    }
+  ]
+}
